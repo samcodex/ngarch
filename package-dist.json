@@ -1,0 +1,23 @@
+{
+  "name": "ngarch",
+  "version": "0.1.0",
+  "description": "Angular application architecture tool, analyze and display angular modules, components, services and data models",
+  "main": "index.html",
+  "keywords": [
+    "angular 5",
+    "architecture"
+  ],
+  "author": "Samuel Xie<xie.samuel@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samcodex/ngarch.git"
+  },
+  "homepage": "http://www.ngarch.io",
+  "bugs": {
+    "url": "https://github.com/samcodex/ngarch/issues"
+  },
+  "peerDependencies": {
+
+  }
+}

@@ -1,0 +1,30 @@
+.dialog-content {
+
+  mat-form-field {
+    width: 300px;
+    margin-top: 30px;
+
+    .material-icons {
+      float: right;
+      margin-top: -24px;
+    }
+
+    .material-icons.None {
+      color: gray;
+    }
+
+    .material-icons.Passed {
+      color: green;
+    }
+
+    .material-icons.Failure {
+      color: red;
+    }
+  }
+}
+
+.mat-dialog-actions {
+  button {
+    margin-left: 20px;
+  }
+}

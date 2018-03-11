@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Project Config</h1>
+<div mat-dialog-content class="dialog-content">
+
+  <mat-form-field>
+    <input matInput placeholder="Project root"
+      [formControl]="formControllers.root" [errorStateMatcher]="matcher"
+      (keyup)="onEnter('root')" [(ngModel)]="copiedData.root">
+
+    <mat-hint>The folder contains 'package.json'</mat-hint>
+    <mat-error *ngIf="formControllers.root.hasError('notExist')">
+      Please enter an folder contains 'package.json'
+    </mat-error>
+
+    <ng-container
+      *ngTemplateOutlet="flagIcon;context:{flag: flags.root}">
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="App folder"
+      [formControl]="formControllers.app" [errorStateMatcher]="matcher"
+      (keyup)="onEnter('app')" [(ngModel)]="copiedData.app">
+
+    <mat-hint>The folder contains all Angular components, templates, styles</mat-hint>
+    <mat-error *ngIf="formControllers.app.hasError('notExist')">
+      Please enter Angular app folder
+    </mat-error>
+
+    <ng-container
+      *ngTemplateOutlet="flagIcon;context:{flag: flags.app}">
+    </ng-container>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Main file"
+      [formControl]="formControllers.main" [errorStateMatcher]="matcher"
+      (keyup)="onEnter('main')" [(ngModel)]="copiedData.main">
+
+    <mat-hint>Angular application main entry point(main.ts)</mat-hint>
+    <mat-error *ngIf="formControllers.main.hasError('notExist')">
+      Please enter the main file(main.ts).
+    </mat-error>
+
+    <ng-container
+      *ngTemplateOutlet="flagIcon;context:{flag: flags.main}">
+    </ng-container>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onClickApply()" cdkFocusInitial>Apply</button>
+</div>
+
+<ng-template #flagIcon let-flag="flag">
+    <i class="material-icons" *ngIf="flag ==='None'" [ngClass]="flag">mode_edit</i>
+    <i class="material-icons" *ngIf="flag ==='Failure'" [ngClass]="flag">error</i>
+    <i class="material-icons" *ngIf="flag ==='Passed'" [ngClass]="flag">check</i>
+</ng-template>

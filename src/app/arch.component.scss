@@ -1,0 +1,62 @@
+@import "variables";
+
+#arch-root-container {
+  height: 100%;
+
+  #arch-navigation {
+    width: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 2px 0px 6px #a6a6a7;
+  }
+
+  .arch-navigation-drag-icon {
+    // top: 10px;
+    // left: -10px;
+    z-index: 9999;
+    cursor: pointer;
+    color: #5594c1;
+    text-shadow: 1px 1px 10px #85a7bf;
+  }
+
+  #arch-content {
+    margin-left: 16px;
+  }
+
+  .expander-bar {
+    height: 100%;
+    width: 15px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #dee0e1;
+  }
+
+  .navigation-expand-icon {
+    font-size: 18px;
+    font-weight: bolder;
+    margin-top: 50px;
+  }
+
+  // .arch-navigation-drop-area {
+  //   width: 50px;
+  //   height: 100%;
+  //   position: absolute;
+  // }
+
+  .arch-app-body {
+    flex: 30;
+  }
+}
+
+arch-arch-header {
+  flex: 1;
+}
+
+arch-app-header {
+  flex: 1;
+}
+
+arch-project-loader-overlay {
+
+}

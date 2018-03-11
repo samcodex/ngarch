@@ -1,0 +1,18 @@
+<div class="summary-table-ngponent-container">
+  {{archNgPonent.name}}
+  {{archNgPonent.fileName}} - {{archNgPonent.ngPonentType}}
+
+  <div class="rTable" *ngIf="hasMetadata">
+    <div class="rTableRow" *ngFor="let property of usedProperties">
+      <div class="rTableCell cell-property">{{property}}</div>
+      <div class="rTableCell">{{metadata[property] | commaWithSpace}}</div>
+    </div>
+  </div>
+
+  <div class="rTable" *ngIf="hasTsMembers">
+    <div class="rTableRow" *ngFor="let key of tsKeys">
+      <div class="rTableCell cell-property">{{key}}</div>
+      <div class="rTableCell">{{tsValues[key] | commaWithSpace}}</div>
+    </div>
+  </div>
+</div>

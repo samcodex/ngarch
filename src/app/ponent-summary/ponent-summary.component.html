@@ -1,0 +1,25 @@
+<div class="ponent-summary-canvas">
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let group of archNgPonentGroups"
+        [expanded]="group.isBootstrapGroup">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{group.ngPonentName}}
+          <span class="flag-lazy-loading" *ngIf="!group.isBootstrapGroup">(Lazy Loading)</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{group.fileName}}
+          <!-- <mat-icon>account_circle</mat-icon> -->
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <arch-summary-table-ngponent *ngFor='let archNgPonent of group.archNgPonents' [archNgPonent]="archNgPonent">
+      </arch-summary-table-ngponent>
+
+      <mat-action-row>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+</div>

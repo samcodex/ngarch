@@ -1,0 +1,19 @@
+
+
+<div class="ngx-flow-panel"
+  movable movableConstraint="{{constraintAreaId}}"
+  mwlResizable
+  [enableGhostResize]="true"
+  [resizeEdges]="{bottom: true, right: true, top: true, left: true}"
+  (resizeEnd)="onResizeEnd($event)"
+>
+  <div class="ngx-flow-panel-header" movableHandle>
+    <div class="ngx-panel-header-left-side"></div>
+    <div class="ngx-panel-header-title">{{title}}</div>
+    <div class="ngx-panel-header-right-side"></div>
+  </div>
+  <div class="ngx-flow-panel-body">
+    <ng-content></ng-content>
+  </div>
+  <div class="ngx-flow-panel-footer"></div>
+</div>

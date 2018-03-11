@@ -1,0 +1,5 @@
+<div class="panel-tool-bar">
+  <i class="material-icons enable" (click)="onHome()">home</i>
+  <i class="material-icons" [ngClass]="{disable: !hasItemBackFlag, enable: hasItemBackFlag}" (click)="onBack()">arrow_back</i>
+
+</div>

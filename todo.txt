@@ -1,0 +1,9 @@
+=== TODO List ===
+# Welcome page
+# Set host and port from command line
+# MVC Pattern component
+
+=== Need To Clarify ===
+# NgModule scope
+# Service scope
+# Difference between Lazy loading module and early loading module in 'imports' and 'providers'

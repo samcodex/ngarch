@@ -1,0 +1,31 @@
+.ngx-flow-panel {
+  z-index: 9999;
+  position: absolute;
+  left: 70%;
+  top: 100px;
+  border:3px ridge #d7d6d6;
+  background-color: white;
+  min-width: 200px;
+
+  -webkit-box-shadow:5px 7px 8px 0px #d6cece ;
+  -moz-box-shadow:5px 7px 8px 0px #d6cece ;
+  box-shadow:5px 7px 8px 0px #d6cece ;
+
+  .ngx-panel-header-title {
+    text-align: center;
+    font-size: 14px;
+    padding-top: 5px;
+  }
+
+  .ngx-flow-panel-header {
+    border-bottom: groove #e8dede 2px;
+    min-width: 200px;
+    height: 25px;
+    background: lightgrey;
+    cursor: pointer;
+  }
+}
+
+mwlResizable {
+  box-sizing: border-box;
+}

@@ -1,0 +1,23 @@
+<div class="routing-structure">
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let routes of routesGroups"
+        [expanded]="routes.isExpanded">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{routes.fileName}}
+          <!-- <span class="flag-lazy-loading" *ngIf="!group.isBootstrapGroup">(Lazy Loading)</span> -->
+        </mat-panel-title>
+        <mat-panel-description>
+          <!-- {{group.fileName}} -->
+          <!-- <mat-icon>account_circle</mat-icon> -->
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <pre>{{routes.rawValue}}</pre>
+      <mat-action-row>
+      </mat-action-row>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+</div>

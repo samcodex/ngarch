@@ -1,0 +1,30 @@
+@import 'variables';
+
+mat-sidenav-container#explorer-sidenav-container {
+  height: 100%;
+  border: 1px gray solid;
+  display: flex;
+
+  mat-sidenav {
+    border: 1px gray solid;
+  }
+}
+
+mat-sidenav-content#explorer-sidenav-content {
+  width: 100%;
+}
+
+arch-explorer-dock {
+  padding-top: 30px;
+}
+// arch-viewer-header {
+//   flex: 1;
+// }
+
+// arch-explorer-canvas {
+//   flex: 30;
+// }
+
+// arch-viewer-terminal {
+//   flex: 3;
+// }

@@ -1,0 +1,9 @@
+<div class="project-loader-overlay" (click)="tryClose()">
+</div>
+<div *ngIf="canClose" class="overlay-close" (click)="onClose()">X</div>
+<div class="loader-overlay-content">
+  <div class="overlay-title">Message from server:</div>
+  <div>
+    <div *ngFor="let msg of messages">{{msg}}</div>
+  </div>
+</div>

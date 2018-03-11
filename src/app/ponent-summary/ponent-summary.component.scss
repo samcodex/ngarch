@@ -1,0 +1,22 @@
+// :host {
+//   flex: 40;
+//   // position: absolute;
+//   // height: 100%;
+//   // width: 100%;
+//   padding: 20px 30px;
+
+//   arch-summary-table-ngponent {
+//     width: 100%;
+//     min-height: 50px;
+//     // margin: 20px 20px 30px 20px;
+//   }
+// }
+
+.ponent-summary-canvas {
+  flex: 40;
+  padding: 20px 30px;
+
+  .flag-lazy-loading {
+    padding-left: 20px;
+  }
+}
