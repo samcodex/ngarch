@@ -1,7 +1,7 @@
 {
   "name": "ngarch",
   "version": "0.1.0",
-  "description": "Angular application architecture tool, analyze and display angular modules, components, services and data models",
+  "description": "Angular application architecture tool, analyzing the static structure of the Angular application and visually displaying the modules, components, services and data models in multiple diagrams",
   "main": "index.html",
   "keywords": [
     "angular 5",
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/samcodex/ngarch.git"
   },
-  "homepage": "http://www.ngarch.io",
+  "homepage": "",
   "bugs": {
     "url": "https://github.com/samcodex/ngarch/issues"
   },
