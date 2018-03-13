@@ -235,26 +235,28 @@ export class ArchNgPonentStore implements IReloadable {
     this.cleanStoreData();
     // this._raw = ponents;
 
-    // group ngponents and tsponents by ponent.name
-    const groupers: PonentGroupers = createPonentGroupers(ponents);
+    if (ponents) {
+      // group ngponents and tsponents by ponent.name
+      const groupers: PonentGroupers = createPonentGroupers(ponents);
 
-    forOwn(groupers, (groupItems, name) => {
-      groupItems.forEach(groupItem => {
-        // create ArchNgPonent
-        const ngponentItem = this.createArchNgPonent(groupItem);
+      forOwn(groupers, (groupItems, name) => {
+        groupItems.forEach(groupItem => {
+          // create ArchNgPonent
+          const ngponentItem = this.createArchNgPonent(groupItem);
 
-        if (ngponentItem) {
-          // update store's references
-          this.updateReferences(ngponentItem);
+          if (ngponentItem) {
+            // update store's references
+            this.updateReferences(ngponentItem);
 
-          // update store's data
-          this.data.push(ngponentItem);
-        }
+            // update store's data
+            this.data.push(ngponentItem);
+          }
+        });
       });
-    });
 
-    // update store's loadingGroups
-    this.updateLoadingGroups();
+      // update store's loadingGroups
+      this.updateLoadingGroups();
+    }
 
     // notify data updated
     this.dataSubject.next(this.data);

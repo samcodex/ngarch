@@ -38,6 +38,9 @@ export class PonentLoaderService extends Reloadable {
   }
 
   private parseResponse(response): Ponent[] {
+    if (!response) {
+      return null;
+    }
 
     const obj = CircularJSON.parse(response);
     // console.log('--- service start---');
