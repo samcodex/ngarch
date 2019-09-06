@@ -32,6 +32,10 @@ export class AngularCliUsageComponent implements OnInit {
     this.changeVersion(firstVersion);
   }
 
+  getSampleCommand(sampleCommand: AngularCliCommand) {
+    return cliHelper.getSampleCommand(sampleCommand);
+  }
+
   private changeVersion(version: string) {
     this.selectedVersion = version;
     this.selectedCli = cliHelper.getCliByVersion(this.usages, version);
