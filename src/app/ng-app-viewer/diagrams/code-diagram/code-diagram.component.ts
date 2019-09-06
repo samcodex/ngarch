@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ArchUiDiagramComponent } from 'app/ng-app-viewer/models/viewer-content-types';
+import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
 import { RestService } from '@shared/services/rest/rest.service';
 import { ArchNgPonent } from '@core/arch-ngponent';
 import { ArchEndPoint } from '@config/end-point-definition';
 import { ProjectProfileService } from '@shared/project-profile';
 import { ArchNode } from '@core/arch-tree/arch-tree';
-import { ViewerType, DiagramViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 const languages = [ 'typescript', 'html', 'css' ];
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ArchUiDiagramComponent } from 'app/ng-app-viewer/models/viewer-content-types';
-import { ViewerType, DiagramViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
+import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 const typeOfActivityDiagram = [ ViewerType.AppArchViewer, DiagramViewerType.ActivityDiagram ];
 @Component({

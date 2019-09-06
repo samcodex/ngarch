@@ -9,9 +9,9 @@ import { DiagramLayout } from '@core/diagram/diagram-layout';
 import { MokuaiOptionCategories } from '@features/mokuai-detail/models/mokuai-option-model';
 import { SvgBoard } from '@core/diagram-impls/diagram-board';
 import { d3_util } from '@core/svg/d3.util';
-import { ArchUiDiagramComponent } from 'app/ng-app-viewer/models/viewer-content-types';
+import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
 import { ArchNode } from '@core/arch-tree/arch-tree';
-import { ViewerType, DiagramViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 @Component({
   template: '<div #svgBoard id="svg-board"></div>',

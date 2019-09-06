@@ -20,7 +20,7 @@ import { ArchNode } from '@core/arch-tree/arch-tree';
 import { ArchViewerOptionsService } from './../../viewers/app-arch-viewer/services/arch-viewer-options.service';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
-import { DiagramViewerType, ViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { DiagramViewerType, ViewerType } from '../../models/ng-app-viewer-definition';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {

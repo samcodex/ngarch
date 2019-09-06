@@ -14,7 +14,7 @@ import { ArchNode, ArchTree } from '@core/arch-tree/arch-tree';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { convertArchPonentToStructureTree } from '@shared/arch-ngponent-store/arch-tree/module-structure-tree';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
-import { ViewerType, DiagramViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 @Component({
   templateUrl: './structure-diagram.component.html',

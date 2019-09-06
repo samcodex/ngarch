@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 
 import { ArchEndPoint } from '../../../config/end-point-definition';
 import { ProjectConfig } from '../../project-profile';
-import { WINDOW } from 'app/arch.env';
+import { WINDOW } from '../../../arch.env';
 
 export enum Protocol {
   Http = 'http',

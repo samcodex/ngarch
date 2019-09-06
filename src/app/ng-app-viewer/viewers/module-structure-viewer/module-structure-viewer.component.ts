@@ -12,9 +12,9 @@ import { d3_util } from '@core/svg/d3.util';
 import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
 import { DiagramElementFeature } from '@core/diagram/diagram-definition';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
-import { AppViewerDataService } from 'app/ng-app-viewer/services/app-viewer-data.service';
+import { AppViewerDataService } from '../../services/app-viewer-data.service';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
-import { ViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ViewerType } from '../../models/ng-app-viewer-definition';
 
 @Component({
   templateUrl: './module-structure-viewer.component.html',

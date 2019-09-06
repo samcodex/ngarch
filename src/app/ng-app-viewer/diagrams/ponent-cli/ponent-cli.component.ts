@@ -6,9 +6,9 @@ import { AngularCliHelper, AngularCli, AngularCliCommand } from '../../../arch-c
 import { ArchNgPonent } from '@core/arch-ngponent';
 import { ProjectProfileService } from '@shared/project-profile';
 import { getDependencyVersion } from '@core/models/arch-project';
-import { ArchUiDiagramComponent } from 'app/ng-app-viewer/models/viewer-content-types';
+import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
 import { ArchNode } from '@core/arch-tree/arch-tree';
-import { ViewerType, DiagramViewerType } from 'app/ng-app-viewer/models/ng-app-viewer-definition';
+import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 @Component({
   templateUrl: './ponent-cli.component.html',
