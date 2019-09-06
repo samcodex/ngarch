@@ -31,11 +31,11 @@ export class PonentMokuaiDataService implements OnDestroy {
   ngOnDestroy() {}
 
   setupStream() {
-    const source = combineLatest(
+    const source = combineLatest([
       this.getContext(),
       this.getArchNgPonentRelationshipTypes(),
       this.getSelectedPonents()
-    );
+    ]);
 
     source
       .pipe(

@@ -21,10 +21,10 @@ export class MokuaiDetailOptionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const source = combineLatest(
+    const source = combineLatest([
       this.optionsService.getOptionCategories(),
       this.optionsService.getContext()
-    );
+    ]);
     source
       .pipe(
         takeUntilNgDestroy(this)

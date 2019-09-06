@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { forEach } from 'lodash-es';
 import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ArchNgPonent } from '@core/arch-ngponent';
 import { DiagramOrganizer } from '@core/diagram/diagram-organizer';
@@ -38,10 +39,12 @@ export class PonentDiagramDataService {
   }
 
   getPonentsSelectionItems(): Observable<PonentSelectOptionGroup[]> {
-    return combineLatest(
+    return combineLatest([
       of([defaultPanelSelectedItem]),
-      this.store.getUsedPonentsGroupByLoadingModule(),
-      (defaultGroup, data) => {
+      this.store.getUsedPonentsGroupByLoadingModule()
+    ])
+    .pipe(
+      map(([defaultGroup, data]) => {
         const archNgPonents = data.map( grouper =>
           (
             {
@@ -63,7 +66,7 @@ export class PonentDiagramDataService {
         this.panelSelectionItems = defaultGroup.concat(archNgPonents);
 
         return this.panelSelectionItems;
-      }
+      })
     );
   }
 

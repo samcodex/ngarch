@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
+import { map } from 'rxjs/operators';
 
 import { SvgBoard } from '@core/diagram-impls/diagram-board/svg-board';
 import { ArchNgPonent } from '@core/arch-ngponent';
@@ -73,33 +74,33 @@ export class PonentDiagramComponent implements OnInit, OnDestroy {
   }
 
   private initSubscription() {
-    combineLatest(
+    combineLatest([
       this.ponentDataService.getPonentsSelectionItems(),
-      this.panelFilterSubject.asObservable(),
-      (optGroups2, panelFilters) => {
-
-        const optGroups = cloneDeep(optGroups2);
-        const panelFilterItems = [];
-
-        panelFilters
-          .filter(item => item.isChecked)
-          .forEach(item => {
-            const val = item.value;
-            if (Array.isArray(val)) {
-              panelFilterItems.push.apply(panelFilterItems, val);
-            } else {
-              panelFilterItems.push(val);
-            }
-          });
-
-        return optGroups.map(group => {
-          group.items = group.items
-            .filter(item => item.isDefault || panelFilterItems.includes(item.ngPonentType));
-          return group;
-        });
-      }
-    )
+      this.panelFilterSubject.asObservable()
+    ])
     .pipe(
+      map(([optGroups2, panelFilters]) => {
+          const optGroups = cloneDeep(optGroups2);
+          const panelFilterItems = [];
+
+          panelFilters
+            .filter(item => item.isChecked)
+            .forEach(item => {
+              const val = item.value;
+              if (Array.isArray(val)) {
+                panelFilterItems.push.apply(panelFilterItems, val);
+              } else {
+                panelFilterItems.push(val);
+              }
+            });
+
+          return optGroups.map(group => {
+            group.items = group.items
+              .filter(item => item.isDefault || panelFilterItems.includes(item.ngPonentType));
+            return group;
+          });
+        }
+      ),
       takeUntilNgDestroy(this)
     )
     .subscribe( data => {
