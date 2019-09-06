@@ -1,11 +1,10 @@
 <div id="arch-root-container" fxLayout="column">
-  <arch-arch-header></arch-arch-header>
-  <arch-app-header></arch-app-header>
+  <arch-header></arch-header>
+  <arch-app-header (clickTopMenu)="onToggleDashboard()"></arch-app-header>
 
   <mat-sidenav-container class="arch-app-body">
     <mat-sidenav id="arch-navigation" #sidenav mode="side" [(opened)]="opened">
-      <arch-arch-navigation></arch-arch-navigation>
-
+      <arch-navigation></arch-navigation>
     </mat-sidenav>
 
     <mat-sidenav-content id="arch-content-container">
@@ -14,16 +13,15 @@
         <i class="navigation-expand-icon material-icons">{{opened ? "chevron_left" : "chevron_right"}}</i>
       </div>
 
-      <!-- <div class="arch-navigation-drop-area"></div> -->
-
       <div id="arch-content">
         <router-outlet></router-outlet>
       </div>
-
-
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
 
-<arch-project-loader-overlay *ngIf="useOverlay" (closeOverlay)="closeOverlay($event)">
-</arch-project-loader-overlay>
+<arch-welcome-page *ngIf="hasWelcomePage" [isServerError]="isServerError"></arch-welcome-page>
+
+<arch-dashboard *ngIf="dashboardIndicator.enabled"></arch-dashboard>
+
+<arch-project-loader-overlay *ngIf="useOverlay" (closeOverlay)="closeOverlay($event)"></arch-project-loader-overlay>

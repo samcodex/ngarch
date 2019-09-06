@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
-import { SocketHandlerService } from '../socket-handler/socket-handler.service';
 import { ReloadRegisterService } from '../../reloadable/reload-register.service';
+import { SocketHandlerService } from '../socket-handler/socket-handler.service';
+
+export enum ProjectStatus {
+  NONE = 'None',
+  UPDATING = 'Updating',
+  UPDATED = 'Updated'
+}
 
 @Injectable()
 export class CenterControllerService {
@@ -34,10 +40,4 @@ export class CenterControllerService {
     return this.projectStatus;
   }
 
-}
-
-export enum ProjectStatus {
-  NONE = 'None',
-  UPDATING = 'Updating',
-  UPDATED = 'Updated'
 }

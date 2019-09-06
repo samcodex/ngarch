@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: SketchAPI 5.1.285 <https://api.sketch.io/> -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketchjs="https://sketch.io/dtd/" style="" sketchjs:metadata="eyJ0aXRsZSI6IkRyYXdpbmciLCJkZXNjcmlwdGlvbiI6Ik1hZGUgd2l0aCBTa2V0Y2hwYWQgLSBodHRwczovL3NrZXRjaC5pby9za2V0Y2hwYWQiLCJtZXRhZGF0YSI6e30sImNsaXBQYXRoIjp7ImVuYWJsZWQiOnRydWUsInN0eWxlIjp7InN0cm9rZVN0eWxlIjoiYmxhY2siLCJsaW5lV2lkdGgiOjF9fSwiZXhwb3J0RFBJIjo3MiwiZXhwb3J0Rm9ybWF0IjoicG5nIiwiZXhwb3J0UXVhbGl0eSI6MC45NSwidW5pdHMiOiJweCIsIndpZHRoIjoyNjQsImhlaWdodCI6MjQ3LCJwYWdlcyI6eyJsZW5ndGgiOjEsImRhdGEiOlt7IndpZHRoIjoyNjQsImhlaWdodCI6MjQ3fV19fQ==" width="264" height="247" viewBox="0 0 264 247" sketchjs:version="5.1.285">
+<defs>
+	<linearGradient x1="135" y1="133.51" x2="135" y2="68.97" id="b" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,1,-8.261,-65.511)">
+		<stop offset="0" style="stop-color:#39f;"/>
+		<stop offset="1" style="stop-color:#fff;"/>
+	</linearGradient>
+</defs>
+<g sketchjs:tool="clipart" style="mix-blend-mode: source-over;" transform="matrix(-0.6794838137462443,0.9704034542152012,-0.9704034542152012,-0.6794838137462443,292.8204656501373,80.62104090417714)">
+	<path d="M187.24 134.24h49.5c.5-66-67.5-154-169.5-96l-24-30.5-35.5 119.5 110.5-22-21.5-27c52-27.5 91.5 14 90.5 56z" sketchjs:uid="1" style="stroke: #000; opacity: 0.6; fill-rule: evenodd; stroke-width: 2.5; stroke-linejoin: round; filter: a;"/>
+	<path d="M184.24 131.24h49.5c.5-66-67.5-154-169.5-96l-24-30.5-35.5 119.5 110.5-22-21.5-27c52-27.5 91.5 14 90.5 56z" sketchjs:uid="2" style="fill: url(#b); stroke: #000; fill-rule: evenodd; stroke-width: 2; stroke-linejoin: round;"/>
+</g>
+</svg>

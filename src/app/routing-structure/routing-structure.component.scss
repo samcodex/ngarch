@@ -1,6 +1,13 @@
-:host {
-  flex: 40;
-  position: absolute;
+.routing-structure {
   height: 100%;
-  width: 100%;
+  overflow-y: scroll;
+
+  .mat-accordion {
+    margin: 20px;
+
+    .mat-expansion-panel {
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+  }
 }

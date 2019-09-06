@@ -1,0 +1,21 @@
+<div class="project-loader-overlay" (click)="tryClose()"></div>
+
+<div class="loader-indicator">
+  <arch-loading-bar [loading]="!canClose"></arch-loading-bar>
+  <div>
+    <div class="indicator-title">Parsing Angular Application</div>
+    <div class="indicator-languages">TypeScript, Angular Templates and Decorators</div>
+    <span *ngIf="!canClose"> ...</span>
+    <span *ngIf="canClose"> - [Done]</span>
+  </div>
+  <button mat-flat-button class="close-overlay" *ngIf="canClose" (click)="tryClose($event)">Close</button>
+</div>
+
+<div *ngIf="canClose" class="overlay-close" (click)="onClose()">X</div>
+
+<div class="loader-overlay-content">
+  <div class="overlay-title">Message from server:</div>
+  <div>
+    <div *ngFor="let msg of messages">{{msg}}</div>
+  </div>
+</div>

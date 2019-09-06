@@ -1,0 +1,31 @@
+::ng-deep #arch-side-navigation-accordion .mat-expansion-panel-body {
+  padding: 0;
+}
+
+::ng-deep #arch-side-navigation-accordion .mat-expansion-panel-header {
+  background: #f7f9fa;
+  background-image: linear-gradient(to bottom, #ffffff, #b0b3b6);
+  border-radius: 3px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 3px 5px 3px 5px;
+  text-decoration: none;
+
+  & > span {
+    justify-content: center;
+  }
+}
+
+.arch-side-navigation-title {
+  color: #6491ed;
+  flex-grow: unset;
+  text-align: center;
+  font-size: 13px;
+}
+
+::ng-deep #arch-side-navigation-accordion .mat-expansion-panel-header:hover {
+  background: #edeef0;
+  background-image: linear-gradient(to bottom, #eceef0, #cbcdcf);
+  text-decoration: none;
+}

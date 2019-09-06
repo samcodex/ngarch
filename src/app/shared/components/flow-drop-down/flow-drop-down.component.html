@@ -1,0 +1,16 @@
+<div ngDraggable>
+  <div *ngIf="!expanded">
+    <div class="drop-down-icon-clickable" (click)="toggleDropDown()">
+      <i class="material-icons">{{icon}}</i>
+    </div>
+  </div>
+
+  <div class="drop-down-expanded-container" *ngIf="expanded">
+    <div class="drop-down-expand-icon" (click)="toggleDropDown()">
+      <i class="material-icons">{{icon}}</i>
+    </div>
+    <div class="drop-down-expanded-panel">
+      test
+    </div>
+  </div>
+</div>

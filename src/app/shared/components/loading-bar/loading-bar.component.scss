@@ -1,0 +1,31 @@
+:host {
+  z-index: 9999;
+  width: 100%;
+}
+
+.loader {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: #ddd;
+}
+
+.loading {
+  height: 3px;
+}
+
+.loading:before{
+  display: block;
+  position: absolute;
+  content: "";
+  left: -200px;
+  width: 200px;
+  height: 4px;
+  background-color: #ff78a6;
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  from {left: -200px; width: 30%;}
+  to {left: 100%;}
+}

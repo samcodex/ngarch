@@ -1,27 +1,29 @@
-import { ArchNgPonentRoutes } from './arch-ngponent-routes';
-import { ArchNgPonentPipe } from './arch-ngponent-pipe';
-import { ArchNgPonentDirective } from './arch-ngponent-directive';
-import { ArchNgPonentInjectable } from './arch-ngponent-injectable';
-import { ArchNgPonentComponent } from './arch-ngponent-component';
-import { ArchNgPonentModule } from './arch-ngponent-module';
-import { NgPonentType, NgPonentFeature, TsPonentType } from '../ngponent-tsponent';
-import { ArchNgPonentModel } from './arch-ngponent-model';
+import { NgPonentType } from '../ngponent-tsponent';
 
-// NgPonentType.NgModule,
-// NgPonentType.Component,
-// NgPonentType.Directive,
-// NgPonentType.Injectable,
-// NgPonentType.Pipe,
-// NgPonentType.Model
-export type ModuleTypeNgPonent = ArchNgPonentModule | ArchNgPonentComponent | ArchNgPonentDirective |
-  ArchNgPonentInjectable | ArchNgPonentModel | ArchNgPonentPipe;
+export const ModuleTypeReferences = [
+  NgPonentType.NgModule,
+  NgPonentType.Component,
+  NgPonentType.Directive,
+  NgPonentType.Injectable,
+  NgPonentType.Pipe,
+  NgPonentType.ModuleWithProviders
+];
 
-export const ArchNgPonentClassMapping: {[key: string]: any} = {
-  [NgPonentType.NgModule]: ArchNgPonentModule,
-  [NgPonentType.Component]: ArchNgPonentComponent,
-  [NgPonentType.Directive]: ArchNgPonentDirective,
-  [NgPonentType.Injectable]: ArchNgPonentInjectable,
-  [NgPonentType.Pipe]: ArchNgPonentPipe,
-  [TsPonentType.ClassPonent]: ArchNgPonentModel,
-  [NgPonentType.Route]: ArchNgPonentRoutes
-};
+export const RelationshipWithinNgPonents: NgPonentType[] = [
+  NgPonentType.NgModule,  NgPonentType.Component, NgPonentType.Directive, NgPonentType.Injectable,
+  NgPonentType.ModuleWithProviders
+];
+
+export const RelationshipWithinTsPonents: NgPonentType[] = [
+  NgPonentType.Injectable, NgPonentType.Model
+];
+
+// Angular feature
+export enum ArchPonentFeature {
+  RouterModuleForRoot = 'RouterModuleForRoot',          // RouterModule.forRoot
+  RouterModuleForChild = 'RouterModuleForChild',        // RouterModule.forChild
+}
+
+export enum ArchPonentIssue {
+  NoDataType = 'NoDataType'
+}

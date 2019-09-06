@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Angular Cli Execution</h1>
+<div mat-dialog-content>
+  <div>Angular Project Directory: {{projectConfig.app}}('/app')</div>
+  <div class="exec-command">{{getCommandLine()}}</div>
+  <button class="exec-button" mat-button (click)="executeCommand()">Submit</button>
+  <div class="exec-result">
+    <arch-loading-bar [loading]="isExecuting"></arch-loading-bar>
+    <pre>{{execResult}}</pre>
+  </div>
+
+</div>
+<div mat-dialog-actions [align]="'center'">
+  <button mat-button [mat-dialog-close] cdkFocusInitial>Close</button>
+</div>

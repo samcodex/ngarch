@@ -7,3 +7,34 @@
 # NgModule scope
 # Service scope
 # Difference between Lazy loading module and early loading module in 'imports' and 'providers'
+
+===============Shape, Actions:
+
+*Module
+Module Shape(folder)
+Actions:
+What does it contain? The containing content, declarations, entreComponents, static methods, typescript
+What dependencies? imports
+What provide? exports
+Angular Cli
+
+*Component
+Component Shape(curly bracket & gears)
+Actions:
+Dependencies, what components and directives are need?
+Injection, what services are injected?
+Component tree
+
+*Directive
+Directive Shape(curly bracket)
+Actions:
+
+*Service
+Service Shape(gears)
+Actions:
+Dependencies, what services are injected?
+Service tree
+
+*Route
+Route Shape(url)
+Actions:

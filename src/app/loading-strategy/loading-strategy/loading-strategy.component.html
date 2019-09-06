@@ -1,0 +1,27 @@
+<div class="loading-strategy-canvas">
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let group of archNgPonentGroups"
+        [expanded]="false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{group.ngPonentName}}
+          <span class="flag-lazy-loading" *ngIf="group.isBootstrapGroup">(Eager Loading)</span>
+          <span class="flag-lazy-loading" *ngIf="!group.isBootstrapGroup">(Lazy Loading)</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          <span class="ponent-filename">{{replaceRootPath(group.fileName)}}</span>
+          <!-- <mat-icon>account_circle</mat-icon> -->
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <arch-loading-group *ngFor='let archNgPonent of group.archNgPonents'
+        [archNgPonent]="archNgPonent" [projectConfig]="projectConfig">
+      </arch-loading-group>
+
+      <!-- <mat-action-row>
+      </mat-action-row> -->
+    </mat-expansion-panel>
+
+  </mat-accordion>
+</div>

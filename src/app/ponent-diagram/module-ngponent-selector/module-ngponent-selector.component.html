@@ -1,5 +1,0 @@
-<select class="ponent-select" size="20" [(ngModel)]="selectedItem" (change)="changeItem()">
-  <optgroup *ngFor="let ponent of ponentItems" label="{{ponent.name}}">
-    <option *ngFor="let item of ponent.items" value="{{item.value}}">{{item.text}}</option>
-  </optgroup>
-</select>

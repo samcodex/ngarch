@@ -1,4 +1,33 @@
-div {
-  border: 1px gray solid;
-  height: 20px;
+@import "_variables";
+
+.viewer-header {
+  background-color: white;
+  height: $app-content-header-height;
+  box-shadow:3px 3px 10px 2px #cfcfcf ;
+
+  span.header-bar-left-icon {
+    float: left;
+    height: 30px;
+
+    button {
+      top: -6px;
+    }
+  }
+
+  ::ng-deep i {
+    margin-left: 10px;
+    margin-top: 1px;
+  }
+
+  ::ng-deep div.left-side-path {
+    float: left;
+    margin-left: 10px;
+  }
+
+  ::ng-deep div.right-side-filter {
+    float: right;
+    margin-right: 20px;
+    margin-top: 5px;
+  }
+
 }

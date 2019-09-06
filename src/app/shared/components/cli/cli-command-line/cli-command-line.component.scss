@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.ng-element-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: steelblue;
+}
+
+.enter-command {
+  font-weight: bold;
+  color: steelblue;
+  margin-left: 5px;
+  padding: 4px 10px;
+  border: 1px steelblue dotted;
+}
+
+.apply-command-button {
+  margin-left: 8px;
+  min-width: 40px;
+  line-height: 20px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 12px;
+  background-color: #3cb0fd;
+}
+
+.command-operand {
+  min-width: 200px;
+}

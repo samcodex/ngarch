@@ -1,9 +1,10 @@
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 
-export abstract class Pausable {
-  private _source: ConnectableObservable<any>;
+import {NEVER, ConnectableObservable, Subject, Observable } from 'rxjs';
+
+import {publishReplay, switchMap} from 'rxjs/operators';
+
+export abstract class Pausable<T> {
+  private _source: ConnectableObservable<T>;
   private pauser = new Subject<boolean>();
   private replay: number;
 
@@ -11,14 +12,14 @@ export abstract class Pausable {
     this.replay = replay;
   }
 
-  initialize(source: Observable<any>, wait_for_resume: boolean = false) {
+  initialize(source: Observable<T>, wait_for_resume: boolean = false) {
     this._source = this.pauser
-      .switchMap<boolean, any>(
-        paused => paused ? Observable.never() : source
-      )
-      .publishReplay(this.replay);
+      .pipe(
+        switchMap<boolean, any>( paused => paused ? NEVER : source),
+        publishReplay(this.replay)
+      ) as ConnectableObservable<T>;
 
-    this._source.connect();
+    this._source.connect();           // begin emitting value
     this.pauser.next(wait_for_resume);
   }
 
@@ -30,7 +31,7 @@ export abstract class Pausable {
     this.pauser.next(false);
   }
 
-  get source(): Observable<any> {
+  get source(): Observable<T> {
     return this._source;
   }
 

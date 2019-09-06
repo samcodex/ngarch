@@ -1,16 +1,20 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { zip } from 'rxjs/observable/zip';
-import { TREE_ACTIONS, IActionMapping, ITreeOptions } from 'angular-tree-component';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { IActionMapping, ITreeOptions } from 'angular-tree-component';
+import { last } from 'lodash-es';
+import { zip } from 'rxjs';
+import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
-import { ProjectFilesService } from '../../shared/services/project-files/project-files.service';
-import { ProjectConfigService } from './../../shared/services/project-config/project-config.service';
+import { ArchEndPoints } from '@config/arch-end-points';
+import { ProjectConfig, ProjectProfileService } from '@shared/project-profile';
+import { RestService } from '@shared/services/rest/rest.service';
+import { util } from '../../util/util';
 
 @Component({
   selector: 'arch-explorer-dock',
   templateUrl: './explorer-dock.component.html',
   styleUrls: ['./explorer-dock.component.scss']
 })
-export class ExplorerDockComponent implements OnInit {
+export class ExplorerDockComponent implements OnInit, OnDestroy {
 
   @Output() clickFileNode = new EventEmitter<string>();
 
@@ -18,9 +22,11 @@ export class ExplorerDockComponent implements OnInit {
 
   options: ITreeOptions = {};
 
+  private projectConfig: ProjectConfig;
+
   constructor(
-    private projectFiles: ProjectFilesService,
-    private projectConfig: ProjectConfigService
+    private rest: RestService,
+    private profileService: ProjectProfileService
   ) { }
 
   ngOnInit() {
@@ -28,18 +34,21 @@ export class ExplorerDockComponent implements OnInit {
       mouse: {
         click: (tree, node, $event) => {
           if (node.isLeaf) {
-            this.clickFileNode.emit(node.id.replace('..', ''));
+            this.clickFileNode.emit(node.id);
           }
         }
       }
     };
 
     zip(
-      this.projectConfig.getData(),
-      this.projectFiles.getData()
-    ).subscribe( data => {
-      const config = data[0];
-      const files: string[] = data[1];
+      this.profileService.getProjectConfig(),
+      this.rest.getWithReloader<string[]>(ArchEndPoints.projectFiles, false, true)
+    )
+    .pipe(
+      takeUntilNgDestroy(this)
+    )
+    .subscribe( data => {
+      const [config, files] = data;
       const root: FileNode = {
         id: config.app,
         name: `root (${config.app})`,
@@ -51,11 +60,14 @@ export class ExplorerDockComponent implements OnInit {
       const nodes = this.nodes = [root];
       createNode(root, config, root.children, files);
 
+      this.projectConfig = config;
       this.options = {
         actionMapping: actionMapping
       };
     });
   }
+
+  ngOnDestroy() {}
 
 }
 
@@ -69,17 +81,17 @@ function createNode(root: FileNode, config: any, nodes: FileNode[], data: string
   };
 
   let parent = findDirectory(folders, item);
-  if (isDirectory(item)) {
+  if (util.isDirectory(item)) {
     node.children = [];
     node.hasChildren = true;
     node.isExpanded = false;
     folders[node.id] = node;
 
     if (parent) {
-      node.name = node.name.replace(toFolderPath(parent.id), '');
+      node.name = node.name.replace(util.toFolderPath(parent.id), '');
       parent.children.push(node);
     } else {
-      node.name = node.name.replace(toFolderPath(config.app), '');
+      node.name = index === 0 ? last(node.name.split('/')) : node.name.replace(util.toFolderPath(config.app), '');
       nodes.push(node);
     }
   } else {
@@ -87,24 +99,13 @@ function createNode(root: FileNode, config: any, nodes: FileNode[], data: string
       parent = root;
     }
 
-    node.name = node.name.replace(toFolderPath(parent.id), '');
+    node.name = node.name.replace(util.toFolderPath(parent.id), '');
     parent.children.push(node);
   }
 
   if (index < data.length - 1) {
     createNode(root, config, nodes, data, folders, ++index);
   }
-}
-
-const extensions = ['html', 'ts', 'scss', 'htm', 'css'];
-function isDirectory(file: string): boolean {
-  const ext = file.split('.').pop();
-  return extensions.indexOf(ext) === -1;
-}
-
-function toFolderPath(path) {
-  const last = path.substr(path.length - 1);
-  return (last === '/') ? path : path + '/';
 }
 
 function findDirectory(folders: FolderNode, fileName: string ): FileNode {

@@ -1,0 +1,15 @@
+<mat-expansion-panel [expanded]="expanded" [disabled]="false">
+  <mat-expansion-panel-header [expandedHeight]="'100%'">
+    <mat-panel-title>
+      <arch-cli-command-line [command]="command"></arch-cli-command-line>
+    </mat-panel-title>
+    <!-- <mat-panel-description>
+      <span class="command-usage">
+        {{command.description}}
+      </span>
+    </mat-panel-description> -->
+  </mat-expansion-panel-header>
+
+  <arch-cli-option-card *ngFor="let option of command.options"
+    [option]="option" (apply)="applyOption(option)"></arch-cli-option-card>
+</mat-expansion-panel>

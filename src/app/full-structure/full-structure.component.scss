@@ -1,6 +1,15 @@
+@import "_variables";
+
 :host {
-  flex: 40;
-  position: absolute;
+  // flex: 40;
+  // position: absolute;
   height: 100%;
   width: 100%;
+}
+
+#svg-board {
+  overflow: auto;
+  // position: relative;
+  height: 100%;
+  // width: calc(100% - #{$app-navigation-divider-width});
 }

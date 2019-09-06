@@ -1,3 +1,12 @@
-<div>
-  viewer-header works!
+<div class="viewer-header">
+  <span class="header-bar-left-icon">
+    <!-- <button mat-icon-button color="accent" (click)="onClickInfo()">
+      <mat-icon aria-label="Example icon-button with a heart icon">info</mat-icon>
+    </button> -->
+
+    <i class="material-icons" *ngIf="hasIcon">pageview</i>
+  </span>
+
+  <ng-content select="div.left-side-path"></ng-content>
+  <ng-content select="div.right-side-filter"></ng-content>
 </div>

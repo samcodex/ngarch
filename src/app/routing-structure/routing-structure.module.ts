@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import {
-  MatExpansionModule,
-  MatIconModule,
-  MatFormFieldModule,
   MatDatepickerModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
   MatNativeDateModule,
-  MatInputModule
 } from '@angular/material';
+import { RouterModule, Routes } from '@angular/router';
 
-import { RoutingStructureComponent } from './routing-structure.component';
 import { SharedModule } from '../shared/shared.module';
+import { RoutingStructureComponent } from './routing-structure.component';
 
 const routes: Routes = [
   {

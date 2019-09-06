@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { ISocketClient } from './../../../core/models/socket-client.interface';
-import { ArchConfigService, Protocol } from '../arch-config/arch-config.service';
 import { CommandMessage } from '../../../core/models/command-message';
 import { NameValue } from '../../../core/models/name-value';
-
+import { ISocketClient, SocketTasks } from '../../../core/models/socket-client.interface';
+import { ArchConfigService, Protocol } from '../arch-config/arch-config.service';
 
 @Injectable()
 export class WebSocketClientService implements ISocketClient {
 
   private socket: WebSocket;
-  private socketTasks: NameValue[] = [];
+  private socketTasks: NameValue<Function>[] = [];
   private url: string;
   private count: number;
 
@@ -36,12 +35,14 @@ export class WebSocketClientService implements ISocketClient {
     this.socket = new WebSocket(this.url);
 
     this.socket.onclose = () => {
-      setTimeout(this.connectServer.bind(this), 2000);
+      setTimeout(this.connectServer.bind(this), 5000);
     };
     this.socket.onerror = () => {
-      console.log('websocket - error');
+      this.invokeTaskCallback(SocketTasks.OnError, null);
     };
     this.socket.onopen = () => {
+      this.invokeTaskCallback(SocketTasks.OnOpen, null);
+
       this.socket.onmessage = (event) => {
         this.invokeTask(event.data);
       };
@@ -58,7 +59,7 @@ export class WebSocketClientService implements ISocketClient {
     }
   }
 
-  on(command: string, handler: (data: any) => void, options?: any): void {
+  on(command: string | SocketTasks, handler: (data: any) => void, options?: any): void {
     this.socketTasks.push(new NameValue(command, handler, options));
   }
 
@@ -76,11 +77,16 @@ export class WebSocketClientService implements ISocketClient {
     const cmdMsg = CommandMessage.parse(message);
     const cmd = cmdMsg.command;
     const msg = cmdMsg.message;
-    const tasks = this.socketTasks.filter( tsk => tsk.name === cmd);
+
+    this.invokeTaskCallback(cmd, msg);
+  }
+
+  private invokeTaskCallback(command: string, data: any) {
+    const tasks = this.socketTasks.filter( tsk => tsk.name === command);
 
     if (tasks) {
       tasks.forEach( task => {
-        task.value.call(null, msg);
+        task.value.call(null, data);
       });
     }
   }

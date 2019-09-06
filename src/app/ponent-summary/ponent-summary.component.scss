@@ -1,22 +1,19 @@
-// :host {
-//   flex: 40;
-//   // position: absolute;
-//   // height: 100%;
-//   // width: 100%;
-//   padding: 20px 30px;
-
-//   arch-summary-table-ngponent {
-//     width: 100%;
-//     min-height: 50px;
-//     // margin: 20px 20px 30px 20px;
-//   }
-// }
 
 .ponent-summary-canvas {
-  flex: 40;
-  padding: 20px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  height: 100%;
 
-  .flag-lazy-loading {
-    padding-left: 20px;
+  .summary-section-container {
+    // border: 1px solid gray;
+    margin: 20px 30px;
+    min-width: 300px;
+    max-width: 500px;
+  }
+
+  .summary-detail-container {
+    margin: 10px 30px;
+    min-width: 300px;
   }
 }

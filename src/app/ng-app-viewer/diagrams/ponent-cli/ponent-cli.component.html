@@ -1,0 +1,23 @@
+<div class="cli-command-execution" *ngIf="selectedCommand">
+  <arch-cli-command-line [command]="selectedCommand"></arch-cli-command-line>
+
+  <div class="tip-option-card">Please select option card first</div>
+
+  <arch-cli-option-card *ngFor="let option of selectedCommand.options"
+    [option]="option" (apply)="applyOption(option)"></arch-cli-option-card>
+</div>
+
+<div class="cli-commands-dropdown">
+  <arch-dropdown [autoExpand]="true" (select)="selectCommand($event)">
+    <div archDropdownOption *ngFor="let command of commands"
+        class="command-option">
+      <div class="option-command-line">ng {{ command.command }} {{ command.template }}</div>
+      <div class="command-description">{{ command.description }}</div>
+
+      <div archDropdownThumbnail class="command-thumbnail">
+        <div class="thumbnail-command-line">ng {{ command.command }} {{ command.template }}</div>
+        <div class="command-description">{{ command.description }}</div>
+      </div>
+    </div>
+  </arch-dropdown>
+</div>

@@ -1,10 +1,49 @@
-<div id="ponent-diagram-container">
+<!-- <arch-viewer-header (clickInfoIcon)="onClickInfoForHelp()"> -->
+<arch-viewer-header>
+  <!-- view-header/left-side/ponent-path -->
+  <div class="left-side-path">
+    Path:
+    <span class="ponent-path-item" *ngFor="let pathItem of currentPonentPath; let i = index">
+      <a (click)="onClickPonentPathItem(pathItem)">{{pathItem.name}}</a>
+      <span *ngIf="i < currentPonentPath.length-1">></span>
+    </span>
+  </div>
+
+  <!-- view-header/right-side/view-filter -->
+  <div class="right-side-filter">
+      <mat-checkbox class="view-filter" *ngFor="let filterItem of viewFilterItems"
+        [value]="filterItem.value" [disabled]="filterItem.isDisable" [checked]="filterItem.isChecked"
+        (change)="onChangeViewFilter($event)">{{filterItem.name}}
+      </mat-checkbox>
+  </div>
+</arch-viewer-header>
+
+  <!-- svg-board -->
   <div id="svg-board"></div>
+
+  <!-- flow-panel -->
   <ngx-flow-panel [title]="'Modules & Components Panel'" [constraintAreaId]="'ponent-diagram-container'">
-    <arch-ponent-diagram-panel-tool-bar></arch-ponent-diagram-panel-tool-bar>
 
-    <arch-module-ngponent-selector></arch-module-ngponent-selector>
+    <!-- flow-panel/tool-bar/select-filter -->
+    <div class="panel-tool-bar">
+      <mat-checkbox class="ponent-panel-filter" *ngFor="let panelFilterItem of panelPonentFilterItems"
+          [matTooltip]="panelFilterItem.tip" [matTooltipPosition]="'above'"
+          [value]="panelFilterItem.value"
+          [disabled]="panelFilterItem.isDisable"
+          [checked]="panelFilterItem.isChecked"
+          (change)="onChangePanelFilter(panelFilterItem)">
+        {{panelFilterItem.name}}
+      </mat-checkbox>
+    </div>
+
+    <!-- flow-panel/tool-bar/select -->
+    <select class="ponent-panel-select" size="20" [(ngModel)]="panelSelectedItem"
+        (change)="onChangePanelSelectItem()">
+
+      <optgroup *ngFor="let ponent of panelPonentItems" label="{{ponent.name}}">
+        <option *ngFor="let item of ponent.items" value="{{item.value}}">{{item.text}}</option>
+      </optgroup>
+
+    </select>
+
   </ngx-flow-panel>
-
-</div>
-

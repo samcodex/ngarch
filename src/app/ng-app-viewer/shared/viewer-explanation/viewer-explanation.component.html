@@ -1,0 +1,17 @@
+<ng-container *ngIf="isActivityDiagram()">
+  <div *ngTemplateOutlet="expActivityDiagram"></div>
+</ng-container>
+
+<ng-template #expActivityDiagram>
+  <h3>Activity Diagram/Application Activity Diagram(Architecture View)</h3>
+  <p>Use <b>Application Activity Diagram</b> to illustrate the application activity and refer to the Route(s),
+    NgModules and Components involved in the execution of the views. It focuses on</p>
+    <ol>
+      <li><b>routes eager and lazy loading flow</b> and</li>
+      <li><b>view hierarchy</b>(Component's templates and views).</li>
+    </ol>
+    <p>It describes the application activity from the app routes to the component views( component templates and its rendered components).</p>
+
+  <p>The activity diagram starts from one NgModule through its routes.
+    Then, shows component hierarchy base on component's template(showing what and how to render component's view)</p>
+</ng-template>

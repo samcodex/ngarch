@@ -1,102 +1,91 @@
-import { Injectable, NgModule } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { forEach } from 'lodash';
+import { Injectable } from '@angular/core';
+import { forEach } from 'lodash-es';
+import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
 
-import { ArchNgPonentStore, ArchNgPonentLoadingGroup } from '../../shared/services/arch-ngponent-store';
-import { ArchNgPonent } from '../../core/arch-ngponent';
-import { NgPonentFeature, ClassLevelPonentTypes, NgPonentType, PonentsRelation } from '../../core/ngponent-tsponent';
+import { ArchNgPonent } from '@core/arch-ngponent';
+import { DiagramOrganizer } from '@core/diagram/diagram-organizer';
+import { PonentSelectOption, PonentSelectOptionGroup } from '../models/ponent-select.model';
+import { ClassLevelPonentTypes } from '@core/ngponent-tsponent';
+import { ArchNgPonentStore } from '@shared/arch-ngponent-store';
+
+const defaultPanelSelectedItem: PonentSelectOptionGroup = {
+  name: 'Overview',
+  items: [
+    {
+      value: 'Overview',
+      text: 'Modules & Components Overview',
+      isDefault: true
+    }
+  ]
+};
 
 @Injectable()
 export class PonentDiagramDataService {
-  private panelItems: PanelSession[] = [];
-  private selectedItems: PanelItem[] = [];
-  private selectedPanelItem: PanelItem;
+  private panelSelectionItems: PonentSelectOptionGroup[] = [];
+  private selectedPanelItem: PonentSelectOption;
+  private selectedPanelItemSubject: ReplaySubject<PonentSelectOption> = new ReplaySubject<PonentSelectOption>(1);
 
-  private panelItemsSubject: ReplaySubject<PanelSession[]> = new ReplaySubject(1);
   private currentPonentsSubject: ReplaySubject<ArchNgPonent[]> = new ReplaySubject(1);
-  private selectedItemSubject: ReplaySubject<PanelItem> = new ReplaySubject(1);
-  private itemStackSubject: ReplaySubject<PanelItem[]> = new ReplaySubject(1);
 
   constructor(
-    private store: ArchNgPonentStore
+    private store: ArchNgPonentStore,
+    private organizer: DiagramOrganizer
   ) {
-    this.setPanelItemsListener();
-  }
-
-  private resetData() {
-    this.panelItems.length = 0;
-    this.selectedItems.length = 0;
-    this.selectedPanelItem = null;
-  }
-
-  getPanelItems(): Observable<PanelSession[]> {
-    return this.panelItemsSubject.asObservable();
-  }
-
-  getSelectedItem(): Observable<PanelItem> {
-    return this.selectedItemSubject.asObservable();
   }
 
   getCurrentArchNgPonents(): Observable<ArchNgPonent[]> {
     return this.currentPonentsSubject.asObservable();
   }
 
-  getItemStack(): Observable<PanelItem[]> {
-    return this.itemStackSubject.asObservable();
+  getPonentsSelectionItems(): Observable<PonentSelectOptionGroup[]> {
+    return combineLatest(
+      of([defaultPanelSelectedItem]),
+      this.store.getUsedPonentsGroupByLoadingModule(),
+      (defaultGroup, data) => {
+        const archNgPonents = data.map( grouper =>
+          (
+            {
+              name: grouper.ngPonentName,
+              items: grouper.archNgPonents.map( archNgPonent =>
+                (
+                  {
+                    archNgPonent: archNgPonent,
+                    ngPonentType: archNgPonent.ngPonentType,
+                    value: archNgPonent.name,
+                    text: archNgPonent.name
+                  }
+                )
+              )
+            }
+          )
+        );
+
+        this.panelSelectionItems = defaultGroup.concat(archNgPonents);
+
+        return this.panelSelectionItems;
+      }
+    );
   }
 
-  private setPanelItemsListener() {
-    this.store.getPonentsGroupByLoadingModule().subscribe((data) => {
-      const defaultItems = this.getDefaultItems();
-
-      const archNgPonents = data.map( grouper =>
-        (
-          {
-            name: grouper.ngPonentName,
-            items: grouper.archNgPonents.map( archNgPonent =>
-              (
-                {
-                  ngPonentType: archNgPonent.ngPonentType,
-                  features: archNgPonent.ngPonentFeatures,
-                  value: archNgPonent.name,
-                  text: archNgPonent.name
-                }
-              )
-            )
-          }
-        )
-      );
-
-      this.resetData();
-
-      this.panelItems.push.apply(this.panelItems, defaultItems);
-      this.panelItems.push.apply(this.panelItems, archNgPonents);
-
-      this.panelItemsSubject.next(this.panelItems);
-    });
+  getSelectedPanelItem(): Observable<PonentSelectOption> {
+    return this.selectedPanelItemSubject.asObservable();
   }
 
   private getPonentDiagramData(): Observable<ArchNgPonent[]> {
     const panelItem = this.selectedPanelItem;
+    const isDirectedDependencies = false;
 
     if (panelItem) {
-      const ponentName = panelItem.value;
+      const {archNgPonent, ngPonentType, value: ponentName} = panelItem;
 
       if (ponentName === 'Overview') {
-        return this.store.getAllArchNgModules();
+        return this.store.getRootModulesOfLoadingGroup();
       } else {
-        const ngPonentType = panelItem.ngPonentType;
-        const features = panelItem.features;
-
-        if (features &&
-          (features.indexOf(NgPonentFeature.LazyLoading) > -1 ||
-          features.indexOf(NgPonentFeature.BootstrapModule) > -1)
-        ) {
-          return this.store.getPonentsByLoadingModule(ponentName);
-        } else if (ClassLevelPonentTypes.indexOf(ngPonentType) > -1) {
-          return this.store.getModuleTypePonentByName(ponentName);
+        // if (archNgPonent.isRootOfLoadingGroup) {
+        //   return this.store.findPonentAndDependenciesByName(ponentName);
+        // } else
+        if (ClassLevelPonentTypes.indexOf(ngPonentType) > -1) {
+          return this.store.findPonentAndDependenciesByName(ponentName, isDirectedDependencies);
         }
       }
     }
@@ -107,57 +96,39 @@ export class PonentDiagramDataService {
     });
   }
 
-  backSelectedItem() {
-    if (this.selectedItems.length) {
-      this.selectedPanelItem = this.selectedItems.pop();
-
-      this.selectedItemSubject.next(this.selectedPanelItem);
-      this.itemStackSubject.next(this.selectedItems);
-      this.updateArchNgPonents();
-    }
-  }
-
-  /**
-   * Main entry to change ponent-diagram data
-   * @param selectedItem
-   */
-  changeSelectedItem(selectedItem: PanelItem | string = null) {
-    let theItem: PanelItem;
-    let isClickHome = false;
+  changePonentSelection(selectedItem: PonentSelectOption | string = null): PonentSelectOption {
+    let theItem: PonentSelectOption;
 
     if (!selectedItem) {
-      isClickHome = true;
-      theItem = this.getDefaultItem();
+      theItem = defaultPanelSelectedItem.items[0];
     } else if (typeof selectedItem === 'string') {
       theItem = this.findPanelItem(selectedItem);
     } else {
       theItem = selectedItem;
     }
-
-    if (this.selectedPanelItem) {
-      if (this.selectedPanelItem.value === theItem.value || isClickHome) {
-        this.selectedItems.length = 0;
-      } else {
-        this.selectedItems.push(this.selectedPanelItem);
-      }
-      this.itemStackSubject.next(this.selectedItems);
-    }
     this.selectedPanelItem = theItem;
-    this.selectedItemSubject.next(this.selectedPanelItem);
 
-    this.updateArchNgPonents();
-  }
+    this.organizer.centerFirstNgPonent(false);
+    const archPonent = this.selectedPanelItem.archNgPonent;
+    if (archPonent) {
+      if (!archPonent.isBootstrapModule) {
+        this.organizer.centerFirstNgPonent(true);
+      }
+    }
 
-  updateArchNgPonents() {
     this.getPonentDiagramData().subscribe(data => {
       this.currentPonentsSubject.next(data);
     });
+
+    this.selectedPanelItemSubject.next(this.selectedPanelItem);
+
+    return this.selectedPanelItem;
   }
 
-  private findPanelItem(id: string): PanelItem {
-    let panelItem: PanelItem;
+  private findPanelItem(id: string): PonentSelectOption {
+    let panelItem: PonentSelectOption;
 
-    forEach(this.panelItems, (group) => {
+    forEach(this.panelSelectionItems, (group) => {
       panelItem = group.items.find( item => item.value === id );
       if (panelItem) {
         return false;
@@ -166,35 +137,4 @@ export class PonentDiagramDataService {
 
     return panelItem;
   }
-
-  private getDefaultItems(): PanelSession[] {
-    return [
-      {
-        name: 'Overview',
-        items: [
-          {
-            value: 'Overview',
-            text: 'Modules & Components Overview'
-          }
-        ]
-      }
-    ];
-  }
-
-  private getDefaultItem(): PanelItem {
-    return this.getDefaultItems()[0].items[0];
-  }
-}
-
-
-export interface PanelSession {
-  name: string;
-  items: PanelItem[];
-}
-
-export interface PanelItem {
-  value: string;
-  text: string;
-  ngPonentType?: NgPonentType;
-  features?: NgPonentFeature[];
 }

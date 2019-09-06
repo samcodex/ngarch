@@ -1,0 +1,39 @@
+<arch-tian>
+  <arch-tian-header>
+    <arch-viewer-header>
+      <!-- view-header/left-side/ponent-path -->
+      <div class="left-side-path">
+
+        <div class="selected-ponent-items">
+          <span class="ponent-path-item" *ngFor="let pathItem of selectedPonentPath; let i = index">
+            <a (click)="onClickPonentPathItem(pathItem)">{{pathItem}}</a>
+            <span *ngIf="i < selectedPonentPath.length-1"> > </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- view-header/right-side/view-filter -->
+    </arch-viewer-header>
+  </arch-tian-header>
+
+  <arch-tian-main>
+    <arch-loading-bar [loading]="isPonentsLoading"></arch-loading-bar>
+
+    <!-- svg-board -->
+    <div id="svg-board"></div>
+  </arch-tian-main>
+
+  <arch-tian-title>
+    {{ponentName}}
+  </arch-tian-title>
+
+  <arch-tian-summary>
+    <arch-tabs>
+      <arch-tab caption="Options" [active]="true">
+        <arch-mokuai-detail-options></arch-mokuai-detail-options>
+      </arch-tab>
+    </arch-tabs>
+
+  </arch-tian-summary>
+
+</arch-tian>

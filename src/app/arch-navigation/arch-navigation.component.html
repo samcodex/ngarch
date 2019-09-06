@@ -1,9 +1,0 @@
-<div class="arch-navigation-container">
-  <div [ngClass]="{ active: item.isSelected, inactive: !item.isSelected}"
-    class="navigation-item" (click)="selectItem(item)"
-    *ngFor="let item of items">
-    <span>
-      {{item.name}}
-    </span>
-  </div>
-</div>

@@ -1,0 +1,21 @@
+<div class="tian-container">
+  <div class="tian-left_and_divider">
+    <div class="tian-left">
+      <ng-content select="arch-tian-header"></ng-content>
+      <ng-content select="arch-tian-main"></ng-content>
+    </div>
+
+    <div class="tian-divider">
+      <div (click)="toggleExpand()">
+        <i class="tian-expand-icon material-icons">{{isExpanded ? "chevron_right" : "chevron_left"}}</i>
+      </div>
+      <span class="divider-handler" [@toggleDividerHandler]="isExpanded ? 'show': 'hide'">||</span>
+    </div>
+  </div>
+
+  <div class="tian-right" [@toggleRightPanel]="isExpanded ? 'expanded' : 'collapsed'"
+      #tianRightPanel *ngIf="!disableSummary">
+      <ng-content select="arch-tian-title"></ng-content>
+      <ng-content select="arch-tian-summary"></ng-content>
+  </div>
+</div>

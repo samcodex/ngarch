@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import * as d3 from 'd3';
+import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
 import { ServiceDependencyDataService } from '../services/service-dependency-data.service';
-import { d3Element } from '../../core/svg/d3.util';
-import { Board } from './../../core/arch-board/board';
-import { DiagramOrganizer } from './../../core/diagram/diagram-organizer';
+import { d3Element } from '@core/svg/d3-def-types';
+import { SvgBoard } from '@core/diagram-impls/diagram-board/svg-board';
+import { DiagramOrganizer } from '@core/diagram/diagram-organizer';
 
 @Component({
   selector: 'arch-service-dependency',
@@ -14,12 +15,12 @@ import { DiagramOrganizer } from './../../core/diagram/diagram-organizer';
     DiagramOrganizer
   ]
 })
-export class ServiceDependencyComponent implements OnInit {
+export class ServiceDependencyComponent implements OnInit, OnDestroy {
 
   nativeElement: HTMLElement;
   host: d3Element;
 
-  board: Board;
+  board: SvgBoard;
 
   constructor(
     private elementRef: ElementRef,
@@ -31,12 +32,16 @@ export class ServiceDependencyComponent implements OnInit {
 
   ngOnInit() {
     this.host = d3.select(this.nativeElement.querySelector('#svg-board'));
-    const board = this.board = new Board(this.host);
+    const board = this.board = new SvgBoard(this.host);
 
-    this.organizer.setBoard(board);
-    this.organizer.start();
+    this.organizer.setBoard(board, true);
 
-    this.dataService.getAllServices().subscribe(this.organizer.appendData.bind(this.organizer));
+    this.dataService.getAllServices()
+      .pipe(
+        takeUntilNgDestroy(this)
+      )
+      .subscribe(this.organizer.drawArchPonentWithLayout.bind(this.organizer));
   }
 
+  ngOnDestroy() {}
 }

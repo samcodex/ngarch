@@ -1,15 +1,31 @@
 export enum TsPonentType {
+  ImportPonent = 'ImportPonent',
   ClassPonent = 'ClassPonent',
   PropertyPonent = 'PropertyPonent',
   ConstructorPonent = 'ConstructorPonent',
   MethodPonent = 'MethodPonent',
   FunctionPonent = 'FunctionPonent',
   ParameterPonent = 'ParameterPonent',
-  ArgumentPonent = 'ArgumentPonent',
-  ValuePonent = 'ValuePonent',
   DecoratorPonent = 'DecoratorPonent',
-  VariablePonent = 'VariablePonent'
+  VariablePonent = 'VariablePonent',
+
+  IdentifierExpressionPonent = 'IdentifierExpressionPonent',
+  StringExpressionPonent = 'StringExpressionPonent',
+  ObjectExpressionPonent = 'ObjectExpressionPonent',
+  ArrayExpressionPonent = 'ArrayExpressionPonent',
+  CallExpressionPonent = 'CallExpressionPonent',
+  NewExpressionPonent = 'NewExpressionPonent',
+  BooleanExpressionPonent = 'BooleanExpressionPonent'
 }
+
+export const ExpressionPonentTypes = [
+  TsPonentType.IdentifierExpressionPonent,
+  TsPonentType.StringExpressionPonent,
+  TsPonentType.ObjectExpressionPonent,
+  TsPonentType.ArrayExpressionPonent,
+  TsPonentType.CallExpressionPonent,
+  TsPonentType.BooleanExpressionPonent
+];
 
 export enum TsBasicType {
   AnyKeyword = 'AnyKeyword',

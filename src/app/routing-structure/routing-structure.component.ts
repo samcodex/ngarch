@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
-import { ArchNgPonentStore } from '../shared/services/arch-ngponent-store';
+import { ArchNgPonentStore } from '@shared/arch-ngponent-store';
 
 @Component({
   selector: 'arch-routing-structure',
@@ -18,15 +19,19 @@ export class RoutingStructureComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subscriber = this.store.getRouteData().subscribe( routes => {
-      this.routesGroups = routes.map( route => (
-        {
-          fileName: route.fileName,
-          isExpanded: false,
-          rawValue: JSON.parse(route.ngPonent.getTsPonent()._rawValue)
-        }
-      ));
-    });
+    this.subscriber = this.store.getRouteData()
+      .pipe(
+        takeUntilNgDestroy(this)
+      )
+      .subscribe( routes => {
+        this.routesGroups = routes.map( route => (
+          {
+            fileName: route.fileName,
+            isExpanded: false,
+            rawValue: JSON.parse(route.tsPonent._rawValue)
+          }
+        ));
+      });
   }
 
   ngOnDestroy() {

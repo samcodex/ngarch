@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  height: 100%;
+
+  .page-content-panel {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .page-main-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 4px;
+  }
+
+  .page-sub-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .mat-hint {
+    margin-left: 20px;
+    font-size: 14px;
+  }
+
+  .exec-button {
+    margin-left: 10px;
+    line-height: 20px;
+    background-color: #3cb0fd;
+  }
+
+  .exec-result {
+    min-height: 300px;
+    border: 1px gray dotted;
+    position: relative;
+    top: 10px;
+
+    pre {
+      overflow: auto;
+      position: absolute;
+      height: calc(100% - 7px);
+      width: calc(100% - 5px);
+      margin: 2px 5px;
+    }
+  }
+
+  .exec-command {
+    color: steelblue;
+    white-space: nowrap;
+    margin-left: 5px;
+    padding: 4px 10px;
+
+    input {
+      width: 50%;
+    }
+  }
+}

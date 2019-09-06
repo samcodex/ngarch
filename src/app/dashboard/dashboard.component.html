@@ -1,0 +1,7 @@
+<div class="dashboard-container">
+  <mat-grid-list cols="3" gutterSize="20">
+    <mat-grid-tile *ngFor="let item of boardItems">
+      <arch-board-tile [item]="item"></arch-board-tile>
+    </mat-grid-tile>
+</mat-grid-list>
+</div>

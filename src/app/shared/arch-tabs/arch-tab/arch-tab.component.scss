@@ -1,0 +1,31 @@
+:host(.workspace-tab)arch-tab  {
+  border: 1px lightgray solid;
+  display: none;
+  width: 100%;
+  height: calc(100% - 25px);
+}
+
+:host(.workspace-tab)arch-tab.active {
+  display: inline-block;
+}
+
+:host(.panel-tab) {
+  border: 1px lightgray solid;
+  display: none;
+
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.75);
+  width: 100%;
+  height: calc(100% - 40px);
+  padding-top: 12px;
+  padding-bottom: 8px;
+}
+
+:host(.panel-tab).active {
+  display: inline-block;
+}
+
+.arch-tab-content {
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+}

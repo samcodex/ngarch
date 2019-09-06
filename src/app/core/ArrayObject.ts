@@ -17,11 +17,15 @@ export class ArrayObject<T> {
     return this._array;
   }
 
+  get object(): {[key: string]: T} {
+    return this._object;
+  }
+
   get isComplete(): boolean {
     return this._array.length === Object.values(this._object).length;
   }
 
-  getByKey(key: string): T {
+  getValueByKey(key: string): T {
     return this._object[key];
   }
 

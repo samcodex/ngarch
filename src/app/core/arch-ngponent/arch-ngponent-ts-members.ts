@@ -1,5 +1,6 @@
-import { TsPonentType, NgPonent, TsPonent } from '../ngponent-tsponent';
-import { PonentHelper } from './ponent-helper';
+import { TsPonent } from '../ngponent-tsponent/tsponent';
+import { TsPonentType } from '../ngponent-tsponent/tsponent-definition';
+import { PonentHelper } from '../ngponent-tsponent/ponent-helper';
 
 export class ArchNgPonentTsMembers {
   tsPonent: TsPonent;
@@ -18,15 +19,15 @@ export class ArchNgPonentTsMembers {
 
   private buildTsMembers() {
     const tsPonent = this.tsPonent;
+    const ctor = PonentHelper.filterTsPonentMembersByType(tsPonent, [TsPonentType.ConstructorPonent]);
 
-    const ctor = PonentHelper.iterateTsPonent(tsPonent, [TsPonentType.ConstructorPonent]);
-    this.properties = PonentHelper.iterateTsPonent(tsPonent, [TsPonentType.PropertyPonent]);
-    this.methods = PonentHelper.iterateTsPonent(tsPonent, [TsPonentType.MethodPonent]);
-    this.ctor = ctor[0];
+    this.ctor = Array.isArray(ctor) ? ctor[0] : null;
+    this.properties = PonentHelper.filterTsPonentMembersByType(tsPonent, [TsPonentType.PropertyPonent]);
+    this.methods = PonentHelper.filterTsPonentMembersByType(tsPonent, [TsPonentType.MethodPonent]);
   }
 
   get ctorParameters(): TsPonent[] {
-    return PonentHelper.iterateTsPonent(this.ctor, [TsPonentType.ConstructorPonent, TsPonentType.ParameterPonent]);
+    return PonentHelper.filterTsPonentMembersByType(this.ctor, [TsPonentType.ConstructorPonent, TsPonentType.ParameterPonent]);
   }
 
 }

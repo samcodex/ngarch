@@ -1,0 +1,50 @@
+<div class="angular-cli-command">
+  <div class="version-bar">
+    <span>Cli Version:</span>
+    <mat-button-toggle-group>
+      <mat-button-toggle *ngFor="let version of versions" value="{{version}}"
+          [checked]="this.selectedVersion===version" (click)="changeVersion(version)">
+        {{version}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="command-bar">
+    <!-- <button class="cli-command-menu" mat-button [matMenuTriggerFor]="menu">
+        Angular Cli Commands
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngFor="let command of commands"
+        (click)="changeCommand(command)">ng {{command}}</button>
+    </mat-menu>
+    <span *ngIf="!!selectedCommand">ng {{selectedCommand}}</span> -->
+    <span>Command:</span>
+    <mat-button-toggle-group>
+      <mat-button-toggle *ngFor="let command of commands" value="{{command}}"
+          [checked]="this.selectedCommand===command" (click)="changeCommand(command)">
+        {{command}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="command-description">
+    <div class="cli-subtitle">Overview</div>
+    <div class="description-content">{{ currentOverview?.description }}</div>
+  </div>
+
+  <div class="command-details">
+    <hr>
+    <div>{{ currentOverview?.details }}</div>
+  </div>
+
+  <div class="cli-subtitle">Usage & Options:</div>
+
+  <div class="cli-panel">
+      <mat-accordion [multi]="true">
+      <arch-cli-command-panel *ngFor="let command of currentUsage?.commands; let index=index"
+        [command]="command" [expanded]="index===0">
+      </arch-cli-command-panel>
+    </mat-accordion>
+  </div>
+
+</div>

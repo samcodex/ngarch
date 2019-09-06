@@ -1,6 +1,7 @@
 
 
 <div class="ngx-flow-panel"
+  [ngClass]="{'expanded': isExpanded, 'collapsed': !isExpanded}"
   movable movableConstraint="{{constraintAreaId}}"
   mwlResizable
   [enableGhostResize]="true"
@@ -10,10 +11,12 @@
   <div class="ngx-flow-panel-header" movableHandle>
     <div class="ngx-panel-header-left-side"></div>
     <div class="ngx-panel-header-title">{{title}}</div>
-    <div class="ngx-panel-header-right-side"></div>
+    <div class="ngx-panel-header-right-side">
+      <i class="material-icons" (click)="toggleExpand()">{{expandIcon}}</i>
+    </div>
   </div>
-  <div class="ngx-flow-panel-body">
+  <div class="ngx-flow-panel-body" *ngIf="isExpanded">
     <ng-content></ng-content>
   </div>
-  <div class="ngx-flow-panel-footer"></div>
+  <div class="ngx-flow-panel-footer" *ngIf="isExpanded"></div>
 </div>

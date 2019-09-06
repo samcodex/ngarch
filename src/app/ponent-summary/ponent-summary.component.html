@@ -1,25 +1,17 @@
 <div class="ponent-summary-canvas">
 
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let group of archNgPonentGroups"
-        [expanded]="group.isBootstrapGroup">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{group.ngPonentName}}
-          <span class="flag-lazy-loading" *ngIf="!group.isBootstrapGroup">(Lazy Loading)</span>
-        </mat-panel-title>
-        <mat-panel-description>
-          {{group.fileName}}
-          <!-- <mat-icon>account_circle</mat-icon> -->
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+  <ng-container *ngFor="let section of summarySections">
+    <ng-container *ngIf="section && !section.isDisable">
+      <arch-summary-section class="summary-section-container" [section]="section" [defaultExpanded]="true">
+      </arch-summary-section>
+    </ng-container>
+  </ng-container>
 
-      <arch-summary-table-ngponent *ngFor='let archNgPonent of group.archNgPonents' [archNgPonent]="archNgPonent">
-      </arch-summary-table-ngponent>
+  <ng-container *ngFor="let detail of summaryDetail">
+    <ng-container *ngIf="detail && !detail.isDisable">
+      <arch-summary-section class="summary-detail-container" [section]="detail" [defaultExpanded]="false">
+      </arch-summary-section>
+    </ng-container>
+  </ng-container>
 
-      <mat-action-row>
-      </mat-action-row>
-    </mat-expansion-panel>
-
-  </mat-accordion>
 </div>

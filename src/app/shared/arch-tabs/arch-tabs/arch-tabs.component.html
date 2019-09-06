@@ -1,0 +1,18 @@
+<div class="tab-captions">
+  <ng-container *ngFor="let archTab of archTabs">
+    <div class="tab-caption {{ tabCaptionClass }}" *ngIf="!archTab.disabled" (click)="onSelectTab(archTab)"
+      [ngClass]="{'active': archTab.active, 'inactive': !archTab.active}">
+      {{archTab.caption}}
+    </div>
+
+    <div class="tab-caption disabled" *ngIf="archTab.disabled">
+      {{archTab.caption}}
+    </div>
+  </ng-container>
+</div>
+
+<ng-content *ngIf="!singlePanel" select="arch-tab"></ng-content>
+
+<div class="tabs-single-panel" *ngIf="singlePanel">
+  <ng-content></ng-content>
+</div>

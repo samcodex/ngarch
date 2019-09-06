@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>ngArch Helper</h1>
+
+<div mat-dialog-content class="helper-content">
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        Application Architecture
+      </mat-expansion-panel-header>
+
+        <div class="help-architecture-content">
+          <h3>1. Activity Diagram/Application Activity Diagram(Architecture View)</h3>
+          <p>Use <b>Application Activity Diagram</b> to illustrate the application activity and refer to the Route(s),
+            NgModules and Components involved in the execution of the views. It focuses on 1) <b>routes eager
+            and lazy loading flow</b> and 2)<b>view hierarchy</b>(Component's templates and views). It describes the
+            application activity from the app routes to the component views( component templates and its rendered components).</p>
+
+          <p>The activity diagram starts from one NgModule through its routes.
+            Then, shows component hierarchy base on component's template(showing what and how to render component's view)</p>
+
+          <h3>2. Service Dependency Diagram</h3>
+          <p>Uses service dependency injection tree to illustrate the service dependency relationships.</p>
+
+          <h3>3. Structure Diagram</h3>
+          Apply to:<i>(Application/NgModule Metadata/Component Template Render)</i>
+          <p>Showing the structure of NgModule and Component, exposing the whole/part relationship of NgModule and Component.</p>
+          <ul>
+            <li>Use NgModule's metadata to show what it includes and provides.</li>
+            <li>Use Component template to show the component's hierarchy</li>
+          </ul>
+          <p><b>Application Structure Diagram</b> starts from AppModule to show complete static application structure.</p>
+
+          <h3>4. Class Visualizer</h3>
+          Apply to:<i>(NgModuleComponentServiceDirectivePipe)</i>
+          <p>Showing the class metadata properties, constructor parameters, attributes and methods.</p>
+        </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<button class="close-button" mat-dialog-close mat-raised-button>Close</button>

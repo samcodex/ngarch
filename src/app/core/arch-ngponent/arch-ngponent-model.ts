@@ -1,4 +1,4 @@
-import { NgPonent, TsPonent, NgPonentType } from '../ngponent-tsponent';
+import { NgPonent, NgPonentType, TsPonent } from '../ngponent-tsponent';
 import { ArchNgPonent } from './arch-ngponent';
 
 export class ArchNgPonentModel extends ArchNgPonent {

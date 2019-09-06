@@ -1,0 +1,43 @@
+<div class="section-name">
+  Diagram Category:
+</div>
+<div class="option-category" *ngFor="let category of optionCategories | callback: filterCategoryForRelationship">
+  <div class="category-subtitle">{{ category.name }}</div>
+
+  <div class="category-item" *ngFor="let catItem of category.items | callback: filterUsedItem">
+
+    <div>
+      <mat-checkbox class="option-checkbox"
+        [value]="catItem.value" [disabled]="!!catItem.isDisabled" [checked]="catItem.isChecked"
+        (change)="onChangeOptionFilter(category, catItem)">{{catItem.name}}
+      </mat-checkbox>
+      <div class="sub-title">({{ catItem.subtitle }})</div>
+    </div>
+
+    <ul class="sub-details">
+      <li *ngFor="let detail of catItem.details">
+        {{ detail }}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<ng-container *ngIf="hasDiagramIncludingSection">
+  <div class="section-divider">
+    <hr>
+  </div>
+
+  <div class="section-name">
+    Diagram Including:
+  </div>
+  <div class="option-category" *ngFor="let category of optionCategories | callback: filterCategoryForNonRelationship">
+    <div class="category-subtitle">{{ category.name }}:</div>
+
+    <div class="option-inline" *ngFor="let catItem of category.items | callback: filterUsedItem">
+      <mat-checkbox class="option-checkbox"
+        [value]="catItem.value" [disabled]="!!catItem.isDisabled" [checked]="catItem.isChecked"
+        (change)="onChangeOptionFilter(category, catItem)">{{catItem.name}}
+      </mat-checkbox>
+    </div>
+  </div>
+</ng-container>

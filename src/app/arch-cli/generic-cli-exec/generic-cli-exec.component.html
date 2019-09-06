@@ -1,0 +1,20 @@
+<div class="page-content-panel">
+  <div class="page-main-title">Generic Cli Execution</div>
+
+  <div class="page-sub-title">Project Directory: {{projectConfig.root}}</div>
+
+  <div class="exec-command">
+    <input matInput placeholder="command" [(ngModel)]="command">
+  </div>
+  <mat-hint [align]="'start'">Try enter 'git log', etc.</mat-hint>
+
+  <div>
+    <button class="exec-button" mat-button (click)="executeCommand()">Submit</button>
+  </div>
+
+  <div class="exec-result">
+    <arch-loading-bar [loading]="isExecuting"></arch-loading-bar>
+    <pre>{{execResult}}</pre>
+  </div>
+
+</div>

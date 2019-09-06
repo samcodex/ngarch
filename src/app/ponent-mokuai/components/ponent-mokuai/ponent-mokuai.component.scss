@@ -1,0 +1,53 @@
+@import '_variables';
+
+:host {
+  margin-left: 4px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mokuai-tab-captions {
+  position: relative;
+  margin-top: 2px;
+  margin-left: 2px;
+  top: 1px;
+  display: inline-flex;
+}
+
+.mokuai-tab-caption {
+  display: inline-block;
+  padding: 5px 10px 4px 10px;
+  border-top: 1px gray solid;
+  border-left: 1px gray solid;
+  border-right: 1px gray solid;
+
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 14px;
+  color: $arch-blue-color;
+}
+
+.mokuai-tab-caption.active {
+  background: linear-gradient(to bottom, #a7c7dc 0%,#99d4fb 100%);
+  font-weight: 600;
+}
+
+.mokuai-tab-caption.inactive {
+  border-bottom: 1px lightgray solid;
+  background-color: #ecf6ff;
+  cursor: pointer;
+}
+
+.mokuai-tab-caption.disabled {
+  border-bottom: 1px lightgray solid;
+  background-color: #ececec;
+  cursor: default;
+  color: #b0b0b0;
+}
+
+.mokuai-workspace {
+  flex: 1;
+  border: 1px lightgray solid;
+  box-shadow: 3px 4px 12px -1px rgba(0,0,0,0.75);
+}

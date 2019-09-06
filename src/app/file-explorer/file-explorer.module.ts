@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TreeModule } from 'angular-tree-component';
 
-import { SharedModule } from './../shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { ExplorerCanvasComponent } from './explorer-canvas/explorer-canvas.component';
 import { FileExplorerComponent } from './file-explorer.component';
 import { ExplorerDockComponent } from './explorer-dock/explorer-dock.component';

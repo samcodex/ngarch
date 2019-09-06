@@ -1,0 +1,54 @@
+:host {
+  display: inline-block;
+  margin: 2px 4px 2px 2px;
+  font-size: 12px;
+
+  .option-name-container {
+    font-weight: bold;
+    color: steelblue;
+
+    .option-name {
+      // float: left;
+    }
+
+    .option-input {
+      display: inline-block;
+      // right: 20px;
+      // position: absolute;
+      margin-left: 20px;
+    }
+  }
+
+  .option-usage {
+    font-size: 13px;
+    color: gray;
+  }
+
+  .option-description {
+    font-size: 12px;
+    color: gray;
+  }
+
+  .option-container {
+    display: inline-block;
+    position: relative;
+  }
+
+  i {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .enabled-option {
+    cursor: pointer;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 #75c8ff;
+  }
+
+  .disabled-option {
+    cursor: default;
+    opacity: 0.7;
+  }
+}

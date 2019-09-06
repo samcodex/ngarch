@@ -1,0 +1,22 @@
+<ng-container [ngSwitch]="inputType">
+  <ng-container *ngSwitchCase="'CheckBox'">
+    <mat-checkbox (change)="onCheckBoolean($event)" (click)="$event.stopPropagation()"
+      [disabled]="disabled | async" [(ngModel)]="optionValue.inputValue">
+    </mat-checkbox>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'InputField'">
+    <input #inputOption placeholder="" [(ngModel)]="optionValue.inputValue"
+      [disabled]="disabled | async" (click)="$event.stopPropagation()">
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'Selection'">
+    <select placeholder="" [disabled]="disabled | async"
+      [(ngModel)]="optionValue.inputValue" (click)="$event.stopPropagation()">
+      <option *ngFor="let possible of optionValue.possibleValues" [value]="possible">
+        {{possible}}
+      </option>
+    </select>
+  </ng-container>
+
+</ng-container>

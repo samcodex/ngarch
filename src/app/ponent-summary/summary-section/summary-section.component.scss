@@ -1,0 +1,41 @@
+@import "variables";
+
+.mat-expansion-panel-header-title {
+  color: $app-blue-color;
+  flex-grow: 0;
+}
+
+div .mat-expansion-panel-body {
+  padding: 0px 0px 6px;
+}
+
+div .mat-list[dense] .mat-list-item .mat-list-item-content {
+  display: block;
+  padding-top: 5px;
+  word-break: break-word;
+}
+
+div .mat-list[dense] .mat-list-item.summary-list-item {
+  height: 100%;
+}
+
+div .list-item-divider {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+span.section-items-title {
+  margin-left: 0px;
+  font-size: small;
+  font-weight: 500;
+  color: $title-green-color;
+}
+
+.section-item-tooltip {
+  background: $warn-red-color;
+}
+
+.tooltip-icon {
+  font-size: 18px;
+  color: $warn-red-color;
+}

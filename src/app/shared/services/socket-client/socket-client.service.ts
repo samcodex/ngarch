@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as socketIo from 'socket.io-client';
 
-import { ArchConfigService } from './../arch-config/arch-config.service';
-import { ISocketClient } from './../../../core/models/socket-client.interface';
+import { ISocketClient } from '@core/models/socket-client.interface';
+import { ArchConfigService } from '../arch-config/arch-config.service';
 
 @Injectable()
 export class SocketClientService implements ISocketClient {

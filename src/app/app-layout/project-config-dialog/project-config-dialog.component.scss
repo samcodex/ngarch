@@ -1,0 +1,57 @@
+.dialog-content {
+  min-height: 80px;
+
+  & > mat-accordion > mat-expansion-panel {
+    box-shadow: none;
+  }
+
+  .application-folder-input {
+    padding-left: 0px;
+
+    mat-form-field {
+      color: black;
+    }
+  }
+
+  .app-folder-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .app-folder-container > * {
+    width: 100%;
+  }
+
+  .project-config-folders-input {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  mat-form-field {
+    margin-top: 14px;
+
+    .material-icons {
+      float: right;
+      margin-top: -24px;
+    }
+
+    .material-icons.None {
+      color: gray;
+    }
+
+    .material-icons.Passed {
+      color: green;
+    }
+
+    .material-icons.Failure {
+      color: red;
+    }
+  }
+}
+
+.mat-dialog-actions {
+  float: right;
+  padding-right: 35px;
+}

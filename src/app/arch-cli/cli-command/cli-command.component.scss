@@ -1,0 +1,61 @@
+.angular-cli-command {
+  margin-left:25px;
+  margin-top: 10px;
+  margin-right: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .cli-command-menu {
+    border: 1px solid lightgray;
+  }
+
+  .command-bar {
+    margin-bottom: 12px;
+
+    span {
+      float: left;
+      margin-top: 8px;
+      margin-right: 10px;
+      width: 80px;
+    }
+
+    mat-chip-list {
+      float: left;
+    }
+  }
+
+  .version-bar {
+    margin-bottom: 12px;
+
+    span {
+      float: left;
+      margin-top: 8px;
+      margin-right: 10px;
+      width: 80px;
+    }
+
+    mat-chip-list {
+      float: left;
+    }
+  }
+
+  .command-description {
+    .description-content {
+
+    }
+  }
+
+  .command-details {
+    margin-bottom: 15px;
+  }
+
+  .cli-subtitle {
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .cli-panel {
+    overflow-y: auto;
+  }
+}

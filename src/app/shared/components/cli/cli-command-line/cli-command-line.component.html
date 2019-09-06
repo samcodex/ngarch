@@ -1,0 +1,13 @@
+<span class="ng-element-name" *ngIf="command.template">
+  {{command.template | titlecase}}:
+</span>
+<div class="enter-command" (click)="stopExpand($event)">
+  <span matPrefix>{{getCommandPart()}} </span>
+  <!-- <mat-form-field *ngIf="hasOperandPart"> -->
+    <input #inputOperand class="command-operand" *ngIf="hasOperandPart" [(ngModel)]="command.operand.name"
+      matInput [placeholder]="getOperandInput()">
+  <!-- </mat-form-field> -->
+  <span matSuffix> {{getOptionsPart()}}</span>
+  <button mat-flat-button class="apply-command-button" matTooltip="Apply command"
+    (click)="onApply($event)" [disabled]="!command.allowExecute">Apply</button>
+</div>

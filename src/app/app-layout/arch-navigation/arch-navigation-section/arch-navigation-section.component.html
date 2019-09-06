@@ -1,0 +1,9 @@
+<ng-container *ngFor="let item of items">
+  <div [ngClass]="{ active: item.isSelected, inactive: !item.isSelected}"
+    class="navigation-item" (click)="selectItem(item)" [title]="item.title"
+    *ngIf="item.isPlaceHolder !== true">
+    <span>
+      {{item.name}}
+    </span>
+  </div>
+</ng-container>

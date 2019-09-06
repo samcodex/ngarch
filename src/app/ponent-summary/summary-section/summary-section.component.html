@@ -1,0 +1,36 @@
+<mat-accordion [hideToggle]="true">
+  <mat-expansion-panel [expanded]="defaultExpanded">
+    <mat-expansion-panel-header expandedHeight="42px">
+
+      <mat-panel-title>
+        {{section.title}}
+      </mat-panel-title>
+
+      <mat-panel-description *ngIf="section.description">
+        ({{section.description}})
+      </mat-panel-description>
+
+    </mat-expansion-panel-header>
+
+    <arch-name-value-list *ngIf="section.details && section.details.length"
+      [nameValues]="section.details">
+
+      <ng-container *ngFor="let item of section.items; let i = index">
+        <mat-divider class="list-item-divider"></mat-divider>
+
+        <mat-list-item class="summary-list-item"
+          matTooltip="{{ item.options.tooltip }}" matTooltipPosition="above"
+          matTooltipClass="section-item-tooltip">
+          <span class="section-items-title">{{item.options.title}}</span>
+          <i *ngIf="item.options.tooltip" class="material-icons tooltip-icon">info</i>
+          <span *ngFor="let val of item.value; let j = index">
+            <ng-container *ngIf="j > 0">,</ng-container>
+            {{val.name}}
+          </span>
+        </mat-list-item>
+      </ng-container>
+
+    </arch-name-value-list>
+
+  </mat-expansion-panel>
+</mat-accordion>

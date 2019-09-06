@@ -1,18 +1,24 @@
-import { Observable } from 'rxjs/Observable';
-import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
-import { Subject } from 'rxjs/Subject';
-
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/publishReplay';
-import 'rxjs/add/observable/never';
-import { IReloadable } from './reloadable.interface';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { Pausable } from '@core/pausable';
 import { ArchConfigService } from '../services/arch-config/arch-config.service';
 import { ReloadRegisterService } from './reload-register.service';
-import { Pausable } from '../../core/pausable';
+import { IReloadable } from './reloadable.interface';
 
-export abstract class Reloadable extends Pausable implements IReloadable {
+/**
+ * Should use RestService instead extends this class
+ *
+ * @export
+ * @abstract
+ * @class Reloadable
+ * @extends {Pausable}
+ * @implements {IReloadable}
+ */
+export abstract class Reloadable<T> extends Pausable<T> implements IReloadable {
   protected http: HttpClient;
+
+  // This property is for the derived class
   protected archConfig: ArchConfigService;
   protected reloadRegister: ReloadRegisterService;
 

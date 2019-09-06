@@ -1,11 +1,11 @@
-import { NgPonentType } from './../ngponent-tsponent/ngponent-definition';
-import { TsPonent } from './../ngponent-tsponent/tsponent';
-import { NgPonent } from './../ngponent-tsponent/ngponent';
-import { ArchNgPonent } from './../arch-ngponent/arch-ngponent';
-import { IArchNgPonentMetadata } from './../arch-ngponent/arch-ngponent-metadata-interface';
+import { RelationshipType } from '../arch-relationship';
+import { NgPonent } from '../ngponent-tsponent/ngponent';
+import { NgPonentType } from '../ngponent-tsponent/ngponent-definition';
+import { TsPonent } from '../ngponent-tsponent/tsponent';
+import { ArchNgPonent } from './arch-ngponent';
+import { ArchNgPonentMetadata, ArchNgPonentMetadataKeys } from './arch-ngponent-metadata';
 
-
-export class NgComponentMetadata implements IArchNgPonentMetadata {
+export class NgComponentMetadata extends ArchNgPonentMetadata {
   ngPonentType: NgPonentType = NgPonentType.Component;
   properties = ['changeDetection', 'viewProviders', 'moduleId',
     'templateUrl', 'template', 'styleUrls', 'styles', 'animations',
@@ -13,25 +13,27 @@ export class NgComponentMetadata implements IArchNgPonentMetadata {
     'selector', 'inputs', 'outputs', 'host', 'providers', 'exportAs', 'queries'];
   usedProperties = [];
 
-  changeDetection?: number | string;
-  viewProviders?: any[];
-  moduleId?: string;
-  templateUrl?: string;
-  template?: string;
-  styleUrls?: string[];
-  styles?: string[];
-  animations?: any[];
-  encapsulation?: number | string;
-  interpolation?: [string, string];
-  entryComponents?: Array<Array<any> | any[]>;
-  preserveWhitespaces?: boolean;
-  selector?: string;
-  inputs?: string[];
-  outputs?: string[];
-  host?: {[key: string]: string};
-  providers?: any[];
-  exportAs?: string;
-  queries?: {[key: string]: any};
+  metadata: {
+    changeDetection?: number | string,
+    viewProviders?: any[],
+    moduleId?: string,
+    templateUrl?: string,
+    template?: string,
+    styleUrls?: string[],
+    styles?: string[],
+    animations?: any[],
+    encapsulation?: number | string,
+    interpolation?: [string, string],
+    entryComponents?: Array<Array<any> | any[]>,
+    preserveWhitespaces?: boolean,
+    selector?: string,
+    inputs?: string[],
+    outputs?: string[],
+    host?: {[key: string]: string},
+    providers?: any[],
+    exportAs?: string,
+    queries?: {[key: string]: any}
+  };
 
   descriptions = {
       changeDetection: 'change detection strategy used by this component',
@@ -53,6 +55,14 @@ export class NgComponentMetadata implements IArchNgPonentMetadata {
       'providers': 'list of providers available to this component and its children',
       'exportAs': 'name under which the component instance is exported in a template',
       'queries': 'configure queries that can be injected into the component',
+  };
+
+  relationships = {
+    entryComponents: RelationshipType.Composite,
+    providers: RelationshipType.Aggregation,
+    viewProviders: RelationshipType.Aggregation,
+    [ ArchNgPonentMetadataKeys.Ctor ]: RelationshipType.Dependency,
+    [ ArchNgPonentMetadataKeys.Template ]: RelationshipType.Dependency
   };
 }
 

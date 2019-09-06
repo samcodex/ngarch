@@ -1,24 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
-import { ArchNgPonentStore, ArchNgPonentLoadingGroup } from './../shared/services/arch-ngponent-store';
+import { SummarySection, SummaryDetailCategories, SummaryAppCategories } from './models/ponent-summary.model';
+import { PonentSummaryService } from './services/ponent-summary.service';
 
 @Component({
   selector: 'arch-ponent-summary',
   templateUrl: './ponent-summary.component.html',
   styleUrls: ['./ponent-summary.component.scss']
 })
-export class PonentSummaryComponent implements OnInit {
+export class PonentSummaryComponent implements OnInit, OnDestroy {
 
-  archNgPonentGroups: ArchNgPonentLoadingGroup[] = [];
+  summarySections: SummarySection[] = [];
+  summaryDetail: SummarySection[] = [];
 
   constructor(
-    private store: ArchNgPonentStore,
+    private summaryService: PonentSummaryService
   ) { }
 
   ngOnInit() {
-    this.store.getPonentsGroupByLoadingModule().subscribe(data => {
-      this.archNgPonentGroups = data;
-    });
+    this.summaryService.getSummaryData()
+      .pipe(
+        takeUntilNgDestroy(this)
+      )
+      .subscribe(data => {
+        this.summarySections = data.filter(summary => SummaryAppCategories.includes(summary.category));
+        this.summaryDetail = data.filter(summary => SummaryDetailCategories.includes(summary.category));
+      });
   }
 
+  ngOnDestroy() {}
 }

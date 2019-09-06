@@ -1,45 +1,73 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkTreeModule } from '@angular/cdk/tree';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkTableModule} from '@angular/cdk/table';
-import { MatSidenavModule,
-  MatCheckboxModule,
-  MatFormFieldModule,
-  MatInputModule,
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MatAutocompleteModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
   MatNativeDateModule,
-  MatDialogModule
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatStepperModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatTreeModule,
 } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { ToastrModule } from 'ngx-toastr';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-import { SharedModule } from './shared/shared.module';
-
+import { AppHeaderComponent } from './app-layout/app-header/app-header.component';
+import { ArchHeaderComponent } from './app-layout/arch-header/arch-header.component';
+import { ArchNavigationSectionComponent } from './app-layout/arch-navigation/arch-navigation-section/arch-navigation-section.component';
+import { ArchNavigationComponent } from './app-layout/arch-navigation/arch-navigation.component';
+import { ProjectConfigDialogComponent } from './app-layout/project-config-dialog/project-config-dialog.component';
+import { ProjectLoaderOverlayComponent } from './app-layout/project-loader-overlay/project-loader-overlay.component';
+import { WelcomePageComponent } from './app-layout/welcome-page/welcome-page.component';
 import { ArchRoutingModule } from './arch-routing.module';
-
 import { ArchComponent } from './arch.component';
-import { ArchHeaderComponent } from './arch-header/arch-header.component';
-import { AppHeaderComponent } from './app-header/app-header.component';
-import { ArchNavigationComponent } from './arch-navigation/arch-navigation.component';
-import { ProjectConfigDialogComponent } from './project-config-dialog/project-config-dialog.component';
-import { ProjectLoaderOverlayComponent } from './project-loader-overlay/project-loader-overlay.component';
-import { ArchNgPonentStore } from './shared/services/arch-ngponent-store';
-import { PonentLoaderService } from './shared/services/ponent-loader/ponent-loader.service';
-import { ProjectInfoService } from './shared/services/project-info/project-info.service';
-import { SocketClientService } from './shared/services/socket-client/socket-client.service';
-import { WebSocketClientService } from './shared/services/web-socket-client/web-socket-client.service';
-import { SocketHandlerService } from './shared/services/socket-handler/socket-handler.service';
-import { AppStateService } from './shared/services/app-state/app-state.service';
-import { ArchConfigService } from './shared/services/arch-config/arch-config.service';
-import { ProjectFilesService } from './shared/services/project-files/project-files.service';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { ProjectProfileService } from './shared/project-profile';
 import { ReloadRegisterService } from './shared/reloadable/reload-register.service';
+import { ArchConfigService } from './shared/services/arch-config/arch-config.service';
 import { CenterControllerService } from './shared/services/center-controller/center-controller.service';
 import { RestService } from './shared/services/rest/rest.service';
+import { SocketClientService } from './shared/services/socket-client/socket-client.service';
+import { SocketHandlerService } from './shared/services/socket-handler/socket-handler.service';
+import { WebSocketClientService } from './shared/services/web-socket-client/web-socket-client.service';
+import { SharedModule } from './shared/shared.module';
+import { ArchHelpComponent } from './app-layout/arch-help/arch-help.component';
+import { ArchNgPonentStore } from '@shared/arch-ngponent-store/arch-ngponent-store';
+import { WINDOW_PROVIDERS } from './arch.env';
 
 @NgModule({
   declarations: [
@@ -49,19 +77,52 @@ import { RestService } from './shared/services/rest/rest.service';
     ArchNavigationComponent,
     ProjectConfigDialogComponent,
     ProjectLoaderOverlayComponent,
+    WelcomePageComponent,
+    ArchNavigationSectionComponent,
+    ArchHelpComponent
   ],
   entryComponents: [
-    ProjectConfigDialogComponent
+    ProjectConfigDialogComponent,
+    ArchHelpComponent
   ],
   imports: [
-    MatSidenavModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule,
+    CdkTableModule,
+    CdkTreeModule,
+    MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
-    MatNativeDateModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatStepperModule,
+    MatDatepickerModule,
     MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatTreeModule,
 
     BrowserModule,
     BrowserAnimationsModule,
@@ -69,26 +130,28 @@ import { RestService } from './shared/services/rest/rest.service';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    ToastrModule.forRoot({
+      iconClasses: { info: 'arch-toast-tips' },
+      preventDuplicates: true
+    }),
 
     SharedModule.forRoot(),
 
-    ArchRoutingModule
+    ArchRoutingModule,
+    DashboardModule
   ],
   providers: [
+    localStorageProviders({prefix: 'ngarch'}),
+    WINDOW_PROVIDERS,
     SocketClientService,
     WebSocketClientService,
     SocketHandlerService,
-
-    AppStateService,
-    PonentLoaderService,
-
-    ArchNgPonentStore,
-    ProjectInfoService,
     ArchConfigService,
-    ProjectFilesService,
     ReloadRegisterService,
     CenterControllerService,
-    RestService
+    RestService,
+    ProjectProfileService,
+    ArchNgPonentStore
   ],
   bootstrap: [ArchComponent]
 })

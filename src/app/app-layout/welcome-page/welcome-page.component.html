@@ -1,0 +1,25 @@
+<div class="welcome-container">
+
+</div>
+
+<ng-template [ngIf]="isServerError" [ngIfElse]="need_config">
+  <div class="server-message">
+    <i class="material-icons">error_outline</i>
+    Cannot connect to server!
+  </div>
+</ng-template>
+
+<ng-template #need_config>
+  <div class="config-message">
+    Please config the Angular application
+  </div>
+
+  <img class="config-arrow" src="./../../assets/arrow.png"/>
+
+
+  <div class="welcome-content">
+    <img src="./../../assets/welcome_background_800.png"/>
+
+    <p class="diagram-title">NgArch Components, Services, Models Diagram</p>
+  </div>
+</ng-template>

@@ -1,14 +1,22 @@
-import { NgPonentType } from './../ngponent-tsponent/ngponent-definition';
-import { TsPonent } from './../ngponent-tsponent/tsponent';
-import { NgPonent } from './../ngponent-tsponent/ngponent';
-import { ArchNgPonent } from './../arch-ngponent/arch-ngponent';
-import { IArchNgPonentMetadata } from './../arch-ngponent/arch-ngponent-metadata-interface';
+import { RelationshipType } from '../arch-relationship';
+import { NgPonent } from '../ngponent-tsponent/ngponent';
+import { NgPonentType } from '../ngponent-tsponent/ngponent-definition';
+import { TsPonent } from '../ngponent-tsponent/tsponent';
+import { ArchNgPonent } from './arch-ngponent';
+import { ArchNgPonentMetadata, ArchNgPonentMetadataKeys } from './arch-ngponent-metadata';
 
 
-export class NgInjectableMetadata implements IArchNgPonentMetadata {
+export class NgInjectableMetadata extends ArchNgPonentMetadata {
   ngPonentType: NgPonentType = NgPonentType.Injectable;
   properties = [];
+
   usedProperties = [];
+  metadata: null;
+  descriptions = null;
+
+  relationships = {
+    [ArchNgPonentMetadataKeys.Ctor]: RelationshipType.Dependency
+  };
 }
 
 export class ArchNgPonentInjectable extends ArchNgPonent {

@@ -1,0 +1,20 @@
+<div class="option-container">
+  <mat-card (click)="option.disabled ? false: select($event)"
+      [ngClass]="{'enabled-option': !option.disabled, 'disabled-option': option.disabled}">
+    <div class="option-name-container">
+      <span class="option-name">{{option.option}}</span>
+
+      <span class="option-input" *ngIf="!option.disabled">
+        <arch-cli-option-input [disabled]="disabledObservable" [optionValue]="option.optionValue"></arch-cli-option-input>
+      </span>
+    </div>
+    <div class="option-usage">--{{option.option}}
+      <span class="option-alias" *ngIf="option.alias">
+        (alias: -{{option.alias}})
+      </span>
+    </div>
+    <div class="option-description">{{option.description}}</div>
+  </mat-card>
+
+  <i class="material-icons" *ngIf="isChecked">check</i>
+</div>

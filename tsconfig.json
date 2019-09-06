@@ -1,10 +1,7 @@
 {
   "compileOnSave": false,
-  "include": [
-    "src",
-    "src/node_modules"
-  ],
   "compilerOptions": {
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -18,6 +15,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@core/*": ["app/core/*"],
+      "@config/*": ["app/config/*"],
+      "@shared/*": ["app/shared/*"],
+      "@util/*": ["app/util/*"],
+      "@ponent-mokuai/*": ["app/ponent-mokuai/*"],
+      "@features/*": ["app/features/*"]
+    }
   }
 }

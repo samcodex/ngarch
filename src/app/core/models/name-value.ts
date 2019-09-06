@@ -1,9 +1,9 @@
-export class NameValue {
+export class NameValue<T = string, S = null> {
   name: string;
-  value: any;
-  options?: any;
+  value: T;
+  options?: S;
 
-  constructor(name: string, value: any, options?: any) {
+  constructor(name: string, value: T, options?: S) {
     this.name = name;
     this.value = value;
     this.options = options;

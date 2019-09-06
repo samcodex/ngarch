@@ -1,0 +1,17 @@
+<div>
+  <span class="thumbnail-icon" (click)="expand()">
+    <i *ngIf="!expanded" class="material-icons">chevron_right</i>
+    <i *ngIf="expanded" class="material-icons">expand_more</i>
+  </span>
+</div>
+
+<div>
+  <div class="dropdown-thumbnail" (click)="expand()">
+    <div class="thumbnail-content" #dropdownThumbnail></div>
+  </div>
+
+  <div #dropdownSelection
+    class="dropdown-selection"
+    [@toggleDrapdown]="expanded ? 'expanded' : 'collapsed'">
+  </div>
+</div>

@@ -1,31 +1,33 @@
-import { Injectable } from '@angular/core';
-import * as path from 'path';
+import { Injectable, Inject } from '@angular/core';
 
-import { ProjectConfig } from '../../../core/models/project-config';
+import { ArchEndPoint } from '../../../config/end-point-definition';
+import { ProjectConfig } from '../../project-profile';
+import { WINDOW } from 'app/arch.env';
 
+export enum Protocol {
+  Http = 'http',
+  WebSocket = 'ws'
+}
+
+const defaultPort = '3000';
 // root: "../ngarch/",
-//   app: "../ngarch/src/app/",
-//   main: "../ngarch/src/main.ts"
+// app: "../ngarch/src/",
+// main: "../ngarch/src/main.ts"
 
 @Injectable()
 export class ArchConfigService {
 
-  hostname: string;
-  port: string;
+  private hostname: string;
+  private port: string;
 
-  projectConfig: ProjectConfig;
+  private projectConfig: ProjectConfig;
 
-  endPoints: {[key: string]: string} = {
-    [ArchEndPoints.NgArch]: 'ngarch',
-    [ArchEndPoints.ProjectConfig]: 'project-config',
-    [ArchEndPoints.ProjectFiles]: 'project-files',
-    [ArchEndPoints.ProjectInfo]: 'project-info'
-  };
-
-  constructor() {
+  constructor(
+    @Inject(WINDOW) private window: Window
+  ) {
     // this.projectConfig.root = '';
     this.hostname = 'localhost';
-    this.port = '3000';
+    this.port = defaultPort; // this.window.location.port || defaultPort;
   }
 
   get domain(): string {
@@ -36,19 +38,11 @@ export class ArchConfigService {
     return protocol + '://' + this.domain;
   }
 
-  getEndPoint(name: ArchEndPoints): string {
-    return this.getDomainUrl() + '/api/' +  this.endPoints[name];
+  getEndPoint(endPoint: ArchEndPoint): string {
+    return this.getDomainUrl() + '/api/' +  endPoint.path;
   }
-}
 
-export enum ArchEndPoints {
-  NgArch = 'NgArch',
-  ProjectConfig = 'ProjectConfig',
-  ProjectFiles = 'ProjectFiles',
-  ProjectInfo = 'ProjectInfo'
-}
-
-export enum Protocol {
-  Http = 'http',
-  WebSocket = 'ws'
+  changePort(port: string) {
+    this.port = port;
+  }
 }

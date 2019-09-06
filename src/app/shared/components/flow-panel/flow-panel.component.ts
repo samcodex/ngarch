@@ -11,6 +11,7 @@ import { ResizeEvent } from 'angular-resizable-element';
 export class FlowPanelComponent implements OnInit {
   @Input() title: string;
   @Input() constraintAreaId: string;
+  isExpanded = true;
 
   constructor(
     private elementRef: ElementRef,
@@ -21,6 +22,14 @@ export class FlowPanelComponent implements OnInit {
   }
 
   onResizeEnd(event: ResizeEvent): void {
-    console.log('Element was resized', event);
+    // console.log('Element was resized', event);
+  }
+
+  get expandIcon(): string {
+    return this.isExpanded ? 'expand_less' : 'expand_more';
+  }
+
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
   }
 }

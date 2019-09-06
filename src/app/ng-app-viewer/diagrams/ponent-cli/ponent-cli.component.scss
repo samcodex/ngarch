@@ -1,0 +1,44 @@
+.cli-command-execution {
+  z-index: 1;
+  top: 68px;
+  left: 20px;
+  position: absolute;
+
+  arch-cli-command-line {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
+.cli-commands-dropdown {
+  z-index: 10;
+  position: absolute;
+  top: 14px;
+}
+
+.command-option {
+  font-size: 12px;
+}
+
+.command-thumbnail {
+  font-size: 12px;
+  background-color: gainsboro;
+  width: 100%;
+  padding: 5px 10px;
+}
+
+.command-description {
+  color: gray;
+}
+
+.thumbnail-command-line, .option-command-line {
+  color: steelblue;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.tip-option-card {
+  font-size: 10px;
+  color: gray;
+  margin-bottom: 10px;
+}

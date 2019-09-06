@@ -4,7 +4,7 @@
   height: 100%;
 
   #arch-navigation {
-    width: 100px;
+    width: $app-navigation-width;
     overflow-y: auto;
     overflow-x: hidden;
     box-shadow: 2px 0px 6px #a6a6a7;
@@ -20,16 +20,21 @@
   }
 
   #arch-content {
-    margin-left: 16px;
+    margin-left: $app-navigation-divider-width;
+    height: 100%;
   }
 
   .expander-bar {
     height: 100%;
-    width: 15px;
+    width: $app-navigation-divider-width;
     position: absolute;
     top: 0px;
     left: 0px;
-    background-color: #dee0e1;
+    background: rgb(238,238,238); /* Old browsers */
+    background: -moz-linear-gradient(left, rgba(204,204,204,1) 0%, rgba(238,238,238,1) 50%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(204,204,204,1) 0%, rgba(238,238,238,1) 50%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(204,204,204,1) 0%,rgba(238,238,238,1) 50%, rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    box-shadow: 3px 0px 12px -1px rgba(0,0,0,0.75);
   }
 
   .navigation-expand-icon {
@@ -38,25 +43,27 @@
     margin-top: 50px;
   }
 
-  // .arch-navigation-drop-area {
-  //   width: 50px;
-  //   height: 100%;
-  //   position: absolute;
-  // }
-
   .arch-app-body {
-    flex: 30;
+    flex: 1;
   }
 }
 
-arch-arch-header {
-  flex: 1;
+arch-header {
+  height: $arch-header-height;
 }
 
 arch-app-header {
-  flex: 1;
+  height: $app-header-height;
 }
 
-arch-project-loader-overlay {
+arch-dashboard {
+  position: absolute;
+  top: 85px;
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+}
 
+#arch-content-container {
+  overflow: hidden;
 }

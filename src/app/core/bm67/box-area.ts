@@ -199,14 +199,14 @@ export function BoxArea(settings) {
     // Adds a box by finding a space to fit.
     // returns true if the box has been added
     // returns false if there was no room.
-    this.fitBox = function(box){
+    this.fitBox = function(box) {
         if (boxes.length === 0) { // first box can go in top left
             box.x = space;
             box.y = space;
             boxes.push(box);
             const sb = spaceBoxes.pop();
             spaceBoxes.push(...cutBox(sb, box));
-        }else {
+        } else {
             const bf = findBestFitBox(box); // get the best fit space
             if (bf !== undefined) {
                 const sb = spaceBoxes.splice(bf, 1)[0]; // remove the best fit spacer
@@ -227,7 +227,7 @@ export function BoxArea(settings) {
 
     // Adds a box at location box.x, box.y
     // does not check if it can fit or for overlap.
-    this.placeBox = function(box){
+    this.placeBox = function(box) {
         boxes.push(box); // add the box
         const tb = getTouching(box);  // find all touching spacer boxes
         while (tb.length > 0) {       // and slice them if needed
@@ -236,16 +236,16 @@ export function BoxArea(settings) {
     };
 
     // returns a copy of the spacer array
-    this.getSpacers = function(){
+    this.getSpacers = function() {
         return [...spaceBoxes];
     };
 
-    this.isFull = function(){
+    this.isFull = function() {
         return spaceBoxes.length === 0;
     };
 
     // resets boxes
-    this.reset = function(){
+    this.reset = function() {
         boxes.length = 0;
         spaceBoxes.length = 0;
         spaceBoxes.push({

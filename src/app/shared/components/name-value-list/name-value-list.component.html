@@ -1,0 +1,11 @@
+<div class="name-value-list">
+  <mat-list dense>
+    <ng-container *ngFor="let item of nameValues">
+      <mat-divider class="list-item-divider"></mat-divider>
+      <mat-list-item class="list-item" > {{item.value}} </mat-list-item>
+    </ng-container>
+
+    <ng-content></ng-content>
+
+  </mat-list>
+</div>

@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  margin-left: 15px;
+  padding-bottom: 3px;
+}
+
+.section-name {
+  font-size: 16px;
+}
+
+.section-divider {
+  margin-top: 18px;
+}
+
+.option-category {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.category-subtitle {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.option-checkbox {
+  font-size: 12px;
+  margin-right: 5px;
+
+  ::ng-deep .mat-checkbox-frame, ::ng-deep .mat-radio-outer-circle, ::ng-deep .mat-radio-inner-circle {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::ng-deep .mat-checkbox-inner-container, ::ng-deep .mat-radio-container {
+    height: 12px;
+    width: 12px;
+
+    margin-right: 2px;
+    margin-left: 8px;
+  }
+}
+
+.category-item {
+  display: inline-block;
+
+  div {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .sub-details {
+    font-size: 11px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    padding-inline-start: 20px;
+  }
+
+  .sub-details li {
+    word-break: break-word;
+  }
+
+  .sub-details li:first-child {
+    list-style: none;
+    font-weight: 600;
+  }
+
+  .sub-title {
+    font-size: 11px;
+  }
+}

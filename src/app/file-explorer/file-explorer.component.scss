@@ -4,9 +4,11 @@ mat-sidenav-container#explorer-sidenav-container {
   height: 100%;
   border: 1px gray solid;
   display: flex;
+  position: absolute;
 
   mat-sidenav {
     border: 1px gray solid;
+    overflow: hidden;
   }
 }
 
@@ -17,10 +19,6 @@ mat-sidenav-content#explorer-sidenav-content {
 arch-explorer-dock {
   padding-top: 30px;
 }
-// arch-viewer-header {
-//   flex: 1;
-// }
-
 // arch-explorer-canvas {
 //   flex: 30;
 // }
@@ -28,3 +26,10 @@ arch-explorer-dock {
 // arch-viewer-terminal {
 //   flex: 3;
 // }
+
+#svg-board {
+  overflow: auto;
+  // position: relative;
+  height: 100%;
+  width: 100%;
+}

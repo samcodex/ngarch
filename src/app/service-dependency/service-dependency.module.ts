@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ServiceDependencyComponent } from './service-dependency/service-dependency.component';
-import { SharedModule } from './../shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { ServiceDependencyDataService } from './services/service-dependency-data.service';
 
 const routes: Routes = [

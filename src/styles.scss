@@ -1,5 +1,6 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~angular-tree-component/dist/angular-tree-component.css';
+@import '~ngx-toastr/toastr.css';
 
 @import 'variables';
 @import 'mixins';
@@ -11,4 +12,12 @@ html, body {
 
 body {
   margin: 0px 0px 0px 0px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+
+.arch-toast-tips {
+  background-color: #8a8a8a;
+  width: none;
+  padding: 20px 20px 20px 50px;
+  border-radius: none;
 }

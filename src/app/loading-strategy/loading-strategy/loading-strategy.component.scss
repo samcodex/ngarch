@@ -1,0 +1,17 @@
+.loading-strategy-canvas {
+  height: 100%;
+  padding: 20px 30px;
+  overflow-y: scroll;
+
+  .flag-lazy-loading {
+    padding-left: 20px;
+  }
+
+  .ponent-filename {
+    font-size: 12px;
+  }
+
+  .mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+    flex-grow: unset;
+  }
+}

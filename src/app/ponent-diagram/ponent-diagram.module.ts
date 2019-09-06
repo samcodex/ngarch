@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule, MatSelectModule, MatTooltipModule } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
-import { MatFormFieldModule, MatSelectModule } from '@angular/material';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { PonentDiagramComponent } from './ponent-diagram.component';
-import { SharedModule } from '../shared/shared.module';
-import { ModuleNgponentSelectorComponent } from './module-ngponent-selector/module-ngponent-selector.component';
-import { PonentDiagramDataService } from './data-service/ponent-diagram-data.service';
+import { DiagramOrganizer } from '../core/diagram/diagram-organizer';
 import { FlowPanelModule } from '../shared/components/flow-panel/flow-panel.module';
-import { PonentDiagramPanelToolBarComponent } from './ponent-diagram-panel-tool-bar/ponent-diagram-panel-tool-bar.component';
+import { SharedModule } from '../shared/shared.module';
+import { PonentDiagramDataService } from './data-service/ponent-diagram-data.service';
+import { PonentDiagramComponent } from './ponent-diagram.component';
 
 const routes: Routes = [
   {
@@ -27,18 +27,16 @@ const routes: Routes = [
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    FlowPanelModule
+    FlowPanelModule,
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   declarations: [
-    PonentDiagramComponent,
-    ModuleNgponentSelectorComponent,
-    PonentDiagramPanelToolBarComponent
-  ],
-  entryComponents: [
-    ModuleNgponentSelectorComponent
+    PonentDiagramComponent
   ],
   providers: [
-    PonentDiagramDataService
+    PonentDiagramDataService,
+    DiagramOrganizer
   ]
 })
 export class PonentDiagramModule { }

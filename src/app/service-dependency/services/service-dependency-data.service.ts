@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ArchNgPonentStore } from './../../shared/services/arch-ngponent-store/arch-ngponent-store';
+import { ArchNgPonentStore } from '../../shared/arch-ngponent-store';
 
 @Injectable()
 export class ServiceDependencyDataService {
@@ -9,6 +9,6 @@ export class ServiceDependencyDataService {
   ) { }
 
   getAllServices() {
-    return this.store.getAllServiceNgPonents();
+    return this.store.getAllServicesFromModuleTypePonents();
   }
 }

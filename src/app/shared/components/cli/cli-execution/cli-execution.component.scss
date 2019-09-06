@@ -1,0 +1,25 @@
+:host {
+  .mat-dialog-title {
+    margin-bottom: 0px;
+  }
+}
+
+.exec-button {
+  margin-left: 10px;
+  line-height: 20px;
+  background-color: #3cb0fd;
+}
+
+.exec-command {
+  color: steelblue;
+  white-space: break-word;
+  margin-left: 5px;
+  padding: 4px 10px;
+}
+
+.exec-result {
+  height: 415px;
+  border: 1px gray dotted;
+  padding: 0px 5px;
+  overflow-y: auto;
+}

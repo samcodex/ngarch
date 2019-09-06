@@ -1,0 +1,96 @@
+.angular-cli-usage {
+  margin-left:25px;
+  margin-top: 10px;
+  margin-right: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .cli-command-menu {
+    border: 1px solid lightgray;
+  }
+
+  .command-bar {
+    margin-bottom: 12px;
+
+    span {
+      float: left;
+      margin-top: 8px;
+      margin-right: 10px;
+      width: 80px;
+    }
+
+    mat-chip-list {
+      float: left;
+    }
+  }
+
+  .version-bar {
+    margin-bottom: 12px;
+
+    span {
+      float: left;
+      margin-top: 8px;
+      margin-right: 10px;
+      width: 80px;
+    }
+
+    mat-chip-list {
+      float: left;
+    }
+
+    .version-description {
+      margin-left: 20px;
+    }
+  }
+
+  .command-description {
+    .description-content {
+
+    }
+  }
+
+  .command-details {
+    margin-bottom: 15px;
+  }
+
+  .cli-subtitle {
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .sample-command {
+    font-weight: bold;
+    color: steelblue;
+    white-space: nowrap;
+  }
+
+  .mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+    flex-grow: unset;
+  }
+
+  .cli-panel {
+    overflow-y: auto;
+  }
+}
+
+.flow-card {
+  display: inline-block;
+  margin: 2px 4px 2px 2px;
+
+  .option-name {
+    font-weight: bold;
+    color: steelblue;
+    font-size: 12px;
+  }
+
+  .option-usage {
+    font-size: 13px;
+    color: gray;
+  }
+
+  .option-description {
+    font-size: 12px;
+    color: gray;
+  }
+}

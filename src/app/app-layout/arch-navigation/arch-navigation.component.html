@@ -1,0 +1,14 @@
+<mat-accordion id="arch-side-navigation-accordion">
+
+  <mat-expansion-panel [expanded]="section.isExpanded" hideToggle="true"
+      *ngFor="let section of navigationSections">
+    <mat-expansion-panel-header expandedHeight="32px" collapsedHeight="32px">
+      <div mat-panel-title class="arch-side-navigation-title">
+        {{ section.title }}
+      </div>
+    </mat-expansion-panel-header>
+
+    <arch-navigation-section [items]="section.children"></arch-navigation-section>
+  </mat-expansion-panel>
+
+</mat-accordion>

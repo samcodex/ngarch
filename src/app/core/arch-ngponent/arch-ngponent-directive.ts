@@ -1,22 +1,25 @@
-import { NgPonentType } from './../ngponent-tsponent/ngponent-definition';
-import { TsPonent } from './../ngponent-tsponent/tsponent';
-import { NgPonent } from './../ngponent-tsponent/ngponent';
-import { ArchNgPonent } from './../arch-ngponent/arch-ngponent';
-import { IArchNgPonentMetadata } from './../arch-ngponent/arch-ngponent-metadata-interface';
+import { RelationshipType } from '../arch-relationship';
+import { NgPonent } from '../ngponent-tsponent/ngponent';
+import { NgPonentType } from '../ngponent-tsponent/ngponent-definition';
+import { TsPonent } from '../ngponent-tsponent/tsponent';
+import { ArchNgPonent } from './arch-ngponent';
+import { ArchNgPonentMetadata, ArchNgPonentMetadataKeys } from './arch-ngponent-metadata';
 
 
-export class NgDirectiveMetadata implements IArchNgPonentMetadata {
+export class NgDirectiveMetadata extends ArchNgPonentMetadata {
   ngPonentType: NgPonentType = NgPonentType.Directive;
   properties = ['selector', 'inputs', 'outputs', 'host', 'providers', 'exportAs', 'queries'];
   usedProperties = [];
 
-  selector?: string;
-  inputs?: string[];
-  outputs?: string[];
-  host?: {[key: string]: string};
-  providers?: any[];
-  exportAs?: string;
-  queries?: {[key: string]: any};
+  metadata: {
+    selector?: string,
+    inputs?: string[],
+    outputs?: string[],
+    host?: {[key: string]: string},
+    providers?: any[],
+    exportAs?: string,
+    queries?: {[key: string]: any}
+  };
 
   descriptions = {
       'selector': 'css selector that identifies this component in a template',
@@ -26,6 +29,13 @@ export class NgDirectiveMetadata implements IArchNgPonentMetadata {
       'providers': 'list of providers available to this component and its children',
       'exportAs': 'name under which the component instance is exported in a template. Can be given a single name or a comma-delimited list of names.',
       'queries': 'configure queries that can be injected into the component',
+  };
+
+  relationships = {
+    entryComponents: RelationshipType.Composite,
+    providers: RelationshipType.Aggregation,
+    viewProviders: RelationshipType.Aggregation,
+    [ArchNgPonentMetadataKeys.Ctor]: RelationshipType.Dependency
   };
 }
 

@@ -1,0 +1,86 @@
+.loader-indicator {
+  position: absolute;
+  top: 35%;
+  left: 35%;
+  width: 400px;
+  height: 90px;
+  vertical-align: middle;
+  background-color: white;
+  z-index: 9999;
+  border: 2px groove;
+  opacity: 0.9;
+
+  div {
+    text-align: center;
+  }
+
+  .indicator-title {
+    margin-top: 15px;
+  }
+
+  .indicator-languages {
+    font-size: 12px;
+    display: inline-block;
+  }
+
+  button {
+    position: absolute;
+    bottom: 5px;
+    left: 45%;
+    min-width: 40px;
+    line-height: 20px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 12px;
+    background-color: #3cb0fd;
+  }
+}
+
+.project-loader-overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.1;
+  z-index: 999;
+}
+
+.overlay-close {
+  position: absolute;
+  bottom: 223px;
+  right: 8px;
+  z-index: 9999;
+  font-family: sans-serif;
+  margin: 2px;
+  cursor: pointer;
+  padding: 3px;
+  background-color: black;
+  color: red
+}
+
+.loader-overlay-content {
+  height: 220px;
+  background: #000;
+  opacity: 0.9;
+  position: absolute;
+  right: 2px;
+  bottom: 5px;
+  z-index: 9999;
+  margin-left: 100px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+
+  .overlay-title {
+    color: red;
+    font-family: sans-serif;
+  }
+
+  div {
+    color: red;
+    margin: 2px 0px 2px 5px;
+    font-family: sans-serif;
+    font-size: smaller;
+  }
+}

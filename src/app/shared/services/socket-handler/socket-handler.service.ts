@@ -1,9 +1,8 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable , Subject } from 'rxjs';
 import { Injectable, Inject } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
 
-import { ISocketClient } from '../../../core/models/socket-client.interface';
-import { SocketClientService } from './../socket-client/socket-client.service';
+import { ISocketClient } from '@core/models/socket-client.interface';
+// import { SocketClientService } from '../socket-client/socket-client.service';
 import { WebSocketClientService } from '../web-socket-client/web-socket-client.service';
 
 @Injectable()

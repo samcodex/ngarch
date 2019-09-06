@@ -1,0 +1,24 @@
+<div id="app-header">
+  <div class="project-info" *ngIf="projectInfo">
+
+    <div class="gear-icon" title="Dashboard">
+      <button (click)="onClickTopMenu()"><i class="material-icons">menu</i></button>
+      <!-- <img src="../../assets/gears.png" height="30px"> -->
+    </div>
+
+    <div class="project-text">
+        <div class="project-dependencies">
+          <span class="project-name">{{projectInfo.name}} : </span>
+          <span class="project-version">{{projectInfo.version}}</span>
+          <ng-container *ngFor="let dependency of projectInfo.dependencies">
+            <span class="project-name left-margin">{{dependency.name}}</span>
+            <span class="project-version"> : {{dependency.value}}</span>
+          </ng-container>
+        </div>
+
+        <div>
+          <span class="project-description">{{projectInfo.description}}</span>
+        </div>
+    </div>
+  </div>
+</div>

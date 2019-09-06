@@ -1,0 +1,80 @@
+<div id="arch-header">
+  <img class="arch-logo" src="./../../assets/ngarch_red_100.png">
+  <span class="sub-title">Angular Application Architecture Tool</span>
+
+  <div class="uml-relationship">
+    <div class="uml-symbol uml-symbol-help symbol-composition" (mouseover)="changeStatus('composition')" (mouseleave)="changeStatus('none')">
+      <img src="./../../assets/associations/composition.svg">
+      <span>Composition</span>
+    </div>
+    <div class="uml-symbol uml-symbol-help symbol-dependency" (mouseover)="changeStatus('dependency')" (mouseleave)="changeStatus('none')">
+      <img src="./../../assets/associations/dependency.svg">
+      <span>Dependency</span>
+    </div>
+    <div class="uml-symbol symbol-association">
+      <img src="./../../assets/associations/association.svg">
+      <span>Association</span>
+    </div>
+    <div class="uml-symbol symbol-inheritance">
+      <img src="./../../assets/associations/inheritance.svg">
+      <span>Inheritance</span>
+    </div>
+
+    <div class="relationship-popover popover-{{relationStatus}}" [ngSwitch]="relationStatus">
+        <div *ngSwitchCase="'composition'">
+          <div class="relationship-title">Composition</div>
+          <div class="relationship-content">
+            Links the whole/part relationship between:
+            <ul>
+              <li>Module and Component/Directive/Pipe/Service</li>
+              <li>Component and Service</li>
+            </ul>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'dependency'">
+          <div class="relationship-title">Usage Dependency</div>
+          <div class="relationship-content">
+            Links the usage dependency between:
+            <ul>
+              <li>Module and Module</li>
+              <li>Service and Service</li>
+              <li>Component and Service</li>
+              <li>Component and Component</li>
+            </ul>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'association'">This is association</div>
+
+        <div *ngSwitchCase="'inheritance'">This is inheritance</div>
+    </div>
+  </div>
+
+  <img class="gray-gear gray-gear1" src="./../../assets/gear_gray_100.png">
+  <img class="gray-gear gray-gear2" src="./../../assets/gear_gray_100.png">
+  <img class="gray-gear gray-gear3" src="./../../assets/gear_gray_100.png">
+  <img class="gray-gear gray-gear4" src="./../../assets/gear_gray_100.png">
+  <img class="gray-gear gray-gear5" src="./../../assets/gear_gray_100.png">
+
+  <div class="arch-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon class="arch-menu-icon">menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item (click)="openProjectConfig()">
+        <mat-icon>create_new_folder</mat-icon>
+        <span>Config</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="openHelp()">
+        <mat-icon>help</mat-icon>
+        <span>Help</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <!-- <div class="project-config">
+    <a (click)="openDialog()">Config</a>
+  </div> -->
+</div>

@@ -1,10 +1,10 @@
+import { first, forOwn } from 'lodash-es';
 
-import { NgPonent } from './ngponent';
 import { Deserializable } from '../serialization';
-
-import { TsPonentType, TsPonentModifier, TsBasicType, IDataType } from './tsponent-definition';
+import { NgPonent } from './ngponent';
 import { TsDataType } from './tsdatatype';
-import { util } from './../util';
+import { ExpressionPonentTypes, IDataType, TsPonentModifier, TsPonentType } from './tsponent-definition';
+
 
 /**
  * Represents Typescript Component
@@ -20,15 +20,17 @@ export class TsPonent implements Deserializable, IDataType {
   public _dataType?: TsDataType;
   public value?: any;
   public _rawValue?: any;
+  public identifierFile?: string;
 
   public ngPonent?: NgPonent;            // optional
 
   public parent?: TsPonent | null;
   public members?: Array<TsPonent>;    // optional
+  public options?: any;
+  public __moduleFile__?: string;
+  public __moduleName__?: string;
 
-  constructor(parent?: TsPonent) {
-    this.parent = parent;
-  }
+  constructor() {}
 
   get dataType(): string {
     if (this._dataType) {
@@ -42,40 +44,144 @@ export class TsPonent implements Deserializable, IDataType {
     }
   }
 
-  initMembers() {
-    if (!this.members) {
-      this.members = new Array<TsPonent>();
+  getOption(key: string): any {
+    if (this.options && key in this.options) {
+      return this.options[key];
     }
+    return undefined;
   }
 
-  initModifiers() {
-    if (!this.modifiers) {
-      this.modifiers = new Array<TsPonentModifier>();
-    }
-  }
+  expressionPonentToString(): string {
+    let expression = null;
 
-  fromJson(data: object) {
-    const ps = ['$clazz', 'fileName', 'ponentType', 'name', 'modifiers', 'value', '_rawValue'];
-    util.copyProperty(this, data, ps);
+    if (ExpressionPonentTypes.includes(this.ponentType)) {
+      if (this.ponentType === TsPonentType.CallExpressionPonent) {
+        let arg = '';
+        if (this.members && this.members.length) {
+          this.members.forEach(member => {
+            arg = member.expressionPonentToString();
+          });
+        }
 
-    const members: Array<TsPonent> = data['members'];
-    if (members && members.length > 0) {
-      this.members = members.map( m => {
-        const ponent = new TsPonent(this);
-        ponent.fromJson(m);
+        expression = this.name + `(${arg})`;
+      } else if (this.ponentType === TsPonentType.IdentifierExpressionPonent) {
+        expression = this.value;
 
-        return ponent;
-      });
-    }
+      } else if (this.ponentType === TsPonentType.StringExpressionPonent) {
+        expression = this.value;
 
-    if ('_dataType' in data) {
-      const dataType = data['_dataType'];
-      if (typeof dataType === 'string') {
-        this._dataType = TsBasicType[dataType];
-      } else {
-        const tsDataType = this._dataType = new TsDataType();
-        tsDataType.fromJson(dataType);
+      } else if (this.ponentType === TsPonentType.ObjectExpressionPonent) {
+        if (this.members && this.members.length) {
+          expression = this.members.map(member => member.name + ': ' + member.expressionPonentToString()).join(', ');
+        }
+        expression = `{${expression}}`;
+
+      } else if (this.ponentType === TsPonentType.ArrayExpressionPonent) {
+        if (this.members && this.members.length) {
+          expression = this.members.map(member => member.expressionPonentToString()).join(', ');
+        }
+
+      } else if (this.ponentType === TsPonentType.BooleanExpressionPonent) {
+        expression = `${this.name}: ${this.value}`;
       }
     }
+
+    return expression;
   }
+
+  extractExpressionPonentDependencies(): string[] {
+    const dependencies: string[] = [];
+
+    if (ExpressionPonentTypes.includes(this.ponentType)) {
+      if (this.ponentType === TsPonentType.CallExpressionPonent) {
+        dependencies.push(first(this.name.split('.')));
+
+        if (this.members && this.members.length) {
+          this.members.forEach(member => {
+            dependencies.push.apply(dependencies,
+              member.extractExpressionPonentDependencies());
+          });
+        }
+
+      } else if (this.ponentType === TsPonentType.IdentifierExpressionPonent) {
+        dependencies.push(this.value);
+
+      } else if (this.ponentType === TsPonentType.StringExpressionPonent) {
+        dependencies.push(this.value);
+
+      } else if (this.ponentType === TsPonentType.ObjectExpressionPonent) {
+        if (this.members && this.members.length) {
+          forOwn(this.members, (member: TsPonent) => {
+            dependencies.push.apply(dependencies, member.extractExpressionPonentDependencies());
+          });
+        }
+
+      } else if (this.ponentType === TsPonentType.ArrayExpressionPonent) {
+        if (this.members && this.members.length) {
+          this.members.forEach(member => {
+            dependencies.push.apply(dependencies, member.extractExpressionPonentDependencies());
+          });
+        }
+
+      } else {
+        // some Angular metadata properties, such as, isolate;
+      }
+    }
+
+    return dependencies;
+  }
+
+  traverse(callback: Function) {
+    if (!this.members) {
+      return;
+    }
+
+    this.members.some(member => {
+      const result = callback.call(null, member);
+      if (result === false) {
+        return true;
+      }
+
+      member.traverse(callback);
+    });
+  }
+
+  getMetadata(property: MetadataProperty, ponentType = TsPonentType.StringExpressionPonent): TsPonent {
+    let tsPonent: TsPonent = null;
+    this.traverse((dir: TsPonent) => {
+      if ( dir.ponentType === ponentType
+        && dir.name === property
+      ) {
+        tsPonent = dir;
+        return false;
+      }
+    });
+
+    return tsPonent;
+  }
+
+  getMetadataValue(property: MetadataProperty): string {
+    const tsPonent = this.getMetadata(property);
+    return tsPonent.value.replace(/'/g, '');
+  }
+
+  findMemberWithTypeAndName(ponentType: TsPonentType, specificName?: string): TsPonent {
+    let foundPonent: TsPonent = null;
+    const findCallExpression = (memberPonent: TsPonent) => {
+      if (memberPonent.ponentType === ponentType
+          && (!specificName || memberPonent.name === specificName)) {
+        foundPonent = memberPonent;
+        return true;
+      }
+    };
+
+    this.traverse(findCallExpression);
+
+    return foundPonent;
+  }
+}
+
+export enum MetadataProperty {
+  Selector = 'selector',
+  TemplateUrl = 'templateUrl'
 }

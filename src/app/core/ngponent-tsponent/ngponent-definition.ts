@@ -1,5 +1,5 @@
-import { TsPonent } from './tsponent';
 import { NgPonent } from './ngponent';
+import { TsPonent } from './tsponent';
 
 export type Ponent = NgPonent | TsPonent;
 
@@ -27,7 +27,9 @@ export enum NgPonentType {
   _DecoratorEnd = '_DecoratorEnd',
 
   Model = 'Model',
-  Route = 'Route'
+  Routes = 'Routes',
+  Route = 'Route',
+  ModuleWithProviders = 'ModuleWithProviders'
 }
 
 export const NgDecoratorToPonentType: {[s: string]: NgPonentType} = {
@@ -90,5 +92,6 @@ export const PonentTypesWithServiceDependencies: NgPonentType[] = [
 ];
 
 export const PonentTypesWithCtorParameters: NgPonentType[] = [
-  NgPonentType.Model
+  NgPonentType.Model,
+  NgPonentType.Injectable
 ];

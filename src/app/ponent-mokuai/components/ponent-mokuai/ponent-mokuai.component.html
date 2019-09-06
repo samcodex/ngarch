@@ -1,0 +1,27 @@
+<div class="mokuai-tab-captions">
+  <ng-container *ngFor="let view of mokuaiViews">
+    <div class="mokuai-tab-caption disabled" *ngIf="view.isDisabled else clickableVTab"
+      matTooltip="{{ view.tip }}" matTooltipPosition="above">
+      {{view.name}}
+    </div>
+
+    <ng-template #clickableVTab>
+      <div class="mokuai-tab-caption" *ngIf="!view.isDisabled" (click)="onNavigate(view, $event)"
+        [ngClass]="{'active': view.isSelected, 'inactive': !view.isSelected}"
+        matTooltip="{{ view.tip }}" matTooltipPosition="above">
+        {{view.name}}
+
+        <ng-container *ngIf="view.isCheckable">
+          <mat-checkbox [disabled]="!view.isSelected" (change)="onCheckDetailOfTab(view)"
+            [(ngModel)]="view.isChecked" matTooltip="UML Style" style="display: none">
+          </mat-checkbox>
+        </ng-container>
+
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<div class="mokuai-workspace">
+  <router-outlet></router-outlet>
+</div>
