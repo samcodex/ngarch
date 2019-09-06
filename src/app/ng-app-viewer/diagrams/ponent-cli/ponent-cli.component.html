@@ -1,7 +1,10 @@
 <div class="cli-command-execution" *ngIf="selectedCommand">
   <arch-cli-command-line [command]="selectedCommand"></arch-cli-command-line>
 
-  <div class="tip-option-card">Please select option card first</div>
+  <div class="version-warning" *ngIf="expectedVersion !== usedVersion">
+    Cannot found your cli version "{{ expectedVersion }}" in ngArch, using version "{{ usedVersion }}" instead
+  </div>
+  <!-- <div class="tip-option-card">Please select option card first</div> -->
 
   <arch-cli-option-card *ngFor="let option of selectedCommand.options"
     [option]="option" (apply)="applyOption(option)"></arch-cli-option-card>

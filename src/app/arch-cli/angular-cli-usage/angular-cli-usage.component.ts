@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 
 import { AngularCliUsage } from '../config/angular-cli-usage';
-import { AngularCli, AngularCliCommand, AngularCliHelper } from '../models/angular-cli';
+import { AngularCli, AngularCliCommand, AngularCliHelper as cliHelper } from '../models/angular-cli';
 
 @Component({
   selector: 'arch-angular-cli-usage',
@@ -11,7 +11,6 @@ import { AngularCli, AngularCliCommand, AngularCliHelper } from '../models/angul
 })
 export class AngularCliUsageComponent implements OnInit {
 
-  helper = AngularCliHelper;
   usages = AngularCliUsage;
   versions = new Set<string>();
   commands = new Set<string>();
@@ -26,7 +25,7 @@ export class AngularCliUsageComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    const versions = this.helper.listClisVersions(this.usages);
+    const versions = cliHelper.listClisVersions(this.usages);
     this.versions = new Set(versions);
     const [ firstVersion ] = versions;
 
@@ -35,8 +34,8 @@ export class AngularCliUsageComponent implements OnInit {
 
   private changeVersion(version: string) {
     this.selectedVersion = version;
-    this.selectedCli = this.helper.getCliByVersion(this.usages, version);
-    const commands = this.helper.listCliCommands(this.selectedCli);
+    this.selectedCli = cliHelper.getCliByVersion(this.usages, version);
+    const commands = cliHelper.listCliCommands(this.selectedCli);
     this.commands = new Set(commands);
     const [ firstCommand ] = commands;
 

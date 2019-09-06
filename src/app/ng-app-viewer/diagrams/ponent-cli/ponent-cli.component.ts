@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 
 import { AngularCliUsage } from '../../../arch-cli/config/angular-cli-usage';
-import { AngularCliHelper, AngularCli, AngularCliCommand } from '../../../arch-cli/models/angular-cli';
+import { AngularCliHelper as cliHelper, AngularCli, AngularCliCommand } from '../../../arch-cli/models/angular-cli';
 import { ArchNgPonent } from '@core/arch-ngponent';
 import { ProjectProfileService } from '@shared/project-profile';
 import { getDependencyVersion } from '@core/models/arch-project';
@@ -22,13 +22,15 @@ export class PonentCliComponent implements OnInit, ArchUiDiagramComponent {
 
   workingDirectory: string;
 
-  helper = AngularCliHelper;
   usages = AngularCliUsage;
 
   currentCli: AngularCli;
   commands: AngularCliCommand[];
   selectedCommandIndex: number;
   selectedCommand: AngularCliCommand;
+
+  expectedVersion: number;
+  usedVersion: number;
 
   constructor(
     private profileService: ProjectProfileService
@@ -41,6 +43,7 @@ export class PonentCliComponent implements OnInit, ArchUiDiagramComponent {
       .subscribe(projectInfo => {
         const angular = getDependencyVersion(projectInfo, 'angular');
         const { major } = angular;
+        this.expectedVersion = major;
 
         if (this.archNgPonent && this.archNgPonent.angularFilePath) {
           this.workingDirectory = this.archNgPonent.angularFilePath.directoryOfApp;
@@ -67,12 +70,20 @@ export class PonentCliComponent implements OnInit, ArchUiDiagramComponent {
   }
 
   private initCli(version: string) {
-    const cli = this.helper.getCliByMajorVersion(this.usages, version);
-    const commands: AngularCliCommand[] = cli.commands;
+    let cli = cliHelper.getCliByMajorVersion(this.usages, version);
+    if (!cli) {
+      cli = cliHelper.getCliByLessMajorVersion(this.usages, version);
+    }
 
-    this.currentCli = cloneDeep(cli);
-    this.commands = this.currentCli.commands = commands
-      .filter(command => command.allowExecute)
-      .map(AngularCliCommand.fromData);
+    if (cli) {
+      this.usedVersion = parseInt(cli.version.split('.')[0], 10);
+      const commands: AngularCliCommand[] = cli.commands;
+
+      this.currentCli = cloneDeep(cli);
+      this.commands = this.currentCli.commands = commands
+        .filter(command => command.allowExecute)
+        .map(AngularCliCommand.fromData);
+    }
+
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { AngularCliCommand, CliOptionPart, AngularCliHelper } from '../../models/angular-cli';
+import { AngularCliCommand, CliOptionPart, AngularCliHelper as cliHelper } from '../../models/angular-cli';
 
 @Component({
   selector: 'arch-cli-command-panel',
@@ -12,8 +12,6 @@ export class CliCommandPanelComponent implements OnInit {
   command: AngularCliCommand;
   @Input()
   expanded: boolean;
-
-  helper = AngularCliHelper;
 
   constructor(
 
