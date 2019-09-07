@@ -6,7 +6,7 @@ All demos are from ngArch application itself.
 <img src="assets/demo/architecture_viewer.png" width="95%">
 <br><br>
 
-<p>Activity Diagram & Structure Diagram(ngArch architecture)</p>
+<p>Structure Diagram(ngArch architecture)</p>
 <img src="assets/demo/multiple_diagrams.png" width="95%">
 <br><br>
 

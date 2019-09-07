@@ -24,7 +24,7 @@ import { ViewerGenericUsageComponent } from './shared/viewer-generic-usage/viewe
 const routes: Route[] = [
   {
     path: '',
-    redirectTo: 'viewer/app-arch',
+    redirectTo: 'viewer/module-struct',
     pathMatch: 'full'
   },
   {

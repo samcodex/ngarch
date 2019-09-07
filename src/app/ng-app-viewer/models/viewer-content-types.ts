@@ -14,7 +14,7 @@ import { DiagramViewerType, ViewerType } from './ng-app-viewer-definition';
 export enum PonentActionPurpose {
   Typescript = 'Typescript',
   AngularCli = 'AngularCli',
-  ActivityDiagram = 'ActivityDiagram',
+  RuntimeStructure = 'RuntimeStructure',
   ClassVisualizer = 'ClassVisualizer',
   StructureDiagram = 'StructureDiagram',
   DependencyDiagram = 'DependencyDiagram',
@@ -73,10 +73,10 @@ const actionDefinition: PonentActionItem[] = [
     type: PonentActionScope.ComponentAction
   },
   {
-    name: 'Activity Diagram',
-    value: PonentActionPurpose.ActivityDiagram,
-    tip: 'Activity Diagram',
-    icon: 'A',
+    name: 'Runtime Structure',
+    value: PonentActionPurpose.RuntimeStructure,
+    tip: 'Runtime Structure',
+    icon: 'RT',
     type: PonentActionScope.ComponentAction
   },
   {
@@ -127,12 +127,12 @@ const actionDefinition: PonentActionItem[] = [
 
 const _ponentActions: {[key in AnalysisElementType]?: PonentActionPurpose[] } = {
   [ AnalysisElementType.Application ]: [
-    // PonentActionPurpose.ActivityDiagram,
+    // PonentActionPurpose.RuntimeStructure,
     // PonentActionPurpose.Typescript,
     // PonentActionPurpose.AngularCli,
   ],
   [ AnalysisElementType.Module ]: [
-    PonentActionPurpose.ActivityDiagram,
+    PonentActionPurpose.RuntimeStructure,
     PonentActionPurpose.StructureDiagram,
     PonentActionPurpose.ClassVisualizer,
     PonentActionPurpose.ToggleCollapseChildren,
@@ -140,7 +140,7 @@ const _ponentActions: {[key in AnalysisElementType]?: PonentActionPurpose[] } = 
     PonentActionPurpose.AngularCli
   ],
   [ AnalysisElementType.Component ]: [
-    // PonentActionPurpose.ActivityDiagram,
+    // PonentActionPurpose.RuntimeStructure,
     // PonentActionPurpose.StructureDiagram,
     PonentActionPurpose.ClassVisualizer,
     PonentActionPurpose.Typescript,

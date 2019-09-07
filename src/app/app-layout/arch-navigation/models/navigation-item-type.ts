@@ -16,6 +16,7 @@ export interface NavigationItem {
   title: string;
   path?: string | string[];
   category: NavigationCategory;
+  order?: number;
 
   isDisabled?: boolean;
   isSelected?: boolean;

@@ -150,7 +150,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   private onDoubleClickPonent(node: DiagramTreeNode) {
-    this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.ActivityDiagram, this.viewerType);
+    this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.RuntimeStructure, this.viewerType);
   }
 
   private onClickAction(item: PonentActionItem) {
@@ -163,7 +163,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
 
     if (item.type === PonentActionScope.ComponentAction) {
       let data;
-      if (purpose === PonentActionPurpose.ActivityDiagram) {
+      if (purpose === PonentActionPurpose.RuntimeStructure) {
         data = item.data;
       }
       this.ngAppViewerService.openWindowByPonentAction(item, this.viewerType);

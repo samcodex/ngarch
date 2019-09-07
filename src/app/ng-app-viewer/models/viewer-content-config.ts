@@ -37,7 +37,7 @@ const _mapOfGenericPurpose: ViewPurposeToUiClass[] = [
 const _mapOfModuleType: ViewPurposeToUiClass[] = [
   {
     type: AnalysisElementType.Module,
-    purpose: PonentActionPurpose.ActivityDiagram,
+    purpose: PonentActionPurpose.RuntimeStructure,
     clazz: ActivityDiagramComponent,
     archUiOptions: { width: '70%'}
   },

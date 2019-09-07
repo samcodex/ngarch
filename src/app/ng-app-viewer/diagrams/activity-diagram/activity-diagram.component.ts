@@ -150,7 +150,7 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
   }
 
   private onDoubleClickPonent(node: DiagramTreeNode) {
-    this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.ActivityDiagram, this.viewerType);
+    this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.RuntimeStructure, this.viewerType);
   }
 
   private onClickAction(item: PonentActionItem) {

@@ -20,7 +20,7 @@ ngArch(Angular application architecture tool) includes the following parts and p
 <img src="assets/demo/architecture_viewer.png" width="95%">
 <br><br>
 
-<p>Activity Diagram & Structure Diagram</p>
+<p>Structure Diagram</p>
 <img src="assets/demo/multiple_diagrams.png" width="95%">
 <br><br>
 

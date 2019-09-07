@@ -2,15 +2,23 @@
 import { NavigationItem, NavigationCategory, NavigationSection, NavigationFeature } from './navigation-item-type';
 import { NavigationPaths } from '../../../arch-routing.config';
 
+const sortFn = (item1: NavigationItem, item2: NavigationItem) => {
+  const order1 = 'order' in item1 ? item1.order : 9999;
+  const order2 = 'order' in item1 ? item2.order : 9999;
+
+  return order1 - order2;
+};
+
 const appDiagram: NavigationItem[] = [
   {
     id: 'application_architecture',
-    name: 'Application Architecture',
-    title: 'Application Architecture',
+    name: 'Runtime Structure',
+    title: 'Runtime Structure',
     path: NavigationPaths.NgAppViewer,
     dataKey: 'viewer',
     dataId: 'app-arch',
-    category: NavigationCategory.ARCHITECTURE_VIEWER
+    category: NavigationCategory.ARCHITECTURE_VIEWER,
+    order: 2
   },
   {
     id: 'angular_ponent_structure',
@@ -19,7 +27,8 @@ const appDiagram: NavigationItem[] = [
     path: NavigationPaths.NgAppViewer,
     dataKey: 'viewer',
     dataId: 'module-struct',
-    category: NavigationCategory.ARCHITECTURE_VIEWER
+    category: NavigationCategory.ARCHITECTURE_VIEWER,
+    order: 1
   },
   {
     id: 'service_dependency_tree',
@@ -168,13 +177,13 @@ const navCli: NavigationItem[] = [
 ];
 
 export const appNavigationItems: NavigationItem[] = [
-  ...appDiagram,
-  ...navBasic,
-  ...navModules,
-  ...NavServices,
-  ...navModels,
-  ...navRoutes,
-  ...navCli
+  ...appDiagram.sort(sortFn),
+  ...navBasic.sort(sortFn),
+  ...navModules.sort(sortFn),
+  ...NavServices.sort(sortFn),
+  ...navModels.sort(sortFn),
+  ...navRoutes.sort(sortFn),
+  ...navCli.sort(sortFn)
 ];
 
 export const navigationSections: NavigationSection[] = [
