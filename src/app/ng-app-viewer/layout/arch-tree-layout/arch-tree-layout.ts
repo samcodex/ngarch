@@ -8,14 +8,14 @@ import { d3_shape } from '@core/svg/d3.shape';
 import { d3Element } from '@core/svg/d3-def-types';
 import { getCallback, LayoutCallbackFlag } from '@core/models/meta-data';
 import { LayoutOptions, Orientation, hasLayoutFeature, LayoutFeature, NodeInfoLevel } from '@core/diagram/layout-options';
-import { PairNumber } from '@core/models/arch-data-format';
+import { PairNumber, RectangleSize } from '@core/models/arch-data-format';
 import { PonentActionItem, PonentActionScope, getArchPonentActions } from '../../models/viewer-content-types';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
-import { ArchHierarchy, ArchHierarchyPointNode, ArchHierarchyPointLink, HierarchyPointNodeSelection, ArchHierarchyHelper } from './arch-hierarchy';
-import { ArchHierarchyNodeDrawer, duration, linkStyle } from './arch-hierarchy-node-drawer';
+import { ArchHierarchy, ArchHierarchyPointNode, ArchHierarchyPointLink, HierarchyPointNodeSelection, ArchHierarchyHelper, HierarchyPointLinkSelection } from './arch-hierarchy';
+import { ArchHierarchyNodeDrawer, duration, linkStyle, linkCoverStyle } from './arch-hierarchy-node-drawer';
 
 let foreignStyle = '';
   foreignStyle += ' .--foreign-scrollable--::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); background-color: #F5F5F5;}';
@@ -32,11 +32,16 @@ export class ArchTreeLayout extends DiagramLayout {
   private nodeDrawer: ArchHierarchyNodeDrawer;
   private layoutOptions: LayoutOptions;
 
+  private treeContainer: d3Element;
+  private finalSize: RectangleSize;
+
   constructor() {
     super();
   }
 
   drawLayout(context: DiagramTreeContext | DiagramTreeNode | DiagramTreeNode[], layoutOptions?: LayoutOptions) {
+    this.init();
+
     const board = this.board;
     board.appendStyle(foreignStyle);
     let root: DiagramTreeNode;
@@ -69,6 +74,14 @@ export class ArchTreeLayout extends DiagramLayout {
     this.updateTreeData();
     this.drawComponentLinks();
     this.drawComponentNodes();
+  }
+
+  private init() {
+    this.treeContainer = this.rootGroup.append('g').classed('tree_container', true);
+
+    // <use xlink:href="#id" />
+    // https://github.com/w3c/svgwg/issues/511, foreignObject would not be considered in <use> for the shadow tree
+    // this.rootGroup.append('use').attr('id', 'last_use').attr('href', '#node_tip_0');
   }
 
   private initProperties(root: DiagramTreeNode, layoutOptions: LayoutOptions) {
@@ -119,12 +132,12 @@ export class ArchTreeLayout extends DiagramLayout {
     // TODO, this line is for collapsing when the node is clicked
     // because 'exit()' cannot correctly remove the unused data and DOM element
     // This line should be removed after fixing it
-    this.rootGroup
+    this.treeContainer
       .selectAll('.node').remove();
 
     // Update the nodes...
     const nodes = this.treeRoot.descendants();
-    const gNode = this.rootGroup
+    const gNode = this.treeContainer
       .selectAll('.node')
       .data(nodes);
 
@@ -162,12 +175,18 @@ export class ArchTreeLayout extends DiagramLayout {
     d3_shape.drawActionBar(nodeWidth + 20, actionY)(nodeEnter, mapNodeToActions,
       this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
 
+    // node tip
+    d3_shape.drawNodeTip()(nodeEnter);
+
     // Transition to the proper position for the node
     nodeUpdate.transition()
       .duration(duration)
       .each(placeNode);
 
     gNode.exit().remove();
+
+    const finalSize = d3_util.getDimension(this.treeContainer);
+    this.finalSize = finalSize;
   }
 
   private drawComponentLinks() {
@@ -216,21 +235,49 @@ export class ArchTreeLayout extends DiagramLayout {
       return points;
     };
 
-    const link = this.rootGroup
-      .selectAll('polyline.link')
+    // const link = this.treeContainer
+    //   .selectAll('polyline.link')
+    //   .data(links) as d3.Selection<SVGPolylineElement, d3.HierarchyPointLink<DiagramTreeNode>, d3.BaseType, any>;
+
+    // const linkEnter = link
+    //   .enter()
+    //   .append('polyline')
+    //   .classed('link', true)
+    //   .call(d3_util.setStyles, linkStyle)
+    //   .attr('points', calcPoints);
+
+    // const linkUpdate = linkEnter.merge(link);
+    // linkUpdate.attr('points', calcPoints);
+
+    // link.exit().remove();
+
+    this.treeContainer
+      .selectAll('.link_group').remove();
+
+    const link = this.treeContainer
+      .selectAll('g.link_group')
       .data(links) as d3.Selection<SVGPolylineElement, d3.HierarchyPointLink<DiagramTreeNode>, d3.BaseType, any>;
 
     const linkEnter = link
       .enter()
+      .append('g')
+      .classed('link_group', true);
+
+    const linkLine = linkEnter
       .append('polyline')
       .classed('link', true)
       .call(d3_util.setStyles, linkStyle)
       .attr('points', calcPoints);
 
-    const linkUpdate = linkEnter.merge(link);
-    linkUpdate.attr('points', calcPoints);
+    const linkCover = linkEnter
+      .append('polyline')
+      .classed('link_cover', true)
+      .call(d3_util.setStyles, linkCoverStyle)
+      .attr('points', calcPoints);
 
-    link.exit().remove();
+    this.attachLinkMouseOverHandler(linkCover);
+
+    d3_shape.drawLinkTip()(linkCover);
   }
 
   private attachNodeClickHandler(nodeEnter: HierarchyPointNodeSelection) {
@@ -245,6 +292,8 @@ export class ArchTreeLayout extends DiagramLayout {
       }
     };
     const clickFn = (diagramNode: ArchHierarchyPointNode) => {
+      this.rootGroup.selectAll('.node_tip_group_copied').remove();
+
       ArchHierarchy.toggleArchHierarchyNode(diagramNode);
       this.doDrawLayout();
     };
@@ -253,12 +302,33 @@ export class ArchTreeLayout extends DiagramLayout {
   }
 
   private attachNodeMouseOverHandler(nodeEnter: HierarchyPointNodeSelection) {
+    const rootGroup = this.rootGroup;
+
     function mouseToggle() {
       const host = d3.select(this);
       d3_util.toggleSelectorShowHide(host, '.action_bar');
+      d3_util.toggleShowHideInNewHost(host, '.node_tip_group', null, rootGroup);
     }
 
     nodeEnter
+      .on('mouseover', mouseToggle)
+      .on('mouseout', mouseToggle)
+      ;
+  }
+
+  private attachLinkMouseOverHandler(linkEnter: HierarchyPointLinkSelection) {
+    const rootGroup = this.rootGroup;
+
+    function mouseToggle() {
+      const host = d3.select(this);
+      const mouseLocation = d3.mouse(this);
+      const [ x, y ] = mouseLocation;
+
+      // x, y offset must be large than the width of link cover;
+      d3_util.toggleShowHideInNewHost(host, '.link_tip_group', null, rootGroup, [ x + 16, y - 12]);
+    }
+
+    linkEnter
       .on('mouseover', mouseToggle)
       .on('mouseout', mouseToggle)
       ;

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { forOwn } from 'lodash-es';
 
-import { RectangleSize, Point, ElementBox, PositionBox } from '../models/arch-data-format';
+import { RectangleSize, Point, ElementBox, PositionBox, PairNumber } from '../models/arch-data-format';
 import { D3Transform, D3FullAttributes, D3GroupFullAttributes } from './d3-def-types';
 import { d3Element } from '@core/svg/d3-def-types';
 
@@ -288,6 +288,7 @@ export namespace d3_util {
   export const setAttrs = _setAttrs;
   export const appendHTML = _appendHTML;
   export const appendSVG = _appendSVG;
+  export const toggleShowHideInNewHost = _toggleShowHideInNewHost;
   export const toggleSelectorShowHide = _toggleSelectorShowHide;
   export const toggleShowHide = _toggleShowHide;
   export const transformD3Element = _transformD3Element;
@@ -350,21 +351,60 @@ function _appendSVG(selection: d3Element, SVGString: string) {
   }
 }
 
+function _toggleShowHideInNewHost(host: d3Element, selector: string, isShow?: boolean, newHost?: d3Element, newLocation?: PairNumber) {
+  const selection = host.select(selector);
+  if (!selection.empty()) {
+    let attrVisibility = selection.attr('_visibility');
+    if ( [ 'visible', 'hidden' ].indexOf(attrVisibility) === -1) {
+      attrVisibility = 'hidden';
+      selection.attr('_visibility', attrVisibility);
+    }
+
+    const expectedShow = isShow === true || isShow === false
+      ? isShow : attrVisibility !== 'visible';
+    selection.attr('_visibility', expectedShow ? 'visible' : 'hidden');
+    const copiedId = selection.attr('id') + '_copied';
+    const copiedClass = selection.attr('class') + '_copied';
+
+    newHost.selectAll('#' + copiedId).remove();
+
+    if (expectedShow) {
+      const copiedGroup = selection.clone(true);
+      copiedGroup.style('visibility', 'visible');
+      copiedGroup.attr('id', copiedId);     // The toggled element must define 'id'
+      copiedGroup.attr('class', copiedClass);
+
+      if (newLocation) {
+        _transformD3Element(copiedGroup, { translate: newLocation });
+      } else {
+        const transform = host.attr('transform');
+        if (transform) {
+          copiedGroup.attr('transform', transform);
+        }
+      }
+
+      const newHoseNode = newHost.node() as any;
+      newHoseNode.appendChild(copiedGroup.node());
+    }
+  }
+}
+
 function _toggleSelectorShowHide(host: d3Element, selector: string, isShow?: boolean) {
   _toggleShowHide(host.select(selector), isShow);
 }
 
 function _toggleShowHide(selection: d3Element, isShow?: boolean) {
   if (!selection.empty()) {
-    let expectedShow = isShow;
-    if (expectedShow !== true && expectedShow !== false) {
-      const visibility = selection.style('visibility');
-      const _isVisible = visibility === 'visible';
-      expectedShow = _isVisible ? false : true;
-    }
+    const expectedShow = isShow === true || isShow === false
+      ? isShow : !_isVisibility(selection);
 
     selection.style('visibility', expectedShow ? 'visible' : 'hidden');
   }
+}
+
+function _isVisibility(selection: d3Element) {
+  const visibility = selection.style('visibility');
+  return visibility === 'visible';
 }
 
 function _transformD3Element(host: d3Element, attrs: D3Transform) {

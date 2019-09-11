@@ -37,6 +37,13 @@ export const linkStyle = {
   'stroke-width': '1px'
 };
 
+export const linkCoverStyle = {
+  'fill': 'none',
+  'stroke': 'red',
+  'stroke-width': '10px',
+  'stroke-opacity': '0'
+};
+
 export const duration = 750;
 
 const rectStyle = {

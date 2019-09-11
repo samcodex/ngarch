@@ -7,6 +7,8 @@ import { AnalysisElementType } from '@core/models/analysis-element';
 
 export class DiagramTreeNode extends DiagramElement {
   archNode: ArchNode;
+  nodeInfo: string;
+  upLinkInfo: string;
 
   tree: DiagramTreeContext;
   children: DiagramTreeNode[];

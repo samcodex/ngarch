@@ -142,7 +142,7 @@ function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
 
   const classed = '--foreign-scrollable--';
   const [ width, height ] = size;
-  const styles = Object.assign({}, textStyles, divScrollStyle);
+  const styles = Object.assign({}, divScrollStyle, textStyles);
 
   const foreign = host
     .append('foreignObject')

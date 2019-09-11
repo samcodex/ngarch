@@ -12,17 +12,17 @@ export namespace svg_defs {
   export function defineDropShadow(defs: d3Element) {
     const filter = defs.append('filter')
       .attr('id', LineEndShapeId.DropShadow)
-      .attr('height', '130%');
+      .attr('height', '150%');
 
     filter.append('feGaussianBlur')
       .attr('in', 'SourceAlpha')
-      .attr('stdDeviation', 5)
+      .attr('stdDeviation', 6)
       .attr('result', 'blur');
 
     filter.append('feOffset')
       .attr('in', 'blur')
-      .attr('dx', 4)
-      .attr('dy', 4)
+      .attr('dx', 2)
+      .attr('dy', 5)
       .attr('result', 'offsetBlur');
 
     const feMerge = filter.append('feMerge');

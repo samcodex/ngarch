@@ -9,6 +9,7 @@ import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
 // export type DiagramNode = d3.HierarchyNode<DiagramTreeNode>;
 export type ArchHierarchyPointNode = d3.HierarchyPointNode<DiagramTreeNode>;     // d3.HierarchyPointNode derived from d3.HierarchyNode
 export type ArchHierarchyPointLink = d3.HierarchyPointLink<DiagramTreeNode>;
+export type HierarchyPointLinkSelection = d3.Selection<d3.BaseType, ArchHierarchyPointLink, d3.BaseType, any>;
 export type HierarchyPointNodeSelection = d3.Selection<d3.BaseType, ArchHierarchyPointNode, d3.BaseType, any>;
 
 export namespace ArchHierarchy {

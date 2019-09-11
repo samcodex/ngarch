@@ -7,6 +7,8 @@ import { d3Element } from '@core/svg/d3-def-types';
 import { appendRightBracket, appendLeftBracket } from './svg-defs';
 import { d3_util } from './d3.util';
 import { PairNumber } from '@core/models/arch-data-format';
+import { d3_svg } from './d3.svg';
+import { ArchHierarchyPointLink } from 'app/ng-app-viewer/layout/arch-tree-layout/arch-hierarchy';
 
 const _setAttrs = d3_util.setAttrs;
 const _setGroupAttrs = d3_util.setGroupAttrs;
@@ -22,6 +24,8 @@ export namespace d3_shape {
   export const combineGroupPaths = _combineGroupPaths;
   export const appendPairBracket = _appendPairBracket;
   export const drawActionBar = _drawActionBar;
+  export const drawNodeTip = _drawNodeTip;
+  export const drawLinkTip = _drawLinkTip;
 }
 
 function _clickCancel() {
@@ -525,5 +529,71 @@ function _drawActionBar(barStartX: number, barY = -15, rightToLeft = true, hasCl
 
     d3_util.toggleShowHide(nodeActionBar, false);
     return nodeActionBar;
+  };
+}
+
+const tipBlockSize: PairNumber = [ 150, 50 ];
+const tipRectAttrs = { fill: '#dcdcdc' };
+const tipRectStyles = { stroke: '#c0c0c0', 'stroke-width': '1', 'filter': 'url(#drop-shadow)' };
+const tipContentAttrs = { };
+const tipContentStyles = { color: '#fb1b1b', 'font-size': '11px', direction: 'none', 'margin-left': '5px', 'margin-top': '5px' };
+function _drawNodeTip() {
+  return (nodeEnter: d3Element) => {
+    const nodeTip = nodeEnter
+      .filter((pointNode) => !!pointNode.data.nodeInfo)
+      .append('g')
+      .classed('node_tip_group', true);
+
+    nodeTip.each(function(pointNode: d3.HierarchyPointNode<any>, index: number) {
+      const node = nodeEnter.nodes()[index];
+      const host = d3.select(node);
+      const owner = d3.select(this);
+      const size = d3_util.getRectDimension(host);
+      const { width, height } = size;
+      const x = width + 5;
+      const y = -40;
+      const tipId = 'node_tip_' + index;
+
+      const textFn = () => {
+        return pointNode.data.nodeInfo;
+      };
+
+      owner.attr('id', tipId);
+      d3_svg.svgRect(owner, 'tip_rect', [ x, y ], tipBlockSize, tipRectAttrs, tipRectStyles);
+      const div = d3_svg.svgForeignScrollableDiv(owner, { html: textFn }, tipBlockSize, tipContentAttrs, tipContentStyles);
+      // const div = d3_svg.svgText(owner, textFn, 'tip_text', tipBlockSize, tipContentAttrs, tipContentStyles);
+      div.attr('x', x).attr('y', y);
+    });
+
+    d3_util.toggleShowHide(nodeTip, false);
+    return nodeTip;
+  };
+}
+
+function _drawLinkTip() {
+  return (linkEnter: d3Element) => {
+    const linkTip = linkEnter
+      .filter((pointLink) => !!pointLink.target.data.upLinkInfo)
+      .append('g')
+      .classed('link_tip_group', true);
+
+    linkTip.each(function(pointLink: ArchHierarchyPointLink, index: number) {
+      const target = pointLink.target;
+      const owner = d3.select(this);
+      const x = 0;
+      const y = 0;
+      const tipId = 'link_tip_' + index;
+
+      const textFn = () => {
+        return target.data.upLinkInfo;
+      };
+
+      owner.attr('id', tipId);
+      d3_svg.svgRect(owner, 'tip_rect', [ x, y ], tipBlockSize, tipRectAttrs, tipRectStyles);
+      d3_svg.svgForeignScrollableDiv(owner, { html: textFn }, tipBlockSize, tipContentAttrs, tipContentStyles);
+    });
+
+    d3_util.toggleShowHide(linkTip, false);
+    return linkTip;
   };
 }

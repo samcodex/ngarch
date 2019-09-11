@@ -15,6 +15,7 @@ import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { AppViewerDataService } from '../../services/app-viewer-data.service';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
+import { mapArchNodeToDiagramTreeNode } from 'app/ng-app-viewer/models/module-structure-helper';
 
 @Component({
   templateUrl: './module-structure-viewer.component.html',
@@ -100,7 +101,7 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
         features: [ LayoutFeature.None ],
       };
 
-      this.organizer.drawArchTreeWithLayout(data, collapseNode, null, layoutOptions);
+      this.organizer.drawArchTreeWithLayout(data, collapseNode, mapArchNodeToDiagramTreeNode, layoutOptions);
     }
   }
 

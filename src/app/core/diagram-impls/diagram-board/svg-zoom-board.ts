@@ -197,9 +197,9 @@ export class SvgZoomBoard extends Board {
 
   private createSvgDefs() {
     svg_defs.defineDropShadow(this.defs);
-    svg_defs.defineTriangleShape(this.defs);
-    svg_defs.defineArrowShape(this.defs);
-    svg_defs.defineRhombusShape(this.defs);
+    // svg_defs.defineTriangleShape(this.defs);
+    // svg_defs.defineArrowShape(this.defs);
+    // svg_defs.defineRhombusShape(this.defs);
   }
 
   private initBoard() {
@@ -208,7 +208,7 @@ export class SvgZoomBoard extends Board {
     // forOwn(toolTipAttrs, (value, key) => {div.attr(key, value); });
     // forOwn(toolTipStyles, (value, key) => { div.style(key, value); });
 
-    // this.createSvgDefs();
+    this.createSvgDefs();
   }
 }
 
