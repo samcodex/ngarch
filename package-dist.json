@@ -1,6 +1,6 @@
 {
   "name": "ngarch",
-  "version": "2.2.5",
+  "version": "2.3.0",
   "description": "Angular application architecture tool, analyzing Angular application and visually displaying the modules, components, services and data models in multiple diagrams",
   "main": "index.html",
   "keywords": [
