@@ -76,6 +76,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
 
   onExpand(event: { expanded: boolean, delay: number }) {
     const { expanded, delay } = event;
+    this.setBoardMaxSize();
 
     if (!expanded) {
       this.onSizeChanged(true);
