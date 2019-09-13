@@ -2,8 +2,12 @@
   <div *ngTemplateOutlet="expActivityDiagram"></div>
 </ng-container>
 
+<ng-container *ngIf="isModuleStructure()">
+  <div *ngTemplateOutlet="expModuleStructure"></div>
+</ng-container>
+
 <ng-template #expActivityDiagram>
-  <p>Use <b>Run Time Structure View</b> to illustrate the application activity and refer to the Route(s),
+  <p>Use <b>Runtime Structure</b> to illustrate the application activity and refer to the Route(s),
     NgModules and Components involved in the execution of the views. It focuses on</p>
     <ol>
       <li><b>routes eager and lazy loading flow</b> and</li>
@@ -13,4 +17,12 @@
 
   <p>The Run Time Structure view starts from one NgModule through its routes.
     Then, shows component hierarchy base on component's template(showing what and how to render component's view)</p>
+</ng-template>
+
+<ng-template #expModuleStructure>
+  <p>Use <b>Module Structure</b> to show the structure of NgModule and Component, exposing the whole/part relationship of NgModule and Component.
+  <ul>
+    <li>Use NgModule's metadata to show what it includes and provides.</li>
+    <li>Use Component template to show the component's hierarchy</li>
+  </ul>
 </ng-template>

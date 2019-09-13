@@ -4,6 +4,8 @@ import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
 import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
 
 const typeOfActivityDiagram = [ ViewerType.AppArchViewer, DiagramViewerType.ActivityDiagram ];
+const typeOfModuleStructure = [ ViewerType.ModuleStructureTree, DiagramViewerType.StructureDiagram ];
+
 @Component({
   selector: 'arch-viewer-explanation',
   templateUrl: './viewer-explanation.component.html',
@@ -20,5 +22,9 @@ export class ViewerExplanationComponent implements OnInit, ArchUiDiagramComponen
 
   isActivityDiagram() {
     return typeOfActivityDiagram.includes(this.fromViewer);
+  }
+
+  isModuleStructure() {
+    return typeOfModuleStructure.includes(this.fromViewer);
   }
 }

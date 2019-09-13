@@ -65,7 +65,7 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
     super.onInit(this.svgBoardRef);
 
     this.setBoardMaxSize();
-    this.optionData = this.optionsService.getOptionData();
+    this.optionData = this.optionsService.getOptionDataForRuntimeStructure();
 
     this.setupStream();
   }

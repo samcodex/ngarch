@@ -22,8 +22,8 @@ const appDiagram: NavigationItem[] = [
   },
   {
     id: 'angular_ponent_structure',
-    name: 'Application Structure',
-    title: 'Application Structure',
+    name: 'Module Structure',
+    title: 'Module Structure',
     path: NavigationPaths.NgAppViewer,
     dataKey: 'viewer',
     dataId: 'module-struct',

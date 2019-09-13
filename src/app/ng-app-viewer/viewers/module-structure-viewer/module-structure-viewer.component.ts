@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
+import { combineLatest } from 'rxjs';
 
 import { DiagramOrganizer } from '@core/diagram';
 import { DiagramLayoutToken } from '@core/diagram/diagram-layout';
@@ -16,6 +17,8 @@ import { AppViewerDataService } from '../../services/app-viewer-data.service';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { mapArchNodeToDiagramTreeNode } from 'app/ng-app-viewer/models/module-structure-helper';
+import { UiElementData } from '@core/models/ui-element-category';
+import { ArchViewerOptionsService } from '../app-arch-viewer/services/arch-viewer-options.service';
 
 @Component({
   templateUrl: './module-structure-viewer.component.html',
@@ -28,6 +31,7 @@ import { mapArchNodeToDiagramTreeNode } from 'app/ng-app-viewer/models/module-st
 export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     implements OnInit, OnDestroy, AfterViewInit {
 
+  optionData: UiElementData;
   viewerType = ViewerType.ModuleStructureTree;
 
   @ViewChild('svgBoard') svgBoardRef: ElementRef;
@@ -36,7 +40,8 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     elementRef: ElementRef,
     organizer: DiagramOrganizer,
     private ngAppViewerService: NgAppViewerService,
-    private viewerData: AppViewerDataService
+    private viewerDataService: AppViewerDataService,
+    private optionsService: ArchViewerOptionsService
   ) {
     super(elementRef, organizer);
 
@@ -47,6 +52,7 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
   ngOnInit() {
     super.onInit(this.svgBoardRef);
     this.setBoardMaxSize();
+    this.optionData = this.optionsService.getOptionDataForModuleStructure();
     this.setupStream();
   }
 
@@ -70,31 +76,42 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     this.onSizeChanged();
   }
 
+  onChangeOption(item) {
+    const { section, category, option } = item;
+    this.optionsService.changeOption(section, category, option);
+  }
+
+  onClickViewerExplanation() {
+    this.ngAppViewerService.openViewerExplanationPanel(ViewerType.ModuleStructureTree);
+  }
+
   private setBoardMaxSize() {
     const maxSize = d3_util.getElementSize(this.elementRef.nativeElement)();
     this.board.maxSize = { width: maxSize.width, height: maxSize.height };
   }
 
   private setupStream() {
-    const source = this.viewerData.getStructureTree();
+    const source = combineLatest([
+      this.viewerDataService.getStructureTree(),
+      this.optionsService.getViewerOrientation()
+    ]);
 
     source
       .pipe(
         takeUntilNgDestroy(this)
       )
-      .subscribe( (archTree) => {
-        this.updateOrganizer(archTree);
+      .subscribe( ([archTree, orientation]) => {
+        this.updateOrganizer(archTree, orientation);
       });
   }
 
-  private updateOrganizer(data: ArchTree) {
+  private updateOrganizer(data: ArchTree, orientation: Orientation) {
     this.organizer.clear();
 
     const collapseNode = (context: DiagramTreeContext) => {
       context.root.children.forEach(child => child.isCollapsed = true);
     };
 
-    const orientation = Orientation.TopToBottom;
     if (data) {
       const layoutOptions: LayoutOptions = {
         orientation,
