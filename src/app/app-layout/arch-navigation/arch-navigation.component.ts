@@ -5,7 +5,7 @@ import { filter, map } from 'rxjs/operators';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
 import { NavigationPaths } from '../../arch-routing.config';
-import { NavigationSection } from './models/navigation-item-type';
+import { NavigationSection, NavigationItem } from './models/navigation-item-type';
 import { ArchNgPonentStore } from '@shared/arch-ngponent-store';
 import { appNavigationItems, navigationSections } from './models/arch-navigation-setting';
 
@@ -44,7 +44,7 @@ export class ArchNavigationComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(
         filter((event: any) => event instanceof NavigationEnd),
-        map((event: any) => event.urlAfterRedirects.split('/')[1]),
+        map((event: any) => event.urlAfterRedirects),
         takeUntilNgDestroy(this)
       )
       .subscribe(this.resetNavigationExpanded.bind(this));
@@ -59,19 +59,42 @@ export class ArchNavigationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  private resetNavigationExpanded(path: string) {
-    let hasAssigned = false;
-    const pathChecker = (item) =>
-      item.path === path || Array.isArray(item.path) && item.path.find(subPath => subPath === path);
+  private resetNavigationExpanded(appUrl: string) {
+    const paths = appUrl.split('/');
 
+    let hasAssigned = false;
+    const checkForAppPath = (item: NavigationItem) => {
+      const path = item.path;
+      if (Array.isArray(path)) {
+        return path.length + 1 === paths.length
+          && path.reduce((acc, cur, idx) => acc && cur === paths[idx + 1], true);
+      } else {
+        return path === appUrl.split('/')[1];
+      }
+    };
+    const checkForRestPath = (item: NavigationItem) => {
+      const hasModuleKey = item.hasOwnProperty('dataKey');
+      const hasModuleId = item.hasOwnProperty('dataId');
+      const matchKey = hasModuleKey && paths.length > 2 && item.dataKey === paths[2];
+      const matchId = hasModuleId && paths.length > 3 && item.dataId === paths[3];
+
+      return !hasModuleKey || !hasModuleId || hasModuleKey && matchKey && hasModuleId && matchId;
+    };
 
     this.navigationSections.forEach(section => {
-      const items = section.children;
-      section.isExpanded = false;
+      const navItems = section.children;
 
-      if (!hasAssigned && items.some(pathChecker)) {
+      section.isExpanded = false;
+      navItems.forEach(child => child.isSelected = false);
+
+      if (!hasAssigned && navItems.some(checkForAppPath)) {
         section.isExpanded = true;
         hasAssigned = true;
+
+        const foundItem = section.children.find(child => checkForAppPath(child) && checkForRestPath(child));
+        if (foundItem) {
+          foundItem.isSelected = true;
+        }
       }
     });
   }
