@@ -31,14 +31,14 @@ export class ArchViewerOptionsService {
   }
 
   getOptionDataForModuleStructure(): UiElementData {
-    const options = this.appViewerOptions
-      .filter( option => option.id === 'options');
-
-    if (options && options.length) {
-      const found = options.find(option => option.id === 'options');
-      found.categories = found.categories
-        .filter(category => category.type === ArchViewerOptionCategory.Orientation);
-    }
+    const optionsConfig = [ [ 'options', ArchViewerOptionCategory.Orientation ]];
+    const options = optionsConfig.map((config: [string, string]) => {
+      const found = this.appViewerOptions.find(section => section.id === config[0]);
+      if (found) {
+        found.categories = found.categories.filter(category => category.type === config[1]);
+      }
+      return found;
+    });
 
     return options;
   }
