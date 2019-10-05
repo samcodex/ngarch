@@ -394,17 +394,17 @@ function breadthFirstForOrientation(orientation: Orientation) {
       let factor = 0;
       if (orientation === Orientation.LeftToRight) {
         if (archPonentType === AnalysisElementType.Routes) {
-          factor = 40;
+          factor = 0; // 40
         } else if (archPonentType === AnalysisElementType.Route) {
-          factor = 20;
+          factor = 0; // 20
         } else if (parentPonentType === AnalysisElementType.Route) {
           factor = 80;
         }
       } else {
         if (archPonentType === AnalysisElementType.Routes) {
-          factor = 40;
+          factor = 0; // 40
         } else if (archPonentType === AnalysisElementType.Route) {
-          factor = 20;
+          factor = 0; // 20
         } else if (parentPonentType === AnalysisElementType.Route) {
           factor = 50;
         }

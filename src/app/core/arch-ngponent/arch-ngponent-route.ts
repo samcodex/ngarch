@@ -68,6 +68,11 @@ export class ArchNgPonentRoute extends ArchNgPonent {
     return !!value;
   }
 
+  get hasRedirectTo(): boolean {
+    const value = this.getMetadataOf<NgRouteMetadata, any[]>('redirectTo');
+    return !!value;
+  }
+
   get hasChildren(): boolean {
     const value = this.getMetadataOf<NgRouteMetadata, any[]>('children');
     return !!value;
@@ -95,6 +100,12 @@ export class ArchNgPonentRoute extends ArchNgPonent {
     const value = this.getMetadataOf<NgRouteMetadata, any[]>('path');
     const path = value ? value[0] : null;
     return path;
+  }
+
+  getRedirectTo(): string {
+    const value = this.getMetadataOf<NgRouteMetadata, any[]>('redirectTo');
+    const redirectTo = value ? value[0] : null;
+    return redirectTo;
   }
 
   getComponentName(): string {
@@ -154,6 +165,21 @@ export class ArchNgPonentRoute extends ArchNgPonent {
     return null;
   }
 
+  getShortDescription(): string {
+    let short: string[] = [];
+    const path = this.getPath();
+    const redirectTo = this.getRedirectTo();
+ 
+    if (path !== null) {
+      short.push('path: ' + path );
+    }
+
+    if (redirectTo) {
+      short.push('redirectTo: ' + redirectTo);
+    }
+
+    return short.length ? short.join(', ') : null;
+  }
   // getLoadChildrenModuleId(): ModuleIdentifier {
   //   if (this.hasLoadChildren) {
   //     const ponentTypes = [TsPonentType.ObjectExpressionPonent, null];

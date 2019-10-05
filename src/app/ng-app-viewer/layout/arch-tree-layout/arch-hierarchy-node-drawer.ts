@@ -400,7 +400,7 @@ function drawBottomLineFn(nodeSize: PairNumber) {
   return (nodeEnter: HierarchyPointNodeSelection) => {
     nodeEnter.append('text')
       .classed('node-bottom-line', true)
-      .text(d => 'path: ' + d.data.bottomLine)
+      .text(d => d.data.bottomLine)
       .style('fill', 'black')
       .attr('font-size', 9)
       .attr('stroke-width', '0px')

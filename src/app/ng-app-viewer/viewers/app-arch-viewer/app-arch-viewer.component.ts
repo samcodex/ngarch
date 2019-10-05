@@ -21,11 +21,23 @@ import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
 import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent } from '../config/arch-viewer-definition';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
+import { NgPonentType } from '@core/ngponent-tsponent';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {
-  const routeArchNgPonent = node.getRelatedRoutePonent() as ArchNgPonentRoute;
-  node.bottomLine = routeArchNgPonent ? routeArchNgPonent.getPath() : null;
+  let routeArchNgPonent = node.getRelatedRoutePonent() as ArchNgPonentRoute;
+  if (!routeArchNgPonent) {
+    const ponent = node.archPonent;
+    if (ponent.ngPonentType === NgPonentType.Route) {
+      routeArchNgPonent = ponent as ArchNgPonentRoute;
+      routeArchNgPonent = routeArchNgPonent.hasComponent 
+        || routeArchNgPonent.hasChildren || routeArchNgPonent.hasLoadChildren ? null : routeArchNgPonent;
+    }
+  }
+
+  if (routeArchNgPonent) {
+    node.bottomLine = routeArchNgPonent.getShortDescription();
+  }
 };
 
 @Component({
