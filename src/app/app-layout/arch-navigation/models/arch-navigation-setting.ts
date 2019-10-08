@@ -12,13 +12,13 @@ const sortFn = (item1: NavigationItem, item2: NavigationItem) => {
 const appDiagram: NavigationItem[] = [
   {
     id: 'application_architecture',
-    name: 'Runtime Structure',
-    title: 'Runtime Structure',
+    name: 'Application Architecture',
+    title: 'Application Architecture',
     path: NavigationPaths.NgAppViewer,
     dataKey: 'viewer',
     dataId: 'app-arch',
     category: NavigationCategory.ARCHITECTURE_VIEWER,
-    order: 2
+    order: 1
   },
   {
     id: 'angular_ponent_structure',
@@ -28,7 +28,7 @@ const appDiagram: NavigationItem[] = [
     dataKey: 'viewer',
     dataId: 'module-struct',
     category: NavigationCategory.ARCHITECTURE_VIEWER,
-    order: 1
+    order: 2
   },
   {
     id: 'service_dependency_tree',
