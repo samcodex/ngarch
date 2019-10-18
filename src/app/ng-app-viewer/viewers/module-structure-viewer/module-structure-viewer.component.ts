@@ -137,7 +137,7 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
 
     if (item.type === PonentActionScope.ComponentAction) {
       let data;
-      if (purpose === PonentActionPurpose.RuntimeStructure) {
+      if (purpose === PonentActionPurpose.ArchitectureView) {
         data = item.data;
       } else if (purpose === PonentActionPurpose.StructureDiagram) {
         const dNode = item.data as DiagramTreeNode;
