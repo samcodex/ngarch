@@ -25,10 +25,16 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
   // 1. root ArchPonent - ArchNgPonentModule, appModule level
   const rootPonent: ArchNgPonentModule = archStore.getBootstrapModule();
-  const root = tree.createRootNode(rootPonent);
+  const root = tree.createRootNode<ArchNgPonentModule>(rootPonent);
   appendNodeRelatedProvider(root);
 
-  parseFromNgModule(root, ArchPonentFeature.RouterModuleForRoot);
+  const bootstrappedComponents = archNgPonentHelper.getBootstrappedComponent(rootPonent);
+  const bootstrappedNodes: ArchNode<ArchNgPonentComponent>[] = bootstrappedComponents.map(root.appendChildNgPonent.bind(root));
+
+  // parseFromNgModule(root, ArchPonentFeature.RouterModuleForRoot);
+  bootstrappedNodes.forEach(bootstrappedNode => {
+    parseFromNgModule(bootstrappedNode, root, ArchPonentFeature.RouterModuleForRoot);
+  });
 
   return tree;
 
@@ -50,7 +56,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
    *
    * startNode => routerNode => routesNode => routeNode => relatedPonent
    */
-  function parseFromNgModule(startNode: ArchNode<ArchNgPonentModule>,
+  function parseFromNgModule(expectStartNode: ArchNode<ArchNgPonent>, startNode: ArchNode<ArchNgPonentModule>,
       routerFeature: ArchPonentFeature = ArchPonentFeature.RouterModuleForChild) {
 
     const startPonent: ArchNgPonentModule = startNode.archNgPonent;
@@ -63,7 +69,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
     // create routerNode
     const routerPonent: ArchNgPonentModule = isRouterPonent ? startPonent : findRouterInGivenModule(startPonent);
     const appendChild = () => {
-      const childNode = startNode.appendChildNgPonent(routerPonent);
+      const childNode = (expectStartNode || startNode).appendChildNgPonent(routerPonent);
       appendNodeRelatedProvider(childNode);
       return childNode;
     };
@@ -127,7 +133,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
         }
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
-          parseFromNgModule(relatedPonentNode);
+          parseFromNgModule(null, relatedPonentNode);
         }
 
         if (routeRelatedPonent instanceof ArchNgPonentComponent) {

@@ -155,7 +155,7 @@ export class ArchTree {
     this.treeType = treeType;
   }
 
-  createRootNode(archPonent: ArchNgPonent): ArchNode {
-    return this.archRoot = new ArchNode(this, null, archPonent);
+  createRootNode<T extends ArchNgPonent = ArchNgPonent>(archPonent: T): ArchNode<T> {
+    return this.archRoot = new ArchNode<T>(this, null, archPonent);
   }
 }
