@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import * as d3 from 'd3';
 import { mergeMap, tap } from 'rxjs/operators';
@@ -26,7 +26,7 @@ import { DiagramLayout } from '@core/diagram/diagram-layout';
     DiagramOrganizer, PonentMokuaiDataService, PonentMokuaiOptionsService
   ]
 })
-export class MokuaiDetailComponent implements OnInit, OnDestroy {
+export class MokuaiDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   // view-header
   selectedPonentPath: string[] = [];
   isPonentsLoading = true;
@@ -65,6 +65,10 @@ export class MokuaiDetailComponent implements OnInit, OnDestroy {
     this.setupStream();
   }
 
+  ngAfterViewInit() {
+    this.resizeBoard();
+  }
+
   private initBoard(useSvgBoard: boolean) {
     if (!this.board || this.useSvgBoard !== useSvgBoard) {
       if (this.board) {
@@ -75,6 +79,8 @@ export class MokuaiDetailComponent implements OnInit, OnDestroy {
       this.board = useSvgBoard ?  new SvgBoard(this.host) : new SvgZoomBoard(this.host);
       this.organizer.setBoard(this.board);
       this.organizer.start();
+
+      this.resizeBoard();
     }
   }
 
@@ -133,8 +139,7 @@ export class MokuaiDetailComponent implements OnInit, OnDestroy {
   // TODO
   @HostListener('window:resize', ['$event'])
   onSizeChanged(event) {
-    // const size = this.nativeElement.getBoundingClientRect();
-    // this.board.setSize(size.width, size.height);
+    // this.resizeBoard();
   }
 
   onClickPonentPathItem(ponentName: string) {
@@ -143,6 +148,13 @@ export class MokuaiDetailComponent implements OnInit, OnDestroy {
 
     if (!result) {
       // this.isPonentsLoading = false;
+    }
+  }
+
+  private resizeBoard() {
+    if (this.board) {
+      const size = this.nativeElement.getBoundingClientRect();
+      this.board.resetSize(size.width, size.height);
     }
   }
 
