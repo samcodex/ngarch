@@ -13,7 +13,7 @@
 
         <ng-container *ngIf="view.isCheckable">
           <mat-checkbox [disabled]="!view.isSelected" (change)="onCheckDetailOfTab(view)"
-            [(ngModel)]="view.isChecked" matTooltip="UML Style" style="display: none">
+            [(ngModel)]="view.isChecked" matTooltip="Enable/Disable Force-Directed Tree">
           </mat-checkbox>
         </ng-container>
 
