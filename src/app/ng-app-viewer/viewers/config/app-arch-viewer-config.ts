@@ -2,7 +2,7 @@ import { UiElementCategory, UiElementSection } from '@core/models/ui-element-cat
 import { MetaInputType } from '@config/meta-config';
 import { UiElementItem } from '@core/models/ui-element-item';
 import { Orientation } from '@core/diagram/layout-options';
-import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent } from './arch-viewer-definition';
+import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from './arch-viewer-definition';
 
 const compositionDetails = ['Including:', '@NgModule/declarations (Module-Component)',
 '@NgModule/providers or ModuleWithProviders (Module-Service)', '@NgModule/imports/RouterModule.forRoot/forChild (Module-Routes)',
@@ -12,6 +12,29 @@ const dependencyDetails = ['Including:', '@NgModule/imports (Module-Module)', 'H
 
 
 const filterByUsed = (item: UiElementItem) => item.isUsed !== false;
+
+const hierarchyOptions: UiElementCategory[] = [
+  {
+    id: 'hierarchy',
+    name: 'Hierarchy',
+    type: ArchViewerOptionCategory.Hierarchy,
+    inputType: MetaInputType.RadioGroup,
+    items: [
+      { name: 'Full View', value: ArchViewerHierarchy.FullView,
+        type: null, isChecked: true
+      },
+      { name: 'Component Hierarchy', value: ArchViewerHierarchy.ComponentHierarchy,
+        type: null, isChecked: false
+      },
+      { name: 'Routing Hierarchy', value: ArchViewerHierarchy.RoutingHierarchy,
+        type: null, isChecked: false
+      },
+      { name: 'Injector Hierarchy', value: ArchViewerHierarchy.InjectorHierarchy,
+        type: null, isChecked: false
+      }
+    ].filter(filterByUsed)
+  }
+];
 
 const viewerOptions: UiElementCategory[] = [
   {
@@ -94,6 +117,12 @@ const viewerServiceOptions: UiElementCategory[] = [
 // ];
 
 export const appViewerOptions: UiElementSection[] = [
+  {
+    name: 'Hierarchies',
+    id: 'hierarchies',
+    type: 'hierarchies',
+    categories: hierarchyOptions
+  },
   {
     name: 'Tree Options',
     id: 'options',

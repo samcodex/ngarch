@@ -18,7 +18,7 @@ import { UiElementData } from '@core/models/ui-element-category';
 import { filterArchViewerTreeContextWithRoutes } from './services/arch-viewer-tree-context-builder';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
-import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent } from '../config/arch-viewer-definition';
+import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from '../config/arch-viewer-definition';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { NgPonentType } from '@core/ngponent-tsponent';
@@ -35,10 +35,28 @@ const mapDiagramTreeNode = (node: DiagramTreeNode) => {
     }
   }
 
-  if (routeArchNgPonent) {
+  if (routeArchNgPonent && routeArchNgPonent instanceof ArchNgPonentRoute) {
     node.bottomLine = routeArchNgPonent.getShortDescription();
   }
 };
+
+const hierarchies = [
+  {
+    id: 'component',
+    name: 'Component Hierarchy',
+    over: false
+  },
+  {
+    id: 'route',
+    name: 'Routing Hierarchy',
+    over: false
+  },
+  {
+    id: 'injector',
+    name: 'Injector Hierarchy',
+    over: false
+  }
+];
 
 @Component({
   templateUrl: './app-arch-viewer.component.html',
@@ -57,6 +75,8 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
 
   viewerType = ViewerType.AppArchViewer;
   @ViewChild('svgBoard') svgBoardRef: ElementRef;
+
+  hierarchies = hierarchies;
 
   constructor(
     elementRef: ElementRef,
@@ -118,6 +138,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   private setupStream() {
     const source = combineLatest([
       this.viewerDataService.getRouteTree(),
+      this.optionsService.getViewerHierarchy(),
       this.optionsService.getViewerOrientation(),
       this.optionsService.getViewerNodeType(),
       this.optionsService.getViewerType(),
@@ -128,7 +149,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
       .pipe(
         takeUntilNgDestroy(this)
       )
-      .subscribe( ([ data, orientation, nodeType, viewerType, extraContent ]) => {
+      .subscribe( ([ data, hierarchy, orientation, nodeType, viewerType, extraContent ]) => {
         this.updateOrganizer(data, orientation, nodeType, viewerType, extraContent);
       });
   }

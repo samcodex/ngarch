@@ -6,7 +6,7 @@ import { UiElementCategory, UiElementSection, UiElementData, findCategoryFromSec
 import { UiElementItem } from '@core/models/ui-element-item';
 import { appViewerOptions } from '../../config/app-arch-viewer-config';
 import { Orientation } from '@core/diagram/layout-options';
-import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent } from '../../config/arch-viewer-definition';
+import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from '../../config/arch-viewer-definition';
 
 const isItemChecked = (item: UiElementItem) => item.isChecked;
 
@@ -17,6 +17,7 @@ export class ArchViewerOptionsService {
 
   private appViewerOptions: UiElementData = cloneDeep(appViewerOptions);
 
+  private viewerHierarchy: BehaviorSubject<ArchViewerHierarchy> = new BehaviorSubject(ArchViewerHierarchy.FullView);
   private viewerOrientation: BehaviorSubject<Orientation> = new BehaviorSubject(Orientation.TopToBottom);
   private viewerNodeType: BehaviorSubject<ArchViewerNodeType> = new BehaviorSubject(null);
   private viewerType: BehaviorSubject<ArchViewerType> = new BehaviorSubject(ArchViewerType.RoutesTree);
@@ -46,6 +47,9 @@ export class ArchViewerOptionsService {
   changeOption(section: UiElementSection, category: UiElementCategory<ArchViewerOptionCategory>, option: UiElementItem): void {
     const categoryType = category.type;
     switch (categoryType) {
+      case ArchViewerOptionCategory.Hierarchy:
+        this.viewerHierarchy.next(option.value);
+        break;
       case ArchViewerOptionCategory.Orientation:
         this.viewerOrientation.next(option.value);
         break;
@@ -61,6 +65,10 @@ export class ArchViewerOptionsService {
       default:
 
     }
+  }
+
+  getViewerHierarchy(): Observable<ArchViewerHierarchy> {
+    return this.viewerHierarchy.asObservable();
   }
 
   getViewerOrientation(): Observable<Orientation> {
@@ -80,6 +88,9 @@ export class ArchViewerOptionsService {
   }
 
   private initViewerOptions() {
+    const checkedHierarchy = this.findCheckedItem(ArchViewerOptionCategory.Hierarchy);
+    this.viewerHierarchy.next(checkedHierarchy ? checkedHierarchy.value : null);
+
     const checkedOrientation = this.findCheckedItem(ArchViewerOptionCategory.Orientation);
     this.viewerOrientation.next(checkedOrientation ? checkedOrientation.value : null);
 

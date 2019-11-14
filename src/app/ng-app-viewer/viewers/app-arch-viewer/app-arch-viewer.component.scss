@@ -28,21 +28,54 @@
 
 .viewer-header-bar {
   padding-top: 5px;
+  display: flex;
 }
 
 .viewer-header {
   padding-left: 15px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .viewer-explanation-icon {
   margin-left: 6px;
-  position: absolute;
+  // position: absolute;
   top: 4px;
   cursor: pointer;
 
   .material-icons {
     color: #fb1b1b;
     font-size: 18px;
+  }
+}
+
+.viewer-explanation-hierarchies {
+  font-size: 12px;
+  margin-left: 8px;
+  margin-top: 3px;
+  color: gray;
+
+  .viewer-hierarchy-item {
+    position: relative;
+    display: inline-block;
+
+    .viewer-hierarchy-name {
+      font-weight: 600;
+      color: #2196f3;
+      cursor: help;
+    }
+
+    .viewer-hierarchy-detail {
+      margin-top: 4px;
+      position: absolute;
+      background-color: #f6f8fa;
+      border: #c1d7e7 solid 1px;
+      z-index: 2;
+      font-size: small;
+      color: gray;
+      box-shadow:3px 3px 10px 2px #cfcfcf;
+      padding: 5px 10px;
+      font-size: small;
+    }    
   }
 }
