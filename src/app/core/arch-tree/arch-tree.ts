@@ -143,6 +143,31 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
   findNodeByArchPonent(archNgPonent: ArchNgPonent): ArchNode {
     return this._children ? this._children.find((child) => child.archNgPonent.equalTo(archNgPonent)) : null;
   }
+
+  // clone(archTree: ArchTree, parent: ArchNode): ArchNode {
+  //   const clonedNode = new ArchNode(archTree, parent, this._archNgPonent, this.name);
+  //   clonedNode._tsPonent = this._tsPonent;
+
+  //   if (this._relatedArchNgPonents) {
+  //     const relatedKeys = Object.keys(this._relatedArchNgPonents);
+  //     relatedKeys.forEach(key => {
+  //       clonedNode.appendRelatedArchNgPonent(key as AnalysisElementType, this._relatedArchNgPonents[key]);
+  //     });
+  //   }
+
+  //   if (this._expectAnalysisType) {
+  //     clonedNode.changeExpectAnalysisType(this._expectAnalysisType);
+  //   }
+
+  //   if (this._children) {
+  //     this._children
+  //       .forEach(child => {
+  //         clonedNode.appendChildNode(child.clone(clonedNode._archTree, clonedNode));
+  //       });
+  //   }
+
+  //   return clonedNode;
+  // }
 }
 
 export class ArchTree {
@@ -158,4 +183,10 @@ export class ArchTree {
   createRootNode<T extends ArchNgPonent = ArchNgPonent>(archPonent: T): ArchNode<T> {
     return this.archRoot = new ArchNode<T>(this, null, archPonent);
   }
+
+  // clone(): ArchTree {
+  //   const clonedTree = new ArchTree(this.name, this.treeType);
+  //   clonedTree.archRoot = this.archRoot.clone(clonedTree, null);
+  //   return clonedTree;
+  // }
 }
