@@ -84,8 +84,12 @@ export class ArchStoreData {
   }
 
   // archTress
-  get routeTree(): ArchTree {
+  get routeLoadingTree(): ArchTree {
     return this._archTrees ? this._archTrees[ArchTreeType.RouteLoadingTree] as ArchTree : null;
+  }
+
+  get routingHierarchyTree(): ArchTree {
+    return this._archTrees ? this._archTrees[ArchTreeType.RoutingHierarchyTree] as ArchTree : null;
   }
 
   get componentUsageTree(): ArchTree {

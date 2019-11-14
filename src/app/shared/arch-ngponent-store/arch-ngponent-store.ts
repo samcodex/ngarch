@@ -178,7 +178,11 @@ export class ArchNgPonentStore extends Pausable<ArchStoreData> implements IReloa
 
   // ArchTree
   getRouteTree(): Observable<ArchTree> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.routeTree));
+    return this.getValidStoreData().pipe(map( storeData => storeData.routeLoadingTree));
+  }
+
+  getRoutingHierarchyTree(): Observable<ArchTree> {
+    return this.getValidStoreData().pipe(map( storeData => storeData.routingHierarchyTree));
   }
 
   getComponentUsageTree(): Observable<ArchTree> {
