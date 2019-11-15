@@ -18,6 +18,7 @@ import { ArchTree } from '@core/arch-tree/arch-tree';
 import { getRouteArchPonentsWithRootModuleId } from './helpers/store-routes-helper';
 import { ProjectProfileService } from '@shared/project-profile/project-profile.service';
 import { isInvalidProjectConfig } from '@shared/project-profile';
+import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 
 /**
  * Definitions:
@@ -74,9 +75,10 @@ export class ArchNgPonentStore extends Pausable<ArchStoreData> implements IReloa
   }
 
   getValidStoreData(): Observable<ArchStoreData> {
-    return this.getStoreData().pipe(
-      filter(storeData => !storeData.isEmpty)
-    );
+    return this.getStoreData()
+      .pipe(
+        filter(storeData => !storeData.isEmpty)
+      );
   }
 
   public reload() {
@@ -177,23 +179,7 @@ export class ArchNgPonentStore extends Pausable<ArchStoreData> implements IReloa
   }
 
   // ArchTree
-  getRouteTree(): Observable<ArchTree> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.routeLoadingTree));
-  }
-
-  getRoutingHierarchyTree(): Observable<ArchTree> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.routingHierarchyTree));
-  }
-
-  getComponentUsageTree(): Observable<ArchTree> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.componentUsageTree));
-  }
-
-  getServiceDependencyTree(): Observable<ArchTree | ArchTree[]> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.serviceDependencyTree));
-  }
-
-  getModuleStructureTree(): Observable<ArchTree> {
-    return this.getValidStoreData().pipe(map( storeData => storeData.moduleStructureTree));
+  getArchTree(treeType: ArchTreeType): Observable<ArchTree> {
+    return this.getValidStoreData().pipe(map( storeData => storeData.getArchTree(treeType)));
   }
 }

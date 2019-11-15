@@ -1,3 +1,5 @@
+import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
+
 export enum ArchViewerOptionCategory {
   Hierarchy = 'Hierarchy',
   Orientation = 'Orientation',
@@ -25,3 +27,12 @@ export enum ArchViewerType {
 export enum ArchViewerExtraContent {
   LayerServiceProvider = 'LayerServiceProvider'
 }
+
+export const mapOfViewerHierarchyToArchTree: { [ key in ArchViewerHierarchy ]: ArchTreeType} = {
+  [ ArchViewerHierarchy.FullView ]: ArchTreeType.RouteLoadingTree,
+  [ ArchViewerHierarchy.ComponentHierarchy ]: ArchTreeType.ComponentUsageTree,
+  [ ArchViewerHierarchy.RoutingHierarchy ]: ArchTreeType.RoutingHierarchyTree,
+  [ ArchViewerHierarchy.InjectorHierarchy ]: ArchTreeType.ServiceDependencyTree
+};
+
+export const mapViewerHierarchyToArchTree = (hierarchy: ArchViewerHierarchy) => mapOfViewerHierarchyToArchTree[hierarchy];

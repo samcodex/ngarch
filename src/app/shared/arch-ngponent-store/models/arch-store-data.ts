@@ -84,24 +84,8 @@ export class ArchStoreData {
   }
 
   // archTress
-  get routeLoadingTree(): ArchTree {
-    return this._archTrees ? this._archTrees[ArchTreeType.RouteLoadingTree] as ArchTree : null;
-  }
-
-  get routingHierarchyTree(): ArchTree {
-    return this._archTrees ? this._archTrees[ArchTreeType.RoutingHierarchyTree] as ArchTree : null;
-  }
-
-  get componentUsageTree(): ArchTree {
-    return this._archTrees ? this._archTrees[ArchTreeType.ComponentUsageTree] as ArchTree : null;
-  }
-
-  get serviceDependencyTree(): ArchTree | ArchTree[] {
-    return this._archTrees ? this._archTrees[ArchTreeType.ServiceDependencyTree] : null;
-  }
-
-  get moduleStructureTree(): ArchTree {
-    return this._archTrees ? this._archTrees[ArchTreeType.ModuleStructureTree] as ArchTree : null;
+  getArchTree(treeType: ArchTreeType): ArchTree {
+    return this._archTrees ? this._archTrees[treeType] as ArchTree : null;
   }
 
   // find method

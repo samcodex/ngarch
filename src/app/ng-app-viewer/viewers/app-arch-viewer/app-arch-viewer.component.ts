@@ -30,7 +30,7 @@ const mapDiagramTreeNode = (node: DiagramTreeNode) => {
     const ponent = node.archPonent;
     if (ponent.ngPonentType === NgPonentType.Route) {
       routeArchNgPonent = ponent as ArchNgPonentRoute;
-      routeArchNgPonent = routeArchNgPonent.hasComponent 
+      routeArchNgPonent = routeArchNgPonent.hasComponent
         || routeArchNgPonent.hasChildren || routeArchNgPonent.hasLoadChildren ? null : routeArchNgPonent;
     }
   }
@@ -137,8 +137,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
 
   private setupStream() {
     const source = combineLatest([
-      this.viewerDataService.getRouteTree(),
-      this.optionsService.getViewerHierarchy(),
+      this.viewerDataService.getViewerDataByHierarchyOption(),
       this.optionsService.getViewerOrientation(),
       this.optionsService.getViewerNodeType(),
       this.optionsService.getViewerType(),
@@ -149,7 +148,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
       .pipe(
         takeUntilNgDestroy(this)
       )
-      .subscribe( ([ data, hierarchy, orientation, nodeType, viewerType, extraContent ]) => {
+      .subscribe( ([ data, orientation, nodeType, viewerType, extraContent ]) => {
         this.updateOrganizer(data, orientation, nodeType, viewerType, extraContent);
       });
   }
