@@ -39,15 +39,12 @@ export class AppViewerDataService {
     return this.store.findPonentAndSpecificDependencies(ponentName, [RelationshipType.Dependency]);
   }
 
-  getViewerDataByHierarchyOption(): Observable<ArchTree> {
-    return this.optionsService.getViewerHierarchy()
-      .pipe(
-        map(mapViewerHierarchyToArchTree),
-        mergeMap(this.store.getArchTree.bind(this.store))
-      );
+
+  getArchTreeByType(type: ArchTreeType): Observable<ArchTree> {
+    return this.store.getArchTreeByType(type);
   }
 
   getStructureTree() {
-    return this.store.getArchTree(ArchTreeType.ModuleStructureTree);
+    return this.store.getArchTreeByType(ArchTreeType.ModuleStructureTree);
   }
 }

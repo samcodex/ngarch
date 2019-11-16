@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject, zip } from 'rxjs';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { ArchEndPoints } from '../../config/arch-end-points';
 import { ArchNgPonent, ArchNgPonentInjectable } from '@core/arch-ngponent';
@@ -179,7 +179,7 @@ export class ArchNgPonentStore extends Pausable<ArchStoreData> implements IReloa
   }
 
   // ArchTree
-  getArchTree(treeType: ArchTreeType): Observable<ArchTree> {
+  getArchTreeByType(treeType: ArchTreeType): Observable<ArchTree> {
     return this.getValidStoreData().pipe(map( storeData => storeData.getArchTree(treeType)));
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
+import { map, mergeMap } from 'rxjs/operators';
 
 import { DiagramOrganizer } from '@core/diagram';
 import { DiagramLayoutToken } from '@core/diagram/diagram-layout';
@@ -18,7 +19,7 @@ import { UiElementData } from '@core/models/ui-element-category';
 import { filterArchViewerTreeContextWithRoutes } from './services/arch-viewer-tree-context-builder';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
-import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from '../config/arch-viewer-definition';
+import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, mapViewerHierarchyToArchTree, ArchViewerHierarchy } from '../config/arch-viewer-definition';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { NgPonentType } from '@core/ngponent-tsponent';
@@ -136,8 +137,15 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   private setupStream() {
+    const treeSource = this.optionsService.getViewerHierarchy()
+      .pipe(
+        map(mapViewerHierarchyToArchTree),
+        mergeMap((type) => this.viewerDataService.getArchTreeByType(type))
+      );
+
     const source = combineLatest([
-      this.viewerDataService.getViewerDataByHierarchyOption(),
+      treeSource,
+      this.optionsService.getViewerHierarchy(),
       this.optionsService.getViewerOrientation(),
       this.optionsService.getViewerNodeType(),
       this.optionsService.getViewerType(),
@@ -148,13 +156,13 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
       .pipe(
         takeUntilNgDestroy(this)
       )
-      .subscribe( ([ data, orientation, nodeType, viewerType, extraContent ]) => {
-        this.updateOrganizer(data, orientation, nodeType, viewerType, extraContent);
+      .subscribe( ([ data, hierarchy, orientation, nodeType, viewerType, extraContent ]) => {
+        this.updateOrganizer(data, hierarchy, orientation, nodeType, viewerType, extraContent);
       });
   }
 
-  private updateOrganizer(data: ArchTree, orientation: Orientation, nodeType: ArchViewerNodeType,
-      viewerType: ArchViewerType, extraContent: ArchViewerExtraContent) {
+  private updateOrganizer(data: ArchTree, hierarchy: ArchViewerHierarchy, orientation: Orientation,
+      nodeType: ArchViewerNodeType, viewerType: ArchViewerType, extraContent: ArchViewerExtraContent) {
     this.organizer.clear();
 
     if (data) {
