@@ -176,10 +176,6 @@ export class ArchStoreData {
     return this._featureModulePonents.find(archNgPonent => archNgPonent.isBootstrapModule);
   }
 
-  getRootRoutePonent() {
-
-  }
-
   tryFindModulePonentByName(name: string, fileName?: string): ArchNgPonent {
     return tryFindByName(this._moduleTypePonents, name, fileName);
   }

@@ -10,3 +10,4 @@ export * from './arch-ngponent-metadata';
 export * from './arch-ngponent-module';
 export * from './arch-ngponent-routes';
 export * from './arch-ngponent-ts-members';
+export * from './arch-ngponent-route';
