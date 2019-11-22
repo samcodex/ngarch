@@ -23,7 +23,7 @@ export namespace archNgPonentHelper {
 
   export const findCallExpressionPonent = _findCallExpressionPonent;
   export const findIdentifierExpressionPonent = _findIdentifierExpressionPonent;
-  export const getBootstrappedComponent = _getBootstrappedComponent;
+  export const getBootstrappedComponents = _getBootstrappedComponents;
 }
 
 // TsPonentType.CallExpressionPonent
@@ -41,7 +41,7 @@ function _findSpecificPonent(ponent: TsPonent | ArchNgPonent,
   return tsPonent.findMemberWithTypeAndName(ponentType, callerName);
 }
 
-function _getBootstrappedComponent(ngModule: ArchNgPonentModule): ArchNgPonentComponent[] {
+function _getBootstrappedComponents(ngModule: ArchNgPonentModule): ArchNgPonentComponent[] {
   const bootstraps: string[] = ngModule.getMetadataOf('bootstrap');
   const bootstrappedComponents: ArchNgPonentComponent[] = bootstraps.map(comName => ngModule.allDependencies.find(dep => dep.name === comName));
   return bootstrappedComponents;

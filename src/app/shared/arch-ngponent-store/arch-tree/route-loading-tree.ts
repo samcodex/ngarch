@@ -28,7 +28,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
   const root = tree.createRootNode<ArchNgPonentModule>(rootPonent);
   appendNodeRelatedProvider(root);
 
-  const bootstrappedComponents = archNgPonentHelper.getBootstrappedComponent(rootPonent);
+  const bootstrappedComponents = archNgPonentHelper.getBootstrappedComponents(rootPonent);
   const bootstrappedNodes: ArchNode<ArchNgPonentComponent>[] = bootstrappedComponents.map(root.appendChildNgPonent.bind(root));
 
   // parseFromNgModule(root, ArchPonentFeature.RouterModuleForRoot);
