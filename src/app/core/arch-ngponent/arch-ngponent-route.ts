@@ -4,6 +4,9 @@ import { ArchNgPonent } from './arch-ngponent';
 import { ArchNgPonentMetadata } from './arch-ngponent-metadata';
 import { ModuleIdentifier } from '@shared/arch-ngponent-store/resolver/arch-resolver-definition';
 import { ArchNgPonentRoutes } from './arch-ngponent-routes';
+import { ArchNgPonentModule } from './arch-ngponent-module';
+import { ArchNgPonentComponent } from './arch-ngponent-component';
+import { ArchStoreData } from '@shared/arch-ngponent-store';
 
 export class NgRouteMetadata extends ArchNgPonentMetadata {
   ngPonentType: NgPonentType = NgPonentType.Route;
@@ -166,10 +169,10 @@ export class ArchNgPonentRoute extends ArchNgPonent {
   }
 
   getShortDescription(): string {
-    let short: string[] = [];
+    const short: string[] = [];
     const path = this.getPath();
     const redirectTo = this.getRedirectTo();
- 
+
     if (path !== null) {
       short.push('path: ' + path );
     }
@@ -198,5 +201,23 @@ export class ArchNgPonentRoute extends ArchNgPonent {
 
   setSubRoutes(routes: ArchNgPonentRoutes) {
     this._subRoutes = routes;
+  }
+
+  getRelatedArchPonent(archStore: ArchStoreData): ArchNgPonentModule | ArchNgPonentComponent {
+    let relatedPonent: ArchNgPonentModule | ArchNgPonentComponent = null;
+
+    if (this.hasComponent) {
+      const moduleId = this.getComponentModuleIdentifier();
+      relatedPonent = archStore.findComponentByModuleId(moduleId);
+    } else if (this.hasLoadChildren) {
+      const moduleId = this.getLoadChildrenModuleId();
+      if (moduleId) {
+        relatedPonent = archStore.findPonentByModuleId(moduleId) as ArchNgPonentModule;
+      } else {
+        console.error('Cannot find the route\'s related ArchNgPonentModule', this);
+      }
+    }
+
+    return relatedPonent;
   }
 }
