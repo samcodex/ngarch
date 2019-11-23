@@ -12,7 +12,8 @@ export enum AnalysisElementType {
   Routes = 'Routes',
   Route = 'Route',
 
-  _Provider = '_Provider'
+  _Provider = '_Provider',
+  _From = '_From'
 }
 
 export const ElementTypeHelper = {

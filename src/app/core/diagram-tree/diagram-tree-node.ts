@@ -16,6 +16,7 @@ export class DiagramTreeNode extends DiagramElement {
 
   disabled = false;
   bottomLine: string;
+  topLine: string;
   isCollapsed = false;
   isSelected = false;
   isClickable = true;

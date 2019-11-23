@@ -39,6 +39,8 @@ const mapDiagramTreeNode = (node: DiagramTreeNode) => {
   if (routeArchNgPonent && routeArchNgPonent instanceof ArchNgPonentRoute) {
     node.bottomLine = routeArchNgPonent.getShortDescription();
   }
+
+  node.topLine = node.archNode.getRelatedFromLabel();
 };
 
 const hierarchies = [

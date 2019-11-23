@@ -98,6 +98,11 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
     this._expectAnalysisType = type;
   }
 
+  getRelatedFromLabel(): string {
+    const wrapper = this.getRelatedArchWrapperByType(AnalysisElementType._From);
+    return wrapper ? wrapper.label : null;
+  }
+
   getRelatedOfFirstRoutePonent(): ArchNgPonentRoute {
     const wrapper = this.getRelatedArchWrapperByType(AnalysisElementType.Route);
     return wrapper ? wrapper.firstChild as ArchNgPonentRoute : null;
@@ -116,7 +121,7 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
     return this._relatedArchNgPonents ? this._relatedArchNgPonents[type] : null;
   }
 
-  appendRelatedArchNgPonent(type: AnalysisElementType, archPonent: ArchNgPonent) {
+  appendRelatedArchNgPonent(type: AnalysisElementType, archPonent: ArchNgPonent, from?: string) {
     let archNgPonents: ArchWrapper<ArchNode, ArchNgPonent> = null;
     if (this._relatedArchNgPonents) {
       archNgPonents = this._relatedArchNgPonents[type];
@@ -125,7 +130,7 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
     }
 
     if (!archNgPonents) {
-      archNgPonents = this._relatedArchNgPonents[type] = new ArchWrapper(this);
+      archNgPonents = this._relatedArchNgPonents[type] = new ArchWrapper(this, from);
     }
 
     archNgPonents.appendChild(archPonent);

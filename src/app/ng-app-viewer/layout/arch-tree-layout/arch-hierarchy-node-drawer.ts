@@ -179,6 +179,7 @@ export class ArchHierarchyNodeDrawer {
     const isOthers = (d: ArchHierarchyPointNode) => !ArchHierarchyHelper.isModule(d)
       && !ArchHierarchyHelper.isRoutes(d) && !ArchHierarchyHelper.isRoute(d);
     const hasBottomLine = (dNode: ArchHierarchyPointNode) => !!dNode.data.bottomLine;
+    const hasTopLine = (dNode: ArchHierarchyPointNode) => !!dNode.data.topLine;
 
     // Module shape
     nodeEnter
@@ -200,6 +201,11 @@ export class ArchHierarchyNodeDrawer {
       .filter(isOthers)
       .call(drawRectangleFn(this.nodeSize));
 
+
+    // draw top line text
+    nodeEnter
+    .filter(hasTopLine)
+    .call(drawTopLineFn(this.nodeSize));
 
     // draw bottom line text
     nodeEnter
@@ -391,6 +397,22 @@ function drawCircleFn(position: PairNumber) {
       .attr('cx', cx)
       .attr('cy', cy)
       .attr('r', 15)
+      ;
+  };
+}
+
+function drawTopLineFn(nodeSize: PairNumber) {
+  const [ nodeWidth, nodeHeight ] = nodeSize;
+  return (nodeEnter: HierarchyPointNodeSelection) => {
+    nodeEnter.append('text')
+      .classed('node-top-line', true)
+      .text(d => d.data.topLine)
+      .style('fill', 'black')
+      .attr('font-size', 9)
+      .attr('stroke-width', '0px')
+      .attr('text-anchor', 'middle')
+      .attr('x', nodeWidth / 2)
+      .attr('y', -6)
       ;
   };
 }
