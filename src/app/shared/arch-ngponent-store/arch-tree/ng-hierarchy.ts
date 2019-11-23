@@ -7,6 +7,7 @@ import { TsPonent, NgPonentType } from '@core/ngponent-tsponent';
 import { RelationshipType } from '@core/arch-relationship/relationship-definition';
 import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
+import { AnalysisElementType } from '@core/models/analysis-element';
 
 const callExpressions = {
   [ ArchPonentFeature.RouterModuleForRoot ]: 'RouterModule.forRoot',
@@ -77,7 +78,7 @@ export class NgHierarchy {
 
     if (isRoutingModule) {
       // ***archModule has RouterModule.forRoot or RouterModule.forChild, continue traverse its Route[] or Routes
-      const routesPonent = this.getArchRoutesFromRoutingModule(archModule, routerFeature);
+      const routesPonent: ArchNgPonentRoutes = this.getArchRoutesFromRoutingModule(archModule, routerFeature);
 
       if (routesPonent && routesPonent instanceof ArchNgPonentRoutes && routesPonent.children) {
         // nextLoopNode is parentNode or routesNode
@@ -85,7 +86,7 @@ export class NgHierarchy {
           [NgHierarchyTraverseType.ComponentRoutingPath, NgHierarchyTraverseType.RoutingPath]);
 
         // ***traverse Routes' elements
-        routesPonent.children.forEach(this.traverseRoutesPonent(routesPonent, nextLoopNode));
+        routesPonent.children.forEach(this.traverseRoutesPonent(routesPonent, nextLoopNode, '<router-outlet/>'));
       }
     } else {
       // ***find the routing module through import's paths
@@ -104,7 +105,6 @@ export class NgHierarchy {
 
   // ***traverse ArchComponent, through the selectors in the template
   private traverseArchComponent(archComponent: ArchNgPonentComponent, parentNode: ArchNode) {
-
     if (archComponent.hasDownConnection) {
       const connections = archComponent.archRelationship ? archComponent.archRelationship.downConnections : null;
       if (connections) {
@@ -114,9 +114,10 @@ export class NgHierarchy {
           .forEach((connection) => {
             const subArchPonent = connection.endOfArchPonent;
 
-            parentNode.appendChildNgPonent(subArchPonent);
+            const subNode = parentNode.appendChildNgPonent(subArchPonent);
+            subNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, '<template>');
 
-            this.traverseArchComponent(subArchPonent, parentNode);
+            this.traverseArchComponent(subArchPonent, subNode);
           });
       }
     }
@@ -147,7 +148,7 @@ export class NgHierarchy {
   }
 
   // ***traverse the element(component or loadChildren) of Routes
-  private traverseRoutesPonent(archRoutes: ArchNgPonentRoutes, parentNode: ArchNode) {
+  private traverseRoutesPonent(archRoutes: ArchNgPonentRoutes, parentNode: ArchNode, from: string) {
     return (routePonent: ArchNgPonentRoute) => {
       // Route component or loadChildren - Lazy loading ArchNgPonentModule
       const routeRelatedPonent: ArchNgPonentModule | ArchNgPonentComponent =
@@ -156,15 +157,21 @@ export class NgHierarchy {
       if (routeRelatedPonent) {
         const routeRelatedNode = this.appendNode(parentNode, routeRelatedPonent);
 
+        // for displaying route.path under the node
+        routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routePonent);
+
+        // for displaying 'from' above the node
+        routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, from);
+
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
           this.traverseArchModule(routeRelatedPonent, routeRelatedNode);
         } else if (routeRelatedPonent instanceof ArchNgPonentComponent) {
           if (routePonent.hasSubRoutes) {
             const subRoutes = routePonent.subRoutes;
-            subRoutes.children.forEach(this.traverseRoutesPonent(archRoutes, routeRelatedNode));
+            subRoutes.children.forEach(this.traverseRoutesPonent(subRoutes, routeRelatedNode, '<router-outlet/>'));
           }
 
-          this.traverseArchComponent(routeRelatedPonent, parentNode);
+          this.traverseArchComponent(routeRelatedPonent, routeRelatedNode);
         }
       }
     };
