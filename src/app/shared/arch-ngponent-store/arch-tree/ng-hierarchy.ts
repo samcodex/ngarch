@@ -44,16 +44,17 @@ export class NgHierarchy {
 
   private traverseBootstrappedModule() {
     // ***bootstrapped module, appModule
-    const rootPonent: ArchNgPonentModule = this.archStore.getBootstrapModule();
-    const rootNode = this.createRootNode(rootPonent);
+    const rootArchModule: ArchNgPonentModule = this.archStore.getBootstrapModule();
+    const rootNode = this.createRootNode(rootArchModule);
 
     // ***bootstrapped component, appComponent
-    const bootstrappedComponents: ArchNgPonentComponent[] = archNgPonentHelper.getBootstrappedComponents(rootPonent);
+    const bootstrappedComponents: ArchNgPonentComponent[] = archNgPonentHelper.getBootstrappedComponents(rootArchModule);
 
     // TODO
     let mustChange;
     bootstrappedComponents.forEach(bootComponent => {
       const componentNode = this.appendNode(rootNode, bootComponent);
+      componentNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootArchModule, 'bootstrap');
 
       if (!mustChange) {
         mustChange = componentNode;
@@ -66,7 +67,7 @@ export class NgHierarchy {
     // TODO, 'mustChange' uses the first bootstrapped component,
     // it must be replaced with the logic of 'outlet' & 'outlets'
     // ***traverse bootstrapped module
-    this.traverseArchModule(rootPonent, mustChange, ArchPonentFeature.RouterModuleForRoot);
+    this.traverseArchModule(rootArchModule, mustChange, ArchPonentFeature.RouterModuleForRoot);
   }
 
   // RoutedModule(forRoot/forChild), RootingModule

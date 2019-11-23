@@ -29,11 +29,15 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
   appendNodeRelatedProvider(root);
 
   const bootstrappedComponents = archNgPonentHelper.getBootstrappedComponents(rootPonent);
-  const bootstrappedNodes: ArchNode<ArchNgPonentComponent>[] = bootstrappedComponents.map(root.appendChildNgPonent.bind(root));
+  const bootstrappedNodes: ArchNode<ArchNgPonentComponent>[] = bootstrappedComponents.map((bootstrapComponent) => {
+    const bootstrapNode = root.appendChildNgPonent(bootstrapComponent);
+    bootstrapNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootPonent, 'bootstrap');
+    return bootstrapNode;
+  });
 
   // parseFromNgModule(root, ArchPonentFeature.RouterModuleForRoot);
   bootstrappedNodes.forEach(bootstrappedNode => {
-    parseFromNgModule(bootstrappedNode, root, ArchPonentFeature.RouterModuleForRoot);
+    parseFromNgModule(null, root, ArchPonentFeature.RouterModuleForRoot);
   });
 
   return tree;
@@ -67,15 +71,23 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
       : storeDataHelper.findRouterForChildInGivenModule.bind(storeDataHelper);
 
     // create routerNode
-    const routerPonent: ArchNgPonentModule = isRouterPonent ? startPonent : findRouterInGivenModule(startPonent);
-    const appendChild = () => {
-      const childNode = (expectStartNode || startNode).appendChildNgPonent(routerPonent);
-      appendNodeRelatedProvider(childNode);
-      return childNode;
-    };
-    const routerNode: ArchNode<ArchNgPonentModule> = isRouterPonent
-      ? startNode
-      : routerPonent ? appendChild() : null;
+    let routerPonent: ArchNgPonentModule, routerNode: ArchNode<ArchNgPonentModule>;
+    if (isRouterPonent) {
+      routerPonent = startPonent;
+      routerNode = startNode;
+    } else {
+      const appendChild = (childArchModule: ArchNgPonentModule) => {
+        const parentNode = (expectStartNode || startNode);
+        const childNode = parentNode.appendChildNgPonent(childArchModule);
+        childNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, 'import');
+
+        appendNodeRelatedProvider(childNode);
+        return childNode;
+      };
+
+      routerPonent = findRouterInGivenModule(startPonent);
+      routerNode = routerPonent ? appendChild(routerPonent) : null;
+    }
 
     // create routesNode
     if (routerNode) {
@@ -130,6 +142,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
         if (routeNode) {
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routeNode.archNgPonent);
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, 'route.children');
         }
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
@@ -140,6 +153,8 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
           if (routePonent.hasSubRoutes) {
             const subRoutes = routePonent.subRoutes;
             const subRoutesNode = relatedPonentNode.appendChildNgPonent(subRoutes);
+            subRoutesNode.appendRelatedArchNgPonent(AnalysisElementType._From, routePonent, 'route.children');
+
             subRoutes.children.forEach(convertRoutePonentToNode(subRoutesNode));
           }
 
@@ -194,6 +209,7 @@ function appendNodeOfSubComponent(node: ArchNode<ArchNgPonentComponent>) {
         .forEach(function(connection) {
           const subArchPonent = connection.endOfArchPonent;
           const subNode = node.appendChildNgPonent(subArchPonent);
+          subNode.appendRelatedArchNgPonent(AnalysisElementType._From, node.archNgPonent, '<template>');
 
           appendNodeOfSubComponent(subNode);
         });

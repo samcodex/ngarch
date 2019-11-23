@@ -98,7 +98,7 @@ const simpleStyleConfig: { [key in Orientation]: StyleConfig } = {
   },
   [ Orientation.LeftToRight ]: {
     nodeSize: [ 110, 38 ],
-    nodeMargin: [ 70, 45 ]
+    nodeMargin: [ 120, 45 ]
   }
 };
 const detailProviderStyleConfig: { [key in Orientation]: StyleConfig } = {
@@ -205,7 +205,7 @@ export class ArchHierarchyNodeDrawer {
     // draw top line text
     nodeEnter
     .filter(hasTopLine)
-    .call(drawTopLineFn(this.nodeSize));
+    .call(drawTopLineFn(this.nodeSize, this.orientation));
 
     // draw bottom line text
     nodeEnter
@@ -401,8 +401,10 @@ function drawCircleFn(position: PairNumber) {
   };
 }
 
-function drawTopLineFn(nodeSize: PairNumber) {
+function drawTopLineFn(nodeSize: PairNumber, orientation: Orientation) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
+  const y = orientation === Orientation.TopToBottom ? -16 : 16;
+  const x = orientation === Orientation.TopToBottom ? nodeWidth / 2 : -40;
   return (nodeEnter: HierarchyPointNodeSelection) => {
     nodeEnter.append('text')
       .classed('node-top-line', true)
@@ -411,8 +413,8 @@ function drawTopLineFn(nodeSize: PairNumber) {
       .attr('font-size', 9)
       .attr('stroke-width', '0px')
       .attr('text-anchor', 'middle')
-      .attr('x', nodeWidth / 2)
-      .attr('y', -6)
+      .attr('x', x)
+      .attr('y', y)
       ;
   };
 }
