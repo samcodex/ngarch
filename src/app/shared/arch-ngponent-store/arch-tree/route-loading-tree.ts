@@ -142,7 +142,8 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
         if (routeNode) {
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routeNode.archNgPonent);
-          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, 'route.children');
+          const from = relatedPonentNode.archPonentType === 'NgModule' ? 'lazy-loading' : 'route.component';
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from);
         }
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
@@ -153,7 +154,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
           if (routePonent.hasSubRoutes) {
             const subRoutes = routePonent.subRoutes;
             const subRoutesNode = relatedPonentNode.appendChildNgPonent(subRoutes);
-            subRoutesNode.appendRelatedArchNgPonent(AnalysisElementType._From, routePonent, 'route.children');
+            subRoutesNode.appendRelatedArchNgPonent(AnalysisElementType._From, routePonent, 'route.component');
 
             subRoutes.children.forEach(convertRoutePonentToNode(subRoutesNode));
           }

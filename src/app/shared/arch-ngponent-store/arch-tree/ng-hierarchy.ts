@@ -14,6 +14,11 @@ const callExpressions = {
   [ ArchPonentFeature.RouterModuleForChild ]: 'RouterModule.forChild',
 };
 
+const mapOfFrom = {
+  'Component': '<router-outlet>',
+  'NgModule': 'lazy-loading'
+};
+
 export enum NgHierarchyTraverseType {
   ComponentPath = 'ComponentPath',
   RoutingPath = 'RoutingPath',
@@ -162,7 +167,8 @@ export class NgHierarchy {
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routePonent);
 
         // for displaying 'from' above the node
-        from = routeRelatedPonent instanceof ArchNgPonentModule ? 'lazy-loading' : from;
+        from = mapOfFrom[routeRelatedPonent.ngPonentType];
+
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, from);
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
