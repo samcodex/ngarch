@@ -38,6 +38,8 @@ const mapDiagramTreeNode = (node: DiagramTreeNode) => {
 
   if (routeArchNgPonent && routeArchNgPonent instanceof ArchNgPonentRoute) {
     node.bottomLine = routeArchNgPonent.getShortDescription();
+  } else if (node.archNode.archNgPonent instanceof ArchNgPonentRoute) {
+    node.bottomLine = node.archNode.archNgPonent.getShortDescription();
   }
 
   node.topLine = node.archNode.getRelatedFromLabel();

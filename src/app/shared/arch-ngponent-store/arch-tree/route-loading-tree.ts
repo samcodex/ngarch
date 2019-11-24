@@ -132,17 +132,17 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
       let routeNode: ArchNode<ArchNgPonentRoute>;
       if (includeRouteNode || !routeRelatedPonent) {
         routeNode = routesNode.appendChildNgPonent<ArchNgPonentRoute>(routePonent, 'route', true);
-        routeNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, '');
+        routeNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, 'Route');
       }
 
       if (routeRelatedPonent) {
+        const from = routeRelatedPonent.ngPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'component';
         let relatedPonentNode: ArchNode;
         if (!includeRouteNode) {
           relatedPonentNode = routesNode.appendChildNgPonent(routeRelatedPonent);
-          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, 'Route');
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, from);
         } else {
           relatedPonentNode = routeNode.appendChildNgPonent(routeRelatedPonent);
-          const from = relatedPonentNode.archPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'component';
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from);
         }
 

@@ -10,6 +10,7 @@ import { d3_shape } from '@core/svg/d3.shape';
 import { d3_svg } from '@core/svg/d3.svg';
 import { firstGearOfTwo, secondGearOfTwo } from '@core/svg/svg-defs';
 import { ArchNgPonentInjectable } from '@core/arch-ngponent/arch-ngponent-injectable';
+import { NgPonentType } from '@core/ngponent-tsponent';
 
 // types
 
@@ -210,7 +211,7 @@ export class ArchHierarchyNodeDrawer {
     // draw bottom line text
     nodeEnter
       .filter(hasBottomLine)
-      .call(drawBottomLineFn(this.nodeSize));
+      .call(drawBottomLineFn(this.nodeSize, this.orientation));
 
     // three gears, for service
     nodeEnter
@@ -414,12 +415,17 @@ function drawTopLineFn(nodeSize: PairNumber, orientation: Orientation) {
       .attr('stroke-width', '0px')
       .attr('text-anchor', 'middle')
       .attr('x', x)
-      .attr('y', y)
-      ;
+      .attr('y', (d3Node) => {
+        const isModuleTop = orientation === Orientation.TopToBottom
+          && d3Node.data.archNode.archPonentType === NgPonentType.NgModule;
+        const offset = isModuleTop ? 0 : 10;
+
+        return y + offset;
+      });
   };
 }
 
-function drawBottomLineFn(nodeSize: PairNumber) {
+function drawBottomLineFn(nodeSize: PairNumber, orientation: Orientation) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
   return (nodeEnter: HierarchyPointNodeSelection) => {
     nodeEnter.append('text')
