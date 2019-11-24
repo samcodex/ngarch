@@ -9,7 +9,7 @@ import { TsPonent } from '@core/ngponent-tsponent';
 
 export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
   name: string;
-  _archNgPonent: T;
+  private _archNgPonent: T;
   _tsPonent: TsPonent;
 
   private _children: ArchNode[];
@@ -138,7 +138,7 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
 
   equalTo(node: ArchNode): boolean {
     const archPonent = this._archNgPonent;
-    return archPonent.equalTo(node._archNgPonent);
+    return archPonent.equalTo(node.archNgPonent);
   }
 
   findNode(node: ArchNode) {
