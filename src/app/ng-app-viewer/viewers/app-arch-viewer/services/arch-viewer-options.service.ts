@@ -106,6 +106,6 @@ export class ArchViewerOptionsService {
 
   private findCheckedItem(type: ArchViewerOptionCategory): UiElementItem {
     const category = findCategoryFromSection(this.appViewerOptions, type);
-    return category.items.find(isItemChecked);
+    return category ? category.items.find(isItemChecked) : null;
   }
 }

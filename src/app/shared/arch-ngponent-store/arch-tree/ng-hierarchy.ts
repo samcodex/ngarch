@@ -162,6 +162,7 @@ export class NgHierarchy {
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routePonent);
 
         // for displaying 'from' above the node
+        from = routeRelatedPonent instanceof ArchNgPonentModule ? 'lazy-loading' : from;
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, from);
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
