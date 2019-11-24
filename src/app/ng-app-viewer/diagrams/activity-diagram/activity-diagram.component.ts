@@ -135,16 +135,15 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
         infoLevel: extraContent === ArchViewerExtraContent.LayerServiceProvider ? NodeInfoLevel.Detail : NodeInfoLevel.Basic
       };
 
-      const resetTree = (includeRoutes: boolean) => {
-        return (treeContext: DiagramTreeContext) => {
-          if (!includeRoutes) {
-            filterArchViewerTreeContextWithRoutes(treeContext);
-          }
-        };
-      };
-      // const traverseTreeContext = nodeType === ArchViewerNodeType.IncludeRoutes
-      //   ? null : resetTree;
-      const traverseTreeContext = resetTree(nodeType === ArchViewerNodeType.IncludeRoutes);
+      // const resetTree = (includeRoutes: boolean) => {
+      //   return (treeContext: DiagramTreeContext) => {
+      //     if (!includeRoutes) {
+      //       filterArchViewerTreeContextWithRoutes(treeContext);
+      //     }
+      //   };
+      // };
+      // const traverseTreeContext = resetTree(nodeType === ArchViewerNodeType.IncludeRoutes);
+      const traverseTreeContext = null;
 
       this.organizer.drawArchTreeWithLayout(this.data, traverseTreeContext, mapDiagramTreeNode, layoutOptions);
   }

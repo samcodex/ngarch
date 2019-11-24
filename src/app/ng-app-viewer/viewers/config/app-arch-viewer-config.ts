@@ -51,16 +51,16 @@ const viewerOptions: UiElementCategory[] = [
       }
     ].filter(filterByUsed)
   },
-  {
-    id: 'tree_node',
-    name: 'Tree Nodes',
-    type: ArchViewerOptionCategory.TreeNodes,
-    items: [
-      { name: 'Include Routes', value: ArchViewerNodeType.IncludeRoutes,
-        type: null, isChecked: false
-      }
-    ].filter(filterByUsed)
-  },
+  // {
+  //   id: 'tree_node',
+  //   name: 'Tree Nodes',
+  //   type: ArchViewerOptionCategory.TreeNodes,
+  //   items: [
+  //     { name: 'Include Routes', value: ArchViewerNodeType.IncludeRoutes,
+  //       type: null, isChecked: false
+  //     }
+  //   ].filter(filterByUsed)
+  // },
   {
     id: 'viewer_type',
     name: 'Type',

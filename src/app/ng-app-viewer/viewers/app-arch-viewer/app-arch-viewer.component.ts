@@ -173,20 +173,19 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
         features: [ LayoutFeature.None ],
         infoLevel: extraContent === ArchViewerExtraContent.LayerServiceProvider ? NodeInfoLevel.Detail : NodeInfoLevel.Basic
       };
-      const resetTree = (includeRoutes: boolean) => {
-        return (treeContext: DiagramTreeContext) => {
-          if (!includeRoutes) {
-            filterArchViewerTreeContextWithRoutes(treeContext);
-          }
-          // TODO, should not use [0] here, remember that this function(collapse all Routes' children) is finished. Please check if or not.)
-          if (Array.isArray(treeContext.root.children) && treeContext.root.children[0]) {
-            treeContext.root.children[0].toggleCollapsedChildrenWhichNoRoutes();
-          }
-        };
-      };
-      // const traverseTreeContext = nodeType === ArchViewerNodeType.IncludeRoutes
-      //   ? null : resetTree;
-      const traverseTreeContext = resetTree(nodeType === ArchViewerNodeType.IncludeRoutes);
+      // const resetTree = (includeRoutes: boolean) => {
+      //   return (treeContext: DiagramTreeContext) => {
+      //     if (!includeRoutes) {
+      //       filterArchViewerTreeContextWithRoutes(treeContext);
+      //     }
+      //     // TODO, should not use [0] here, remember that this function(collapse all Routes' children) is finished. Please check if or not.)
+      //     if (Array.isArray(treeContext.root.children) && treeContext.root.children[0]) {
+      //       treeContext.root.children[0].toggleCollapsedChildrenWhichNoRoutes();
+      //     }
+      //   };
+      // };
+      // const traverseTreeContext = resetTree(nodeType === ArchViewerNodeType.IncludeRoutes);
+      const traverseTreeContext = null;
 
       this.organizer.drawArchTreeWithLayout(data, traverseTreeContext, mapDiagramTreeNode, layoutOptions);
     }
