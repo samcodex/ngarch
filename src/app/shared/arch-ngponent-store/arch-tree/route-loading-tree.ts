@@ -116,6 +116,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
       //   nodeName = parent.name;
       // }
       routesNode = routerNode.appendChildNgPonent<ArchNgPonentRoutes>(routesPonent, nodeName);
+      routesNode.appendRelatedArchNgPonent(AnalysisElementType._From, routerNode.archNgPonent, callExpression);
     } else {
       console.error('Cannot be "null"', routerExpressionPonent);
     }
@@ -131,18 +132,25 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
       let routeNode: ArchNode<ArchNgPonentRoute>;
       if (includeRouteNode || !routeRelatedPonent) {
         routeNode = routesNode.appendChildNgPonent<ArchNgPonentRoute>(routePonent, 'route', true);
+        routeNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, '');
       }
 
       if (routeRelatedPonent) {
-        const relatedPonentNode = !includeRouteNode
-          ? routesNode.appendChildNgPonent(routeRelatedPonent)
-          : routeNode.appendChildNgPonent(routeRelatedPonent);
+        let relatedPonentNode: ArchNode;
+        if (!includeRouteNode) {
+          relatedPonentNode = routesNode.appendChildNgPonent(routeRelatedPonent);
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routesNode.archNgPonent, 'Route');
+        } else {
+          relatedPonentNode = routeNode.appendChildNgPonent(routeRelatedPonent);
+          const from = relatedPonentNode.archPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'component';
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from);
+        }
 
         appendNodeRelatedProvider(relatedPonentNode);
 
         if (routeNode) {
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routeNode.archNgPonent);
-          const from = relatedPonentNode.archPonentType === 'NgModule' ? 'lazy-loading' : 'route.component';
+          const from = relatedPonentNode.archPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'route.component';
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from);
         }
 
