@@ -26,19 +26,22 @@ import { NgPonentType } from '@core/ngponent-tsponent';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {
-  let routeArchNgPonent = node.getRelatedRoutePonent() as ArchNgPonentRoute;
-  if (!routeArchNgPonent) {
-    const ponent = node.archPonent;
-    if (ponent.ngPonentType === NgPonentType.Route) {
-      routeArchNgPonent = ponent as ArchNgPonentRoute;
-      routeArchNgPonent = routeArchNgPonent.hasComponent
-        || routeArchNgPonent.hasChildren || routeArchNgPonent.hasLoadChildren ? null : routeArchNgPonent;
-    }
-  }
+  // the following comment is used to display bottomLine under the child/children of ArchNgPonentRoute,
+  // which are ArchNgPonentModule and ArchNgPonentComponent
+  // let routeArchNgPonent = node.getRelatedRoutePonent() as ArchNgPonentRoute;
+  // if (!routeArchNgPonent) {
+  //   const ponent = node.archPonent;
+  //   if (ponent.ngPonentType === NgPonentType.Route) {
+  //     routeArchNgPonent = ponent as ArchNgPonentRoute;
+  //     routeArchNgPonent = routeArchNgPonent.hasComponent
+  //       || routeArchNgPonent.hasChildren || routeArchNgPonent.hasLoadChildren ? null : routeArchNgPonent;
+  //   }
+  // }
+  // if (routeArchNgPonent && routeArchNgPonent instanceof ArchNgPonentRoute) {
+  //   node.bottomLine = routeArchNgPonent.getShortDescription();
+  // }
 
-  if (routeArchNgPonent && routeArchNgPonent instanceof ArchNgPonentRoute) {
-    node.bottomLine = routeArchNgPonent.getShortDescription();
-  } else if (node.archNode.archNgPonent instanceof ArchNgPonentRoute) {
+  if (node.archNode.archNgPonent instanceof ArchNgPonentRoute) {
     node.bottomLine = node.archNode.archNgPonent.getShortDescription();
   }
 
