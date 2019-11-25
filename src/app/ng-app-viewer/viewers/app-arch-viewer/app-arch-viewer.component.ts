@@ -85,6 +85,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   @ViewChild('svgBoard') svgBoardRef: ElementRef;
 
   hierarchies = hierarchies;
+  treeName: string;
 
   constructor(
     elementRef: ElementRef,
@@ -164,6 +165,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
         takeUntilNgDestroy(this)
       )
       .subscribe( ([ data, hierarchy, orientation, nodeType, viewerType, extraContent ]) => {
+        this.treeName = data.name;
         this.updateOrganizer(data, hierarchy, orientation, nodeType, viewerType, extraContent);
       });
   }
