@@ -396,9 +396,9 @@ function breadthFirstForOrientation(orientation: Orientation) {
         if (archPonentType === AnalysisElementType.Routes) {
           factor = 0; // 40
         } else if (archPonentType === AnalysisElementType.Route) {
-          factor = 0; // 20
+          factor = 20; // 20
         } else if (parentPonentType === AnalysisElementType.Route) {
-          factor = 40;
+          factor = 0;
         }
       } else {
         if (archPonentType === AnalysisElementType.Routes) {
@@ -406,7 +406,7 @@ function breadthFirstForOrientation(orientation: Orientation) {
         } else if (archPonentType === AnalysisElementType.Route) {
           factor = 0; // 20
         } else if (parentPonentType === AnalysisElementType.Route) {
-          factor = 20;
+          factor = 0;
         }
       }
 

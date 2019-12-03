@@ -9,7 +9,7 @@ import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 import { AnalysisElementType } from '@core/models/analysis-element';
 
-const callExpressions = {
+const mapOfRouterExpressions = {
   [ ArchPonentFeature.RouterModuleForRoot ]: 'RouterModule.forRoot',
   [ ArchPonentFeature.RouterModuleForChild ]: 'RouterModule.forChild',
 };
@@ -22,7 +22,7 @@ const mapOfFrom = {
 export enum NgHierarchyTraverseType {
   ComponentPath = 'ComponentPath',
   RoutingPath = 'RoutingPath',
-  ComponentRoutingPath = 'ComponentRoutingPath'
+  RoutingComponentPath = 'RoutingComponentPath'
 }
 
 export class NgHierarchy {
@@ -38,9 +38,27 @@ export class NgHierarchy {
   ) {
     this.storeDataHelper = new EnhancedStoreData(archStore);
     this.archTree = new ArchTree(treeName || treeType, treeType);
-    this.pathType = NgHierarchyTraverseType.ComponentPath;
+    this.pathType = pathType;
   }
 
+  get isRelatedComponent(): boolean {
+    const paths: NgHierarchyTraverseType[] = [
+      NgHierarchyTraverseType.ComponentPath,
+      NgHierarchyTraverseType.RoutingComponentPath
+    ];
+
+    // return true;
+    return paths.includes(this.pathType);
+  }
+
+  get isRelatedRouting(): boolean {
+    const paths = [
+      NgHierarchyTraverseType.RoutingPath,
+      NgHierarchyTraverseType.RoutingComponentPath
+    ];
+
+    return paths.includes(this.pathType);
+  }
 
   buildArchTree(): ArchTree {
     this.traverseBootstrappedModule();
@@ -50,29 +68,42 @@ export class NgHierarchy {
   private traverseBootstrappedModule() {
     // ***bootstrapped module, appModule
     const rootArchModule: ArchNgPonentModule = this.archStore.getBootstrapModule();
-    const rootNode = this.createRootNode(rootArchModule);
+    const rootNode = this.archTree.createRootNode(rootArchModule);
 
+    let refNode = rootNode;
+    if (this.isRelatedComponent) {
+      // ***bootstrapped component and its node
+      const bootstrappedComponentNodes = this.traverseBootstrappedComponent(rootNode);
+
+      // TODO, uses the first bootstrapped component,
+      // it must be replaced with the logic of 'outlet' & 'outlets'
+      refNode = bootstrappedComponentNodes[0];
+    }
+    if (this.isRelatedRouting) {
+      refNode = rootNode;
+    }
+
+    // ***traverse bootstrapped module
+    this.traverseArchModule(rootArchModule, refNode, ArchPonentFeature.RouterModuleForRoot);
+  }
+
+  private traverseBootstrappedComponent(rootArchModuleNode: ArchNode<ArchNgPonentModule>): ArchNode<ArchNgPonentComponent>[] {
+    const rootArchModule = rootArchModuleNode.archNgPonent;
     // ***bootstrapped component, appComponent
     const bootstrappedComponents: ArchNgPonentComponent[] = archNgPonentHelper.getBootstrappedComponents(rootArchModule);
 
-    // TODO
-    let mustChange;
-    bootstrappedComponents.forEach(bootComponent => {
-      const componentNode = this.appendNode(rootNode, bootComponent);
-      componentNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootArchModule, 'bootstrap');
+    // ***bootstrapped component node
+    const bootstrappedComponentNodes = bootstrappedComponents
+      .map(bootComponent => {
+        const componentNode = rootArchModuleNode.appendChildNgPonent(bootComponent);
+        componentNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootArchModule, 'bootstrap');
 
-      if (!mustChange) {
-        mustChange = componentNode;
-      }
+        // ***traverse bootstrapped component
+        this.traverseArchComponent(bootComponent, componentNode);
 
-      // ***traverse bootstrapped component
-      this.traverseArchComponent(bootComponent, componentNode);
-    });
-
-    // TODO, 'mustChange' uses the first bootstrapped component,
-    // it must be replaced with the logic of 'outlet' & 'outlets'
-    // ***traverse bootstrapped module
-    this.traverseArchModule(rootArchModule, mustChange, ArchPonentFeature.RouterModuleForRoot);
+        return componentNode;
+      });
+    return bootstrappedComponentNodes;
   }
 
   // RoutedModule(forRoot/forChild), RootingModule
@@ -87,12 +118,14 @@ export class NgHierarchy {
       const routesPonent: ArchNgPonentRoutes = this.getArchRoutesFromRoutingModule(archModule, routerFeature);
 
       if (routesPonent && routesPonent instanceof ArchNgPonentRoutes && routesPonent.children) {
-        // nextLoopNode is parentNode or routesNode
-        const nextLoopNode = this.appendNode(parentNode, routesPonent,
-          [NgHierarchyTraverseType.ComponentRoutingPath, NgHierarchyTraverseType.RoutingPath]);
+        let relatedNode = null;
+        if (this.isRelatedRouting) {
+          relatedNode = parentNode.appendChildNgPonent(routesPonent);
+          relatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, mapOfRouterExpressions[routerFeature]);
+        }
 
         // ***traverse Routes' elements
-        routesPonent.children.forEach(this.traverseRoutesPonent(routesPonent, nextLoopNode, '<router-outlet/>'));
+        routesPonent.children.forEach(this.traverseRoutesPonent(routesPonent, relatedNode || parentNode, '<router-outlet/>'));
       }
     } else {
       // ***find the routing module through import's paths
@@ -101,10 +134,16 @@ export class NgHierarchy {
         ? storeDataHelper.findRouterForRootInGivenModule.bind(storeDataHelper)
         : storeDataHelper.findRouterForChildInGivenModule.bind(storeDataHelper);
 
-      const routerPonent: ArchNgPonentModule = findRoutingModuleThroughImports(archModule);
+      const routingArchModule: ArchNgPonentModule = findRoutingModuleThroughImports(archModule);
 
-      if (routerPonent) {
-        this.traverseArchModule(routerPonent, parentNode, routerFeature);
+      if (routingArchModule) {
+        let nextNode: ArchNode = parentNode;
+        if (this.isRelatedRouting) {
+          const routingNode = nextNode = parentNode.appendChildNgPonent(routingArchModule);
+          routingNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, 'import');
+        }
+
+        this.traverseArchModule(routingArchModule, nextNode, routerFeature);
       }
     }
   }
@@ -141,7 +180,7 @@ export class NgHierarchy {
       return result;
     };
 
-    const callExpression = callExpressions[routerFeature];
+    const callExpression = mapOfRouterExpressions[routerFeature];
     const routesTsPonent = archNgPonentHelper.findCallExpressionPonent(routingModule, callExpression);
     const routerExpressionPonent = archNgPonentHelper.findIdentifierExpressionPonent(routesTsPonent);
     const routesPonent = findRoutesConfiguration(routerExpressionPonent) as ArchNgPonentRoutes;
@@ -156,20 +195,24 @@ export class NgHierarchy {
   // ***traverse the element(component or loadChildren) of Routes
   private traverseRoutesPonent(archRoutes: ArchNgPonentRoutes, parentNode: ArchNode, from: string) {
     return (routePonent: ArchNgPonentRoute) => {
+      let secondParentNode = parentNode;
+      if (this.isRelatedRouting) {
+        const routeNode = parentNode.appendChildNgPonent(routePonent, 'route', true);
+        routeNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, 'Route');
+        secondParentNode = routeNode;
+      }
+
       // Route component or loadChildren - Lazy loading ArchNgPonentModule
       const routeRelatedPonent: ArchNgPonentModule | ArchNgPonentComponent =
         routePonent.getRelatedArchPonent(this.archStore);
 
       if (routeRelatedPonent) {
-        const routeRelatedNode = this.appendNode(parentNode, routeRelatedPonent);
-
+        const routeRelatedNode = secondParentNode.appendChildNgPonent(routeRelatedPonent);
         // for displaying route.path under the node
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routePonent);
-
         // for displaying 'from' above the node
         from = mapOfFrom[routeRelatedPonent.ngPonentType];
-
-        routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, from);
+        routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, secondParentNode.archNgPonent, from);
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
           this.traverseArchModule(routeRelatedPonent, routeRelatedNode);
@@ -179,7 +222,9 @@ export class NgHierarchy {
             subRoutes.children.forEach(this.traverseRoutesPonent(subRoutes, routeRelatedNode, '<router-outlet/>'));
           }
 
-          this.traverseArchComponent(routeRelatedPonent, routeRelatedNode);
+          if (this.isRelatedComponent) {
+            this.traverseArchComponent(routeRelatedPonent, routeRelatedNode);
+          }
         }
       }
     };
@@ -187,10 +232,5 @@ export class NgHierarchy {
 
   private createRootNode(archPonent: ArchNgPonent): ArchNode {
     return this.archTree.createRootNode(archPonent);
-  }
-
-  private appendNode(parent: ArchNode, archPonent: ArchNgPonent, condition?: NgHierarchyTraverseType[]): ArchNode {
-    return this.pathType && condition && !condition.includes(this.pathType)
-      ? parent : parent.appendChildNgPonent(archPonent);
   }
 }
