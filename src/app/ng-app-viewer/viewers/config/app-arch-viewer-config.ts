@@ -61,21 +61,21 @@ const viewerOptions: UiElementCategory[] = [
   //     }
   //   ].filter(filterByUsed)
   // },
-  {
-    id: 'viewer_type',
-    name: 'Type',
-    type: ArchViewerOptionCategory.ViewerType,
-    description: '',
-    inputType: MetaInputType.RadioGroup,
-    items: [
-      { name: 'Route Tree', value: ArchViewerType.RoutesTree,
-        type: null, isChecked: true
-      },
-      { name: 'Full Route-Component Tree', value: ArchViewerType.FullRouteComponentTree,
-        type: null, isChecked: false, isUsed: true, isDisabled: true
-      }
-    ].filter(filterByUsed)
-  }
+  // {
+  //   id: 'viewer_type',
+  //   name: 'Type',
+  //   type: ArchViewerOptionCategory.ViewerType,
+  //   description: '',
+  //   inputType: MetaInputType.RadioGroup,
+  //   items: [
+  //     { name: 'Route Tree', value: ArchViewerType.RoutesTree,
+  //       type: null, isChecked: true
+  //     },
+  //     { name: 'Full Route-Component Tree', value: ArchViewerType.FullRouteComponentTree,
+  //       type: null, isChecked: false, isUsed: true, isDisabled: true
+  //     }
+  //   ].filter(filterByUsed)
+  // }
 ];
 
 const viewerServiceOptions: UiElementCategory[] = [
