@@ -32,6 +32,9 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
   const bootstrappedNodes: ArchNode<ArchNgPonentComponent>[] = bootstrappedComponents.map((bootstrapComponent) => {
     const bootstrapNode = root.appendChildNgPonent(bootstrapComponent);
     bootstrapNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootPonent, 'bootstrap');
+
+    appendNodeOfSubComponent(bootstrapNode);
+
     return bootstrapNode;
   });
 
@@ -136,7 +139,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
       }
 
       if (routeRelatedPonent) {
-        const from = routeRelatedPonent.ngPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'component';
+        const from = routeRelatedPonent.ngPonentType === NgPonentType.NgModule ? 'loadChildren (lazy-loading)' : 'component';
         let relatedPonentNode: ArchNode;
         if (!includeRouteNode) {
           relatedPonentNode = routesNode.appendChildNgPonent(routeRelatedPonent);
@@ -150,8 +153,8 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
         if (routeNode) {
           relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType.Route, routeNode.archNgPonent);
-          const from = relatedPonentNode.archPonentType === NgPonentType.NgModule ? 'lazy-loading' : 'route.component';
-          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from);
+          const from2 = relatedPonentNode.archPonentType === NgPonentType.NgModule ? 'loadChildren (lazy-loading)' : 'component';
+          relatedPonentNode.appendRelatedArchNgPonent(AnalysisElementType._From, routeNode.archNgPonent, from2);
         }
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {

@@ -15,8 +15,8 @@ const mapOfRouterExpressions = {
 };
 
 const mapOfFrom = {
-  'Component': '<router-outlet>',
-  'NgModule': 'lazy-loading'
+  'Component': 'component',
+  'NgModule': 'loadChildren (lazy-loading)'
 };
 
 export enum NgHierarchyTraverseType {
