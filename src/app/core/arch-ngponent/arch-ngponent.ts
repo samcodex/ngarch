@@ -80,9 +80,9 @@ export abstract class ArchNgPonent {
       this.ngPonentType = ngPonentType;
     }
 
-    if (this.isDecoratorWithTsMembers()) {
+    // if (this.isDecoratorWithTsMembers()) {
       this.tsMembers = new ArchNgPonentTsMembers(this.tsPonent);
-    }
+    // }
   }
 
   equalTo(ponent: ArchNgPonent): boolean {
