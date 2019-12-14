@@ -1,6 +1,4 @@
 import { forOwn } from 'lodash-es';
-import { Observable, pipe, of } from 'rxjs';
-import { mergeMap, map, tap } from 'rxjs/operators';
 
 export namespace util {
   export function copyProperty(desc: object, src: object, properties: string[]) {
@@ -63,7 +61,6 @@ export namespace util {
   export const isDirectory = _isDirectory;
   export const toFolderPath = _toFolderPath;
   export const applyCallback = _applyCallback;
-  export const chain = _chain;
   export const isDeepEqual = _isDeepEqual;
   export const resolvePaths = _resolvePaths;
   export const clearObject = _clearObject;
@@ -94,21 +91,6 @@ function _applyCallback(fn: Function, canBreak: boolean = false, ...rest: any[])
   } else {
     return true;      // no callback, then do nothing and keep the looping
   }
-}
-
-function _chain(observables: Observable<any>[], zipResponses = false): Observable<any> {
-  const responses = [];
-  const mergeMaps = observables.map(observable => {
-    return pipe(
-      mergeMap(() => observable),
-      tap((response) => responses.push(response))
-    );
-  });
-  const streams = pipe.apply(null, mergeMaps);
-
-  return zipResponses
-    ? of(null).pipe(streams, map(() => responses as any))
-    : of(null).pipe(streams);
 }
 
 function _isDeepEqual(value1: any, value2: any) {
