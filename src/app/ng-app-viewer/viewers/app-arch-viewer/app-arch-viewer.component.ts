@@ -63,6 +63,11 @@ const hierarchies = [
     id: 'injector',
     name: 'Injector Hierarchy',
     over: false
+  },
+  {
+    id: 'dependency',
+    name: 'Dependency Diagram',
+    over: false
   }
 ];
 
