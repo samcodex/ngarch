@@ -4,10 +4,7 @@ import * as d3 from 'd3';
 import { d3Element } from '@core/svg/d3-def-types';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
 import { DiagramOrganizer } from '@core/diagram/diagram-organizer';
-import { ArchNgPonent } from '@core/arch-ngponent';
-import { DiagramOptions } from '@core/diagram-element-linkable';
-import { LayoutOptions } from '@core/diagram/layout-options';
-import { Callbacks } from '@core/models/meta-data';
+
 
 export abstract class SvgZoomBoardComponent {
 
