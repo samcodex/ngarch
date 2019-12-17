@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
-import { combineLatest } from 'rxjs';
+import { combineLatest, zip, of } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { map, mergeMap } from 'rxjs/operators';
 
@@ -23,6 +23,7 @@ import { ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, mapViewerHi
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { NgPonentType } from '@core/ngponent-tsponent';
+import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {
@@ -152,13 +153,15 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   private setupStream() {
     const treeSource = this.optionsService.getViewerHierarchy()
       .pipe(
-        map(mapViewerHierarchyToArchTree),
-        mergeMap((type) => this.viewerDataService.getArchTreeByType(type))
+        map((hierarchy) => ([hierarchy, mapViewerHierarchyToArchTree(hierarchy)])),
+        mergeMap(([hierarchy, treeType]: [ArchViewerHierarchy, ArchTreeType]) => zip(
+          of(hierarchy),
+          this.viewerDataService.getArchTreeByType(treeType)
+        ))
       );
 
     const source = combineLatest([
       treeSource,
-      this.optionsService.getViewerHierarchy(),
       this.optionsService.getViewerOrientation(),
       this.optionsService.getViewerNodeType(),
       this.optionsService.getViewerType(),
@@ -169,7 +172,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
       .pipe(
         takeUntilNgDestroy(this)
       )
-      .subscribe( ([ data, hierarchy, orientation, nodeType, viewerType, extraContent ]) => {
+      .subscribe( ([ [hierarchy, data], orientation, nodeType, viewerType, extraContent ]) => {
         this.treeName = data.name;
         this.updateOrganizer(data, hierarchy, orientation, nodeType, viewerType, extraContent);
       });
