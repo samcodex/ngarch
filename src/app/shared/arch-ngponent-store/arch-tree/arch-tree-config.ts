@@ -9,6 +9,6 @@ export const mapOfArchTreeBuilder: { [key in ArchTreeType]: (storeData: any, pro
   [ArchTreeType.RouteLoadingTree]: buildRouteLoadingTree,
   [ArchTreeType.RoutingHierarchyTree]: buildRoutingHierarchyTree,
   [ArchTreeType.ComponentUsageTree]: buildComponentUsageTree,
-  [ArchTreeType.ServiceDependencyTree]: buildServiceDependencyTree,
+  [ArchTreeType.InjectorAndDependencyTree]: buildServiceDependencyTree,
   [ArchTreeType.ModuleStructureTree]: buildModuleStructureTree
 };

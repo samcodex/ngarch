@@ -32,7 +32,7 @@ export const mapOfViewerHierarchyToArchTree: { [ key in ArchViewerHierarchy ]: A
   [ ArchViewerHierarchy.FullView ]: ArchTreeType.RouteLoadingTree,
   [ ArchViewerHierarchy.ComponentHierarchy ]: ArchTreeType.ComponentUsageTree,
   [ ArchViewerHierarchy.RoutingHierarchy ]: ArchTreeType.RoutingHierarchyTree,
-  [ ArchViewerHierarchy.InjectorHierarchy ]: ArchTreeType.ServiceDependencyTree
+  [ ArchViewerHierarchy.InjectorHierarchy ]: ArchTreeType.InjectorAndDependencyTree
 };
 
 export const mapViewerHierarchyToArchTree = (hierarchy: ArchViewerHierarchy) => mapOfViewerHierarchyToArchTree[hierarchy];

@@ -5,7 +5,7 @@ import { NgHierarchy, NgHierarchyTraverseType } from './ng-hierarchy';
 
 export function buildServiceDependencyTree(archStore: ArchStoreData, projectName: string): ArchTree {
   const ngHierarch = new NgHierarchy(archStore, projectName,
-    NgHierarchyTraverseType.RoutingComponentPath, ArchTreeType.ServiceDependencyTree, 'Service Injector Hierarchy');
+    NgHierarchyTraverseType.RoutingComponentPath, ArchTreeType.InjectorAndDependencyTree, 'Service Injector Hierarchy');
 
   const tree = ngHierarch.buildArchTree();
 

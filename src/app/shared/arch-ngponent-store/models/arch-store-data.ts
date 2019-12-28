@@ -287,7 +287,9 @@ export class ArchStoreData {
     const treeTypes = Object.keys(ArchTreeType);
     treeTypes.forEach(treeType => {
       const treeBuilder = mapOfArchTreeBuilder[treeType];
-      this._archTrees[treeType] = treeBuilder(this, projectName);
+      if (treeBuilder) {
+        this._archTrees[treeType] = treeBuilder(this, projectName);
+      }
     });
 
     // console.log(this);

@@ -1,7 +1,7 @@
 export enum ArchTreeType {
   RouteLoadingTree = 'RouteLoadingTree',            // FullView Hierarchy, The relation of route's 'children' & 'loadChildren'
   ComponentUsageTree = 'ComponentUsageTree',        // ComponentHierarchy, it is template->selector & route->children
-  ServiceDependencyTree = 'ServiceDependencyTree',  // InjectorHierarchy, 'dependency' is the relation of injection and providing
+  InjectorAndDependencyTree = 'InjectorAndDependencyTree',  // for Injector, Provider and Dependency hierarchy
   RoutingHierarchyTree = 'RoutingHierarchyTree',    // RoutingHierarchy
   ModuleStructureTree = 'ModuleStructureTree'       //
 }

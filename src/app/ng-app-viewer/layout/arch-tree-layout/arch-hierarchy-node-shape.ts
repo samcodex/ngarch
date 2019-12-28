@@ -312,8 +312,6 @@ export function appendProviderContent(node: ArchHierarchyPointNode) {
   const element = host.node();
 
   const ponents = ArchHierarchy.getProviderNodes(node);
-  // console.log(ponents);
-  // const ponents = [ { name: 'test'}];
   if (ponents) {
     const items = ponents.map(_createProviderDiv);
     items.forEach(item => element.appendChild(item));
