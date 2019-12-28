@@ -213,11 +213,10 @@ function appendNodeRelatedProvider(node: ArchNode) {
 function appendNodeOfSubComponent(node: ArchNode<ArchNgPonentComponent>) {
   const archComponent = node.archNgPonent;
   if (archComponent.hasDownConnection) {
-    const connections = archComponent.archRelationship ? archComponent.archRelationship.downConnections : null;
-    if (connections) {
-      connections
-        .filter(connection => connection.endOfPonentType === NgPonentType.Component
-            && connection.connectionType.type === RelationshipType.Dependency)
+    const downConnections = archComponent.archRelationship ? archComponent.archRelationship.downConnections : null;
+    if (downConnections) {
+      downConnections
+        .filter(connection => connection.isComponentDependency)
         .forEach(function(connection) {
           const subArchPonent = connection.endOfArchPonent;
           const subNode = node.appendChildNgPonent(subArchPonent);

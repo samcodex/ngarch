@@ -143,6 +143,10 @@ export abstract class ArchNgPonent {
     return this.ngPonentType === NgPonentType.NgModule;
   }
 
+  get isComponent(): boolean {
+    return this.ngPonentType === NgPonentType.Component;
+  }
+
   get isBootstrapModule(): boolean {
     return !!this.ngPonentFeatures && Array.isArray(this.ngPonentFeatures)
       && this.ngPonentFeatures.includes(NgPonentFeature.BootstrapModule);

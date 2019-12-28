@@ -76,4 +76,9 @@ export class LogicalConnection {
     this.endOfArchPonent = endOfPonent;
     this.endOfPonentType = endOfPonent.ngPonentType;
   }
+
+  get isComponentDependency(): boolean {
+    return this.endOfPonentType === NgPonentType.Component
+      && this.connectionType.type === RelationshipType.Dependency;
+  }
 }
