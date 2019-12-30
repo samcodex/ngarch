@@ -204,26 +204,23 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
 function appendNodeRelatedProvider(node: ArchNode) {
   const archPonent: ArchNgPonent = node.archNgPonent;
-  const providers = archPonent.getProviderArchPonents();
-  providers.forEach(provider => {
-    node.appendRelatedArchNgPonent(AnalysisElementType._Provider, provider);
-  });
+  const providers = archPonent.getProvidersOfInjector();
+  if (providers) {
+    providers.forEach(provider => {
+      node.appendRelatedArchNgPonent(AnalysisElementType._Provider, provider);
+    });
+  }
 }
 
 function appendNodeOfSubComponent(node: ArchNode<ArchNgPonentComponent>) {
   const archComponent = node.archNgPonent;
-  if (archComponent.hasDownConnection) {
-    const downConnections = archComponent.archRelationship ? archComponent.archRelationship.downConnections : null;
-    if (downConnections) {
-      downConnections
-        .filter(connection => connection.isComponentDependency)
-        .forEach(function(connection) {
-          const subArchPonent = connection.endOfArchPonent;
-          const subNode = node.appendChildNgPonent(subArchPonent);
-          subNode.appendRelatedArchNgPonent(AnalysisElementType._From, node.archNgPonent, '<template>');
+  const templateComponents = archComponent.getDependenciesOfTemplate();
+  if (templateComponents) {
+    templateComponents.forEach(subArchPonent => {
+      const subNode = node.appendChildNgPonent(subArchPonent);
+      subNode.appendRelatedArchNgPonent(AnalysisElementType._From, node.archNgPonent, '<template>');
 
-          appendNodeOfSubComponent(subNode);
-        });
-    }
+      appendNodeOfSubComponent(subNode);
+    });
   }
 }

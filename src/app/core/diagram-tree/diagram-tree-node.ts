@@ -4,6 +4,7 @@ import { DiagramElement } from './../diagram/diagram-element';
 import { ArchNode } from './../arch-tree/arch-tree';
 import { DiagramTreeContext } from './diagram-tree-context';
 import { AnalysisElementType } from '@core/models/analysis-element';
+import { ArchNgPonentModule, ArchNgPonentComponent } from '@core/arch-ngponent';
 
 export class DiagramTreeNode extends DiagramElement {
   archNode: ArchNode;
@@ -54,8 +55,19 @@ export class DiagramTreeNode extends DiagramElement {
     return this.archNode.getRelatedOfFirstRoutePonent();
   }
 
+  // display NgModule's and Component's provider in the node details
   getRelatedProviderPonents(): ArchNgPonentInjectable[] {
     return this.archNode.getRelatedProviderArchNgPonents();
+  }
+
+  // ModuleInjector or ElementInjector
+  getRelatedInjectorArchNgPonents(): ArchNgPonentModule[] | ArchNgPonentComponent[] {
+    return this.archNode.getRelatedInjectorArchNgPonents();
+  }
+
+  // Dependencies of Component's ctor
+  getRelatedCtorDependencies(): ArchNgPonentInjectable[] {
+    return this.archNode.getRelatedCtorDependencies();
   }
 
   traverse(callback: Function) {

@@ -1,4 +1,4 @@
-import { ArchRelationship, RelationshipType, LogicalConnection } from '../arch-relationship';
+import { ArchRelationship, RelationshipType, LogicalConnection, ConnectionType } from '../arch-relationship';
 import { NgPonent, PonentHelper, PonentTypesWithCtorParameters, PonentTypesWithServiceDependencies, TsPonent } from '../ngponent-tsponent';
 import { NgPonentFeature, NgPonentType } from '../ngponent-tsponent/ngponent-definition';
 import { ExpressionPonentTypes, TsPonentModifier, TsPonentType } from '../ngponent-tsponent/tsponent-definition';
@@ -204,14 +204,19 @@ export abstract class ArchNgPonent {
       && this.archFeatures.length && this.archFeatures.includes(feature);
   }
 
-  getProviderArchPonents(): ArchNgPonent[] {
-    if (this.archRelationship) {
-      return this.archRelationship.downConnections
-        .filter(down => down.endOfPonentType === NgPonentType.Injectable)
-        .map(down => down.endOfArchPonent);
-    } else {
-      return null;
-    }
+  // NgModule & Component must override
+  getProvidersOfInjector(): ArchNgPonent[] {
+    return null;
+  }
+
+  // Component must override
+  getDependenciesOfTemplate(): ArchNgPonent[] {
+    return null;
+  }
+
+  // Component and Service must override
+  getDependenciesOfCtorInjectable(): ArchNgPonent[] {
+    return null;
   }
 
   getSpecificDependencies(relationshipTypes: RelationshipType[],

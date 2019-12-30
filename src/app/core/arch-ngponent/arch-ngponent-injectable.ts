@@ -29,4 +29,7 @@ export class ArchNgPonentInjectable extends ArchNgPonent {
     super(name, ngPonent, tsPonent, new NgInjectableMetadata());
   }
 
+  getDependenciesOfCtorInjectable(): ArchNgPonent[] {
+    return this.archRelationship ? this.archRelationship.getArchNgPonentOfDependenciesFromCtor() : null;
+  }
 }

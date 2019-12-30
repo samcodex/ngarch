@@ -76,4 +76,15 @@ export class ArchNgPonentComponent extends ArchNgPonent {
     super(name, ngPonent, tsPonent, new NgComponentMetadata());
   }
 
+  getProvidersOfInjector(): ArchNgPonent[] {
+    return this.archRelationship ? this.archRelationship.getArchNgPonentOfProvidersOfInjector() : null;
+  }
+
+  getDependenciesOfTemplate(): ArchNgPonent[] {
+    return this.archRelationship ? this.archRelationship.getArchNgPonentOfDependenciesOfTemplate() : null;
+  }
+
+  getDependenciesOfCtorInjectable(): ArchNgPonent[] {
+    return this.archRelationship ? this.archRelationship.getArchNgPonentOfDependenciesFromCtor() : null;
+  }
 }

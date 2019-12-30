@@ -1,10 +1,10 @@
-import { ArchNgPonent } from '@core/arch-ngponent';
+import { ArchNgPonent, ArchNgPonentModule, ArchNgPonentComponent, ArchNgPonentInjectable } from '@core/arch-ngponent';
 import { ArchNodeMetaType, ArchTreeType } from './arch-tree-definition';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
 import { ArchWrapper } from '../models/arch-wrapper';
 import { mapNgPonentTypeToElementType } from '@core/diagram-element-linkable/diagram-linkable-definition';
-import { NgPonentType } from '@core/ngponent-tsponent/ngponent-definition';
+import { NgPonentType, NgPonentFeature } from '@core/ngponent-tsponent/ngponent-definition';
 import { TsPonent } from '@core/ngponent-tsponent';
 
 export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
@@ -112,6 +112,15 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
     return this.getRelatedArchNgPonentsByType(AnalysisElementType._Provider);
   }
 
+  // ModuleInjector or ElementInjector
+  getRelatedInjectorArchNgPonents(): ArchNgPonentModule[] | ArchNgPonentComponent[] {
+    return this.getRelatedArchNgPonentsByType(AnalysisElementType._Injector);
+  }
+
+  getRelatedCtorDependencies(): ArchNgPonentInjectable[] {
+    return this.getRelatedArchNgPonentsByType(AnalysisElementType._Dependency);
+  }
+
   getRelatedArchNgPonentsByType(type: AnalysisElementType): ArchNgPonent[] {
     const wrapper = this.getRelatedArchWrapperByType(type);
     return wrapper ? wrapper.children : null;
@@ -147,6 +156,16 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
 
   findNodeByArchPonent(archNgPonent: ArchNgPonent): ArchNode {
     return this._children ? this._children.find((child) => child.archNgPonent.equalTo(archNgPonent)) : null;
+  }
+
+  // ModuleInjector
+  findNodeWithModuleInjector(): ArchNode {
+    const features = this._archNgPonent.ngPonentFeatures;
+    if (features && (features.includes(NgPonentFeature.BootstrapModule) || features.includes(NgPonentFeature.LazyLoading))) {
+      return this;
+    } else {
+      return this._parent.findNodeWithModuleInjector();
+    }
   }
 
   // clone(archTree: ArchTree, parent: ArchNode): ArchNode {

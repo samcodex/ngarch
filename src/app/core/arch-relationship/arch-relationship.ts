@@ -1,5 +1,6 @@
 import { ArchNgPonent } from '../arch-ngponent';
 import { LogicalConnection, RelationshipType } from './relationship-definition';
+import { NgPonentType } from '@core/ngponent-tsponent';
 
 export class ArchRelationship {
   private _owner: ArchNgPonent;
@@ -24,6 +25,35 @@ export class ArchRelationship {
 
   get upConnections(): LogicalConnection[] {
     return this._upConnections;
+  }
+
+  // the relation of component's template
+  get relationOfDependenciesOfTemplate(): LogicalConnection[] {
+    return this._downConnections.filter(down =>
+      down.connectionType.type === RelationshipType.Dependency && down.endOfPonentType === NgPonentType.Component);
+  }
+
+  get relationOfProvidersOfInjector(): LogicalConnection[] {
+    return this._downConnections.filter(down =>
+      down.connectionType.type === RelationshipType.Aggregation && down.endOfPonentType === NgPonentType.Injectable);
+  }
+
+  get relationOfDependenciesOfCtor(): LogicalConnection[] {
+    return this._downConnections.filter(down =>
+      down.connectionType.type === RelationshipType.Dependency && down.endOfPonentType === NgPonentType.Injectable);
+  }
+
+  // component's template
+  getArchNgPonentOfDependenciesOfTemplate(): ArchNgPonent[] {
+    return this.relationOfDependenciesOfTemplate.map(down => down.endOfArchPonent);
+  }
+
+  getArchNgPonentOfProvidersOfInjector(): ArchNgPonent[] {
+    return this.relationOfProvidersOfInjector.map(down => down.endOfArchPonent);
+  }
+
+  getArchNgPonentOfDependenciesFromCtor(): ArchNgPonent[] {
+    return this.relationOfDependenciesOfCtor.map(down => down.endOfArchPonent);
   }
 
   addConnection(relationshipType: RelationshipType, downPonent: ArchNgPonent) {

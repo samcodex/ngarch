@@ -52,6 +52,10 @@ export class ArchNgPonentModule extends ArchNgPonent {
     super(name, ngPonent, tsPonent, new NgModuleMetadata());
   }
 
+  getProvidersOfInjector(): ArchNgPonent[] {
+    return this.archRelationship ? this.archRelationship.getArchNgPonentOfProvidersOfInjector() : null;
+  }
+
   setNgFeatures() {
     const imports = this.getMetadataOf<NgModuleMetadata, (string | TsPonent)[]>('imports');
     imports
