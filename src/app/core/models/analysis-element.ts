@@ -12,8 +12,10 @@ export enum AnalysisElementType {
   Routes = 'Routes',
   Route = 'Route',
 
-  _Provider = '_Provider',
-  _From = '_From'
+  _Provider = '_Provider',      // NgModule's provider & Component's provider
+  _From = '_From',
+  _Injector = '_Injector',      // ModuleInjector & ElementInjector
+  _Dependency = '_Dependency'
 }
 
 export const ElementTypeHelper = {
