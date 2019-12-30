@@ -21,7 +21,8 @@ export enum NodeInfoLevel {
 
 export enum LayoutFeature {
   None = 'None',
-  CollapseAfterSecondLevel = 'CollapseAfterSecondLevel'
+  CollapseAfterSecondLevel = 'CollapseAfterSecondLevel',
+  SecondaryLayerForInjector = 'SecondaryLayerForInjector'
 }
 
 export function hasLayoutFeature(options: LayoutOptions, feature: LayoutFeature): boolean {

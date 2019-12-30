@@ -1,7 +1,7 @@
 import { ArchNgPonentComponent } from '@core/arch-ngponent/arch-ngponent-component';
 import { ArchStoreData } from '../models/arch-store-data';
 import { EnhancedStoreData } from '../helpers/enhanced-store-data';
-import { ArchNgPonentModule, ArchPonentFeature, ArchNgPonent, ArchNgPonentRoutes, ArchNgPonentRoute } from '@core/arch-ngponent';
+import { ArchNgPonentModule, ArchPonentFeature, ArchNgPonent, ArchNgPonentRoutes, ArchNgPonentRoute, isArchModule } from '@core/arch-ngponent';
 import { archNgPonentHelper } from '@core/arch-ngponent/arch-ngponent-helper';
 import { TsPonent, NgPonentType } from '@core/ngponent-tsponent';
 import { RelationshipType } from '@core/arch-relationship/relationship-definition';
@@ -33,7 +33,7 @@ export class NgHierarchy {
     private archStore: ArchStoreData,
     private projectName: string,
     private pathType: NgHierarchyTraverseType,
-    treeType: ArchTreeType,
+    private treeType: ArchTreeType,
     treeName?: string
   ) {
     this.storeDataHelper = new EnhancedStoreData(archStore);
@@ -69,6 +69,7 @@ export class NgHierarchy {
     // ***bootstrapped module, appModule
     const rootArchModule: ArchNgPonentModule = this.archStore.getBootstrapModule();
     const rootNode = this.archTree.createRootNode(rootArchModule);
+    this.appendNodeServiceTypeContentAndTree(rootNode);
 
     let refNode = rootNode;
     if (this.isRelatedComponent) {
@@ -97,6 +98,7 @@ export class NgHierarchy {
       .map(bootComponent => {
         const componentNode = rootArchModuleNode.appendChildNgPonent(bootComponent);
         componentNode.appendRelatedArchNgPonent(AnalysisElementType._From, rootArchModule, 'bootstrap');
+        this.appendNodeServiceTypeContentAndTree(componentNode);
 
         // ***traverse bootstrapped component
         this.traverseArchComponent(bootComponent, componentNode);
@@ -140,6 +142,7 @@ export class NgHierarchy {
         let nextNode: ArchNode = parentNode;
         if (this.isRelatedRouting) {
           const routingNode = nextNode = parentNode.appendChildNgPonent(routingArchModule);
+          this.appendNodeServiceTypeContentAndTree(routingNode);
           routingNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, 'import');
         }
 
@@ -150,21 +153,14 @@ export class NgHierarchy {
 
   // ***traverse ArchComponent, through the selectors in the template
   private traverseArchComponent(archComponent: ArchNgPonentComponent, parentNode: ArchNode) {
-    if (archComponent.hasDownConnection) {
-      const connections = archComponent.archRelationship ? archComponent.archRelationship.downConnections : null;
-      if (connections) {
-        connections
-          .filter(connection => connection.endOfPonentType === NgPonentType.Component
-              && connection.connectionType.type === RelationshipType.Dependency)
-          .forEach((connection) => {
-            const subArchPonent = connection.endOfArchPonent;
+    const templateComponents = archComponent.getDependenciesOfTemplate();
+    if (templateComponents) {
+      templateComponents.forEach(subArchPonent => {
+        const subNode = parentNode.appendChildNgPonent(subArchPonent);
+        subNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, '<template>');
 
-            const subNode = parentNode.appendChildNgPonent(subArchPonent);
-            subNode.appendRelatedArchNgPonent(AnalysisElementType._From, parentNode.archNgPonent, '<template>');
-
-            this.traverseArchComponent(subArchPonent, subNode);
-          });
-      }
+        this.traverseArchComponent(subArchPonent, subNode);
+      });
     }
   }
 
@@ -213,6 +209,7 @@ export class NgHierarchy {
         // for displaying 'from' above the node
         from = mapOfFrom[routeRelatedPonent.ngPonentType];
         routeRelatedNode.appendRelatedArchNgPonent(AnalysisElementType._From, secondParentNode.archNgPonent, from);
+        this.appendNodeServiceTypeContentAndTree(routeRelatedNode);
 
         if (routeRelatedPonent instanceof ArchNgPonentModule) {
           this.traverseArchModule(routeRelatedPonent, routeRelatedNode);
@@ -232,5 +229,65 @@ export class NgHierarchy {
 
   private createRootNode(archPonent: ArchNgPonent): ArchNode {
     return this.archTree.createRootNode(archPonent);
+  }
+
+  // service type content - with AnalysisElementType._Provider, for displaying Providers in node detail style
+  // service type tree - with ArchTreeType.InjectorAndDependencyTree,
+  //                    for Injector Hierarchy, Provider Hierarchy, Dependency Diagram
+  private appendNodeServiceTypeContentAndTree(node: ArchNode) {
+    const appendNodeFn = (this.treeType === ArchTreeType.InjectorAndDependencyTree)
+      ? appendNodeServiceTypeHierarchies : appendNodeProviderContent;
+    appendNodeFn(node);
+  }
+}
+
+function appendNodeProviderContent(node: ArchNode) {
+  const archPonent: ArchNgPonent = node.archNgPonent;
+  const providers = archPonent.getProvidersOfInjector();
+  if (providers) {
+    providers.forEach(provider => {
+      node.appendRelatedArchNgPonent(AnalysisElementType._Provider, provider);
+    });
+  }
+}
+
+function appendNodeServiceTypeHierarchies(node: ArchNode) {
+  const archPonent: ArchNgPonent = node.archNgPonent;
+  appendServiceTypeInjectorAndProviderHierarchies(node);
+
+  if (archPonent.isComponent) {
+    appendServiceTypeOfComponentDependencies(node);
+  }
+}
+
+function appendServiceTypeInjectorAndProviderHierarchies(node: ArchNode) {
+  const archPonent: ArchNgPonent = node.archNgPonent;
+  const providers = archPonent.getProvidersOfInjector();
+
+  let injectorNode: ArchNode = null;
+  if (archPonent.isNgModule) {
+    injectorNode = node.findNodeWithModuleInjector();
+  } else if (providers && providers.length) {
+    injectorNode = node;
+  }
+
+  if (injectorNode) {
+    if (providers && providers.length) {
+      providers.forEach(provider => {
+        injectorNode.appendRelatedArchNgPonent(AnalysisElementType._Injector, provider);
+      });
+    } else {
+      injectorNode.appendRelatedArchNgPonent(AnalysisElementType._Injector, null);
+    }
+  }
+}
+
+function appendServiceTypeOfComponentDependencies(node: ArchNode<ArchNgPonentComponent>) {
+  const archPonent: ArchNgPonentComponent = node.archNgPonent;
+  const dependenciesOfCtor = archPonent.getDependenciesOfCtorInjectable();
+  if (dependenciesOfCtor) {
+    dependenciesOfCtor.forEach(dependency => {
+      node.appendRelatedArchNgPonent(AnalysisElementType._Dependency, dependency);
+    });
   }
 }

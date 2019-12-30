@@ -185,9 +185,15 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
     if (data) {
       const layoutOptions: LayoutOptions = {
         orientation,
-        features: [ LayoutFeature.None ],
+        features: [ ],
         infoLevel: extraContent === ArchViewerExtraContent.LayerServiceProvider ? NodeInfoLevel.Detail : NodeInfoLevel.Basic
       };
+      if (hierarchy === ArchViewerHierarchy.InjectorHierarchy) {
+        layoutOptions.features.push(LayoutFeature.SecondaryLayerForInjector);
+      } else {
+        layoutOptions.features.push(LayoutFeature.None);
+      }
+
       // const resetTree = (includeRoutes: boolean) => {
       //   return (treeContext: DiagramTreeContext) => {
       //     if (!includeRoutes) {
