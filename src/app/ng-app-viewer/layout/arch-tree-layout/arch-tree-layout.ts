@@ -16,6 +16,8 @@ import { AnalysisElementType } from '@core/models/analysis-element';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
 import { ArchHierarchy, ArchHierarchyPointNode, ArchHierarchyPointLink, HierarchyPointNodeSelection, ArchHierarchyHelper, HierarchyPointLinkSelection } from './arch-hierarchy';
 import { ArchHierarchyNodeDrawer, duration, linkStyle, linkCoverStyle } from './arch-hierarchy-node-drawer';
+import { SecondaryLayerForService } from './secondary-layer-for-service';
+import { d3_svg } from '@core/svg/d3.svg';
 
 let foreignStyle = '';
   foreignStyle += ' .--foreign-scrollable--::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); background-color: #F5F5F5;}';
@@ -34,6 +36,10 @@ export class ArchTreeLayout extends DiagramLayout {
 
   private treeContainer: d3Element;
   private finalSize: RectangleSize;
+
+  // secondary layer
+  private secondaryLayerForService: SecondaryLayerForService;
+  private hasSecondaryLayer = false;
 
   constructor() {
     super();
@@ -74,6 +80,24 @@ export class ArchTreeLayout extends DiagramLayout {
     this.updateTreeData();
     this.drawComponentLinks();
     this.drawComponentNodes();
+
+    if (this.hasSecondaryLayer) {
+      this.treeContainer.attr('fill-opacity', '0.8');
+      if (this.secondaryLayerForService) {
+        this.secondaryLayerForService.clear();
+      } else {
+        // const size = d3_util.getDimension(this.rootGroup);
+        // const cover = this.rootGroup.append('g').classed('main_group_cover', true);
+        // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.1'});
+
+        this.secondaryLayerForService = new SecondaryLayerForService(this.rootGroup, this.treeRoot,
+          this.layoutOptions, this.nodeDrawer);
+      }
+
+      this.secondaryLayerForService.draw();
+    } else {
+      this.secondaryLayerForService = null;
+    }
   }
 
   private init() {
@@ -89,6 +113,7 @@ export class ArchTreeLayout extends DiagramLayout {
     this.layoutOptions = layoutOptions || {};
     this.layoutOptions.orientation = layoutOptions.orientation || Orientation.TopToBottom;
     this.layoutOptions.infoLevel = layoutOptions.infoLevel || NodeInfoLevel.Basic;
+    this.hasSecondaryLayer = this.layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector);
 
     const { orientation, infoLevel } = this.layoutOptions;
     this.nodeDrawer = new ArchHierarchyNodeDrawer(orientation, infoLevel);
@@ -125,7 +150,7 @@ export class ArchTreeLayout extends DiagramLayout {
     const placeNode = function(pointNode: ArchHierarchyPointNode) {
       const host: d3Element = d3.select(this);
       const [ x, y ] = getNodePosition(pointNode, [ -nodeWidth / 2, 0]);
-
+      pointNode['realPosition'] = {x, y};
       d3_util.translateTo(host, x, y);
     };
 
@@ -160,7 +185,8 @@ export class ArchTreeLayout extends DiagramLayout {
     const nodeAction = this.nodeDrawer.drawNodeExpandButtonFn()(expandableNodes);
 
     // text
-    this.nodeDrawer.drawNodeContent(nodeEnter);
+    const textOpacity = this.hasSecondaryLayer ? {opacity: '0.8'} : null;
+    this.nodeDrawer.drawNodeContent(nodeEnter, textOpacity);
 
     // merge
     const nodeUpdate = gNode.merge(nodeEnter);
