@@ -16,6 +16,7 @@ export namespace d3_svg {
   export const svgElement = _svgElement;
   export const svgForeignDivText = _svgForeignDivText;
   export const svgForeignScrollableDiv = _svgForeignScrollableDiv;
+  export const svgForeignExtendableDiv = _svgForeignExtendableDiv;
 }
 
 function _svgGroup(host: d3Element, classed: string, position: PairNumber): d3Element {
@@ -177,20 +178,20 @@ function _svgForeignDivText(host: d3Element, callbacks: D3Callbacks, size: PairN
     .append('xhtml:div')
     .style('width', width + 'px')
     .each(function(node, i) {
-      const eachHost: d3Element = d3.select(this);
-      const eachSize = d3_util.getRectDimension(eachHost);
+      const hostDiv: d3Element = d3.select(this);
+      const eachSize = d3_util.getRectDimension(hostDiv);
 
       // parent - foreignObject
-      const element = eachHost.node() as Element;
+      const element = hostDiv.node() as Element;
       const parent = d3.select(element.parentNode as any);
 
       const divHeight = eachSize.height > height ? eachSize.height + 4 : height;
       parent.attr('height', divHeight);
-      eachHost.style('height', divHeight + 'px');
+      hostDiv.style('height', divHeight + 'px');
 
       const dNode = node.data;
       if (dNode.hasOwnProperty('isClickable') && !!dNode.isClickable) {
-        eachHost.style('cursor', 'pointer');
+        hostDiv.style('cursor', 'pointer');
       }
     });
 
@@ -201,35 +202,39 @@ function _svgForeignDivText(host: d3Element, callbacks: D3Callbacks, size: PairN
 }
 
 // extend div to fit the content
-function _svgForeignExtendableDiv(host: d3Element, htmlFn: (d: any) => string, size: PairNumber, textAttrs?: object, textStyles?: object): d3Element {
+function _svgForeignExtendableDiv(host: d3Element, callbacks: D3Callbacks, size: PairNumber,
+    textAttrs?: object, textStyles?: object): d3Element {
 
   const [ width, height ] = size;
   const styles = Object.assign({}, divBreakStyle, textStyles);
 
   const foreign = host
     .append('foreignObject')
-    .attr('width', width);
+    .attr('width', width)
+    ;
 
   const textDiv = foreign
     .append('xhtml:div')
-    .text(htmlFn)
-    .style('width', width + 'px')
+    // .text(htmlFn)
+    // .style('width', width + 'px')
     .each(function(d, i) {
-      const eachHost: d3Element = d3.select(this);
-      const eachSize = d3_util.getRectDimension(eachHost);
+      const hostDiv: d3Element = d3.select(this);
+      const eachSize = d3_util.getRectDimension(hostDiv);
 
       // parent - foreignObject
-      const element = eachHost.node() as Element;
+      const element = hostDiv.node() as Element;
       const parent = d3.select(element.parentNode as any);
 
+      const divOffset = textStyles.hasOwnProperty('padding') ? 8 : 0;
       const divHeight = eachSize.height > height ? eachSize.height + 4 : height;
       parent.attr('height', divHeight);
-      eachHost.style('height', divHeight + 'px');
+      hostDiv.style('height', (divHeight - divOffset) + 'px');
     });
 
-    textDiv
-      .call(_setStyles, styles)
-      .call(_setAttrs, textAttrs);
+    _assignProperties(textDiv, callbacks, textAttrs, styles);
+    // textDiv
+    //   .call(_setStyles, styles)
+    //   .call(_setAttrs, textAttrs);
 
   return foreign;
 }

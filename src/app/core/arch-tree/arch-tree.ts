@@ -123,7 +123,7 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
 
   getRelatedArchNgPonentsByType(type: AnalysisElementType): ArchNgPonent[] {
     const wrapper = this.getRelatedArchWrapperByType(type);
-    return wrapper ? wrapper.children : null;
+    return wrapper ? wrapper.children.filter(child => !!child ) : null;
   }
 
   getRelatedArchWrapperByType(type: AnalysisElementType): ArchWrapper<ArchNode, ArchNgPonent> {
