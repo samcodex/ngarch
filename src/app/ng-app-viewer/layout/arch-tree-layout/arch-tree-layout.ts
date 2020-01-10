@@ -15,7 +15,7 @@ import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
 import { ArchHierarchy, ArchHierarchyPointNode, ArchHierarchyPointLink, HierarchyPointNodeSelection, ArchHierarchyHelper, HierarchyPointLinkSelection } from './arch-hierarchy';
-import { ArchHierarchyNodeDrawer, duration, linkStyle, linkCoverStyle } from './arch-hierarchy-node-drawer';
+import { ArchHierarchyNodeDrawer, duration, linkStyle, linkCoverStyle, lightThemePathColor } from './arch-hierarchy-node-drawer';
 import { SecondaryLayerForService } from './secondary-layer-for-service';
 import { d3_svg } from '@core/svg/d3.svg';
 
@@ -82,13 +82,14 @@ export class ArchTreeLayout extends DiagramLayout {
     this.drawComponentNodes();
 
     if (this.hasSecondaryLayer) {
-      this.treeContainer.attr('fill-opacity', '0.8');
+      // this.treeContainer.attr('fill-opacity', '0.8');
       if (this.secondaryLayerForService) {
         this.secondaryLayerForService.clear();
       } else {
+        // cover
         // const size = d3_util.getDimension(this.rootGroup);
         // const cover = this.rootGroup.append('g').classed('main_group_cover', true);
-        // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.1'});
+        // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.4'});
 
         this.secondaryLayerForService = new SecondaryLayerForService(this.rootGroup, this.treeRoot,
           this.layoutOptions, this.nodeDrawer);
@@ -116,7 +117,7 @@ export class ArchTreeLayout extends DiagramLayout {
     this.hasSecondaryLayer = this.layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector);
 
     const { orientation, infoLevel } = this.layoutOptions;
-    this.nodeDrawer = new ArchHierarchyNodeDrawer(orientation, infoLevel);
+    this.nodeDrawer = new ArchHierarchyNodeDrawer(orientation, infoLevel, this.hasSecondaryLayer);
   }
 
   private initTreeLayout() {
@@ -131,8 +132,9 @@ export class ArchTreeLayout extends DiagramLayout {
     this.treeRoot.sum( () => 1);
 
     // traverse all tree nodes
-    // this.treeRoot.descendants().forEach( (dNode, index) => {
-    // });
+    this.treeRoot.descendants().forEach( (dNode, index) => {
+      dNode.data._hierarchyNode = dNode;
+    });
   }
 
   private updateTreeData() {
@@ -150,8 +152,10 @@ export class ArchTreeLayout extends DiagramLayout {
     const placeNode = function(pointNode: ArchHierarchyPointNode) {
       const host: d3Element = d3.select(this);
       const [ x, y ] = getNodePosition(pointNode, [ -nodeWidth / 2, 0]);
-      pointNode['realPosition'] = {x, y};
+      pointNode['positions'] = {real: {x, y}};
       d3_util.translateTo(host, x, y);
+
+      return {x, y};
     };
 
     // TODO, this line is for collapsing when the node is clicked
@@ -185,8 +189,7 @@ export class ArchTreeLayout extends DiagramLayout {
     const nodeAction = this.nodeDrawer.drawNodeExpandButtonFn()(expandableNodes);
 
     // text
-    const textOpacity = this.hasSecondaryLayer ? {opacity: '0.8'} : null;
-    this.nodeDrawer.drawNodeContent(nodeEnter, textOpacity);
+    this.nodeDrawer.drawNodeContent(nodeEnter);
 
     // merge
     const nodeUpdate = gNode.merge(nodeEnter);
@@ -224,6 +227,7 @@ export class ArchTreeLayout extends DiagramLayout {
     const [ marginWidth, marginHeight ] = this.nodeDrawer.nodeMargin;
     const halfNodeWidth = nodeWidth / 2;
     const halfNodeHeight = nodeHeight / 2;
+    const customLinkStyle = this.hasSecondaryLayer ? {'stroke': lightThemePathColor} : {};
 
     const calcPoints = function(treeLink: ArchHierarchyPointLink) {
       const halfMarginWidth = marginWidth / 3;
@@ -292,7 +296,7 @@ export class ArchTreeLayout extends DiagramLayout {
     const linkLine = linkEnter
       .append('polyline')
       .classed('link', true)
-      .call(d3_util.setStyles, linkStyle)
+      .call(d3_util.setStyles, Object.assign({}, linkStyle, customLinkStyle))
       .attr('points', calcPoints);
 
     const linkCover = linkEnter

@@ -4,8 +4,13 @@ import { PairNumber } from '@core/models/arch-data-format';
 import { Orientation, NodeInfoLevel } from '@core/diagram/layout-options';
 import { drawModuleFn, drawEllipseFn, drawCircleFn, drawRectangleFn, drawTopLineFn, drawBottomLineFn, drawThreeGearsFn, drawText, drawDetailInfoContent } from './arch-hierarchy-node-shape';
 
-// types
+// theme
+export const lightThemePathColor = '#c6c6c6';
+export const normalPathColor = '#888888';
+const lightThemeTextColor = '#9d9d9d';
+const normalTextColor = '#000000';
 
+// types
 interface ContentNodes {
   container: HierarchyPointNodeSelection;
   header: HierarchyPointNodeSelection;
@@ -89,10 +94,12 @@ export class ArchHierarchyNodeDrawer {
   private routesEllipseSize: PairNumber = routesEllipseSize;
 
   private _treeNodeSize: PairNumber;
+  private hasSecondaryLayer: boolean;
 
-  constructor(orientation: Orientation, type: NodeInfoLevel = NodeInfoLevel.Basic) {
+  constructor(orientation: Orientation, type: NodeInfoLevel = NodeInfoLevel.Basic, hasSecondaryLayer = false) {
     this._orientation = orientation;
     this._infoLevel = type;
+    this.hasSecondaryLayer = hasSecondaryLayer;
 
     this.orientationConfig = orientationsConfig[orientation];
     const styleConfig = type === NodeInfoLevel.Detail ? detailProviderStyleConfig : simpleStyleConfig;
@@ -144,37 +151,39 @@ export class ArchHierarchyNodeDrawer {
       && !ArchHierarchyHelper.isRoutes(d) && !ArchHierarchyHelper.isRoute(d);
     const hasBottomLine = (dNode: ArchHierarchyPointNode) => !!dNode.data.bottomLine;
     const hasTopLine = (dNode: ArchHierarchyPointNode) => !!dNode.data.topLine;
+    const customFillAttrs = {fill: this.hasSecondaryLayer ? lightThemeTextColor : normalTextColor};
+    const customBorderStyles = { 'stroke': this.hasSecondaryLayer ? lightThemePathColor : normalPathColor };
 
     // Module shape
     nodeEnter
       .filter(ArchHierarchyHelper.isModule)
-      .call(drawModuleFn(this.nodeSize));
+      .call(drawModuleFn(this.nodeSize, true, customBorderStyles));
 
     // ellipse shape, for routes
     nodeEnter
       .filter(ArchHierarchyHelper.isRoutes)
-      .call(drawEllipseFn([ nodeWidth / 2, nodeHeight / 2 ], this.routesEllipseSize));
+      .call(drawEllipseFn([ nodeWidth / 2, nodeHeight / 2 ], this.routesEllipseSize, customBorderStyles));
 
     // circle shape, for route
     nodeEnter
       .filter(ArchHierarchyHelper.isRoute)
-      .call(drawCircleFn([ nodeWidth / 2, nodeHeight / 2 ]));
+      .call(drawCircleFn([ nodeWidth / 2, nodeHeight / 2 ], customBorderStyles));
 
     // Rectangle shape, for no module and no routes(such as component, directive, service, pipe)
     nodeEnter
       .filter(isOthers)
-      .call(drawRectangleFn(this.nodeSize));
+      .call(drawRectangleFn(this.nodeSize, customBorderStyles));
 
 
     // draw top line text
     nodeEnter
     .filter(hasTopLine)
-    .call(drawTopLineFn(this.nodeSize, this.orientation));
+    .call(drawTopLineFn(this.nodeSize, this.orientation, customFillAttrs));
 
     // draw bottom line text
     nodeEnter
       .filter(hasBottomLine)
-      .call(drawBottomLineFn(this.nodeSize, this.orientation));
+      .call(drawBottomLineFn(this.nodeSize, this.orientation, customFillAttrs));
 
     // three gears, for service
     nodeEnter
@@ -195,7 +204,7 @@ export class ArchHierarchyNodeDrawer {
 
     nodeEnter
       .call(d3_util.setStyles, rectStyle)
-      .attr('fill', ArchHierarchyHelper.getNodeColor());
+      .attr('fill', ArchHierarchyHelper.getNodeColor(true, this.hasSecondaryLayer));
   }
 
   drawNodeExpandButtonFn() {
@@ -206,6 +215,8 @@ export class ArchHierarchyNodeDrawer {
       width: nodeActionWidth,
       height: nodeHeight
     };
+    const customBorderStyles = { 'stroke': this.hasSecondaryLayer ? lightThemePathColor : normalPathColor };
+    const customRectStyles = Object.assign({}, rectStyle, customBorderStyles);
 
     return (nodeEnter: HierarchyPointNodeSelection) => {
       const nodeAction = nodeEnter
@@ -214,10 +225,10 @@ export class ArchHierarchyNodeDrawer {
         //   return `M${nodeWidth} 0 h${nodeActionWidth} v${nodeHeight} h-${nodeActionWidth}`;
         // })
         .append('rect')
-        .attr('fill', ArchHierarchyHelper.getNodeColor(false))
+        .attr('fill', ArchHierarchyHelper.getNodeColor(false, this.hasSecondaryLayer))
         // .style('cursor', 'pointer')
         .call(d3_util.setAttrs, actionRectAttrs)
-        .call(d3_util.setStyles, rectStyle)
+        .call(d3_util.setStyles, customRectStyles)
         // .on('mouseover', function(a) {
         //   const host = d3.select(this);
         //   host.attr('width', nodeActionWidth * 4);
@@ -234,8 +245,10 @@ export class ArchHierarchyNodeDrawer {
 
   drawNodeContent(nodeEnter: HierarchyPointNodeSelection, textOpacity?: object): ContentNodes {
     const nodeSize = this.nodeSize;
+    const color = this.hasSecondaryLayer ? lightThemeTextColor : normalTextColor;
+    const textStyles = Object.assign({}, textOpacity, { color });
     return this._infoLevel === NodeInfoLevel.Basic
-      ? drawText(nodeSize, nodeEnter, textOpacity) as any
+      ? drawText(nodeSize, nodeEnter, textStyles) as any
       : drawDetailInfoContent(nodeSize, nodeEnter, false);
   }
 }

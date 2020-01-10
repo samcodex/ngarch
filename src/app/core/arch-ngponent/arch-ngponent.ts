@@ -152,6 +152,11 @@ export abstract class ArchNgPonent {
       && this.ngPonentFeatures.includes(NgPonentFeature.BootstrapModule);
   }
 
+  get isLazyLoadingModule(): boolean {
+    return !!this.ngPonentFeatures && Array.isArray(this.ngPonentFeatures)
+      && this.ngPonentFeatures.includes(NgPonentFeature.LazyLoading);
+  }
+
   get isRootOfLoadingGroup(): boolean {
     return !!this.loadingGroups && this.loadingGroups.includes(this.name);
   }

@@ -5,6 +5,8 @@ import { ArchNode } from './../arch-tree/arch-tree';
 import { DiagramTreeContext } from './diagram-tree-context';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { ArchNgPonentModule, ArchNgPonentComponent } from '@core/arch-ngponent';
+import { InjectorTree } from './injector-tree';
+import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
 
 export class DiagramTreeNode extends DiagramElement {
   archNode: ArchNode;
@@ -21,6 +23,11 @@ export class DiagramTreeNode extends DiagramElement {
   isCollapsed = false;
   isSelected = false;
   isClickable = true;
+
+  _hierarchyNode: any;
+
+  injectorSubTree: InjectorTree;
+  dependencySubTreeNode: DiagramSubTreeDependency;
 
   constructor(tree: DiagramTreeContext, node: ArchNode, parent: DiagramTreeNode, mapNodeFn?: Function) {
     super(node.archAnalysisType, node.archNgPonent, node.name);

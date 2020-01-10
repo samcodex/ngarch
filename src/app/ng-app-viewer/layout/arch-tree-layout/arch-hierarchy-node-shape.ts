@@ -1,3 +1,4 @@
+import { lightThemePathColor } from './arch-hierarchy-node-drawer';
 import * as d3 from 'd3';
 
 import { ArchHierarchyPointNode, HierarchyPointNodeSelection, ArchHierarchyHelper, ArchHierarchy } from './arch-hierarchy';
@@ -11,6 +12,8 @@ import { firstGearOfTwo, secondGearOfTwo } from '@core/svg/svg-defs';
 import { ArchNgPonentInjectable } from '@core/arch-ngponent/arch-ngponent-injectable';
 import { NgPonentType } from '@core/ngponent-tsponent';
 
+const _setAttrs = d3_util.setAttrs;
+const _setStyles = d3_util.setStyles;
 
 interface ContentNodes {
   container: HierarchyPointNodeSelection;
@@ -22,6 +25,11 @@ interface ContentNodes {
 // configuration
 export const linkStyle = {
   'fill': 'none',
+  'stroke': '#888888',
+  'stroke-width': '1px'
+};
+
+export const defaultShapeStyles = {
   'stroke': '#888888',
   'stroke-width': '1px'
 };
@@ -64,8 +72,16 @@ const svgTextStyle = {
   'font-weight': '600'
 };
 
-export function drawText(nodeSize: PairNumber, nodeEnter: HierarchyPointNodeSelection, textOpacity?: object): HierarchyPointNodeSelection {
-  const textStyle = textOpacity ? Object.assign({}, textDivStyle, textOpacity) : textDivStyle;
+const defaultFillStyle = {
+  'fill': 'black'
+};
+
+const defaultBorderAttrs = {
+  'fill': '#f5a5a5'
+};
+
+export function drawText(nodeSize: PairNumber, nodeEnter: HierarchyPointNodeSelection, textStyles?: object): HierarchyPointNodeSelection {
+  const textStyle = textStyles ? Object.assign({}, textDivStyle, textStyles) : textDivStyle;
   return d3_svg.svgForeignDivText(nodeEnter, { text: (d) => d.data.name }, nodeSize, null, textStyle);
 }
 
@@ -115,7 +131,7 @@ export function drawDetailInfoContent(nodeSize: PairNumber, nodeEnter: Hierarchy
   return { container: contentNode, header: contentHeader, main: contentMain, footer: contentFooter };
 }
 
-export function drawModuleFn(nodeSize: PairNumber, folderIconLeft = true) {
+export function drawModuleFn(nodeSize: PairNumber, folderIconLeft = true, shapeStyles?: object) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
   const leftOffset = folderIconLeft ? 0 : 110;
   const angleLength = 3;
@@ -131,19 +147,22 @@ export function drawModuleFn(nodeSize: PairNumber, folderIconLeft = true) {
   const commands = `0,0 ${moduleTab} ${nodeWidth},0 ${nodeWidth},${nodeHeight} 0,${nodeHeight} 0,0`;
 
   const drawExtendShape = _drawExtendRectangle(nodeWidth, nodeHeight);
+  const customShapeStyles = Object.assign({}, defaultShapeStyles, shapeStyles);
 
   return (nodeEnter: HierarchyPointNodeSelection) => {
     drawExtendShape(nodeEnter, [[12, 6], [8, 3]]);
 
     nodeEnter
       .append('polygon')
-      .attr('points', commands);
+      .attr('points', commands)
+      .call(_setStyles, customShapeStyles);
   };
 }
 
-export function drawRectangleFn(nodeSize: PairNumber) {
+export function drawRectangleFn(nodeSize: PairNumber, customBorderStyles?: object) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
   const drawExtendShape = _drawExtendRectangle(nodeWidth, nodeHeight);
+  const borderStyles = Object.assign({}, defaultShapeStyles, customBorderStyles);
 
   return (nodeEnter: HierarchyPointNodeSelection) => {
     drawExtendShape(nodeEnter, [[12, 6], [8, 3]]);
@@ -151,16 +170,17 @@ export function drawRectangleFn(nodeSize: PairNumber) {
     nodeEnter.append('rect')
       .classed('node-rectangle', true)
       .attr('width', nodeWidth)
-      .attr('height', nodeHeight);
+      .attr('height', nodeHeight)
+      .call(_setStyles, borderStyles);
   };
 }
 
-export function drawEllipseFn(position: PairNumber, ellipseSize: PairNumber) {
+export function drawEllipseFn(position: PairNumber, ellipseSize: PairNumber, shapeAttrs?: object, extendAttrs?: object) {
   const [ cx, cy ] = position;
   const [ nodeWidth, nodeHeight ] = ellipseSize;
   const rx = nodeWidth / 2;
   const ry = nodeHeight / 2;
-  const drawExtend = _drawExtendEllipse(rx, ry);
+  const drawExtend = _drawExtendEllipse(rx, ry, extendAttrs);
 
   return (nodeEnter: HierarchyPointNodeSelection) => {
     drawExtend(nodeEnter, [ [cx + 4, cy + 6], [cx + 2, cy + 3]]);
@@ -174,9 +194,10 @@ export function drawEllipseFn(position: PairNumber, ellipseSize: PairNumber) {
   };
 }
 
-export function drawCircleFn(position: PairNumber) {
-  const drawExtend = _drawExtendCircle(15);
+export function drawCircleFn(position: PairNumber, shapeAttrs?: object, extendAttrs?: object) {
+  const drawExtend = _drawExtendCircle(15, extendAttrs);
   const [ cx, cy ] = position;
+  const customShapeAttrs = Object.assign({}, shapeAttrs);
 
   return (nodeEnter: HierarchyPointNodeSelection) => {
     drawExtend(nodeEnter, [[cx + 2, cy + 4], [cx + 1, cy + 2]]);
@@ -186,14 +207,17 @@ export function drawCircleFn(position: PairNumber) {
       .attr('cx', cx)
       .attr('cy', cy)
       .attr('r', 15)
+      .call(_setAttrs, customShapeAttrs)
       ;
   };
 }
 
-export function drawTopLineFn(nodeSize: PairNumber, orientation: Orientation) {
+export function drawTopLineFn(nodeSize: PairNumber, orientation: Orientation, customStyle?: object) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
   const y = orientation === Orientation.TopToBottom ? -16 : 16;
   const x = orientation === Orientation.TopToBottom ? nodeWidth / 2 : -40;
+  const styles = Object.assign({}, defaultFillStyle, customStyle);
+
   return (nodeEnter: HierarchyPointNodeSelection) => {
     nodeEnter.append('text')
       .classed('node-top-line', true)
@@ -209,22 +233,26 @@ export function drawTopLineFn(nodeSize: PairNumber, orientation: Orientation) {
         const offset = isModuleTop ? 0 : 10;
 
         return y + offset;
-      });
+      })
+      .call(_setStyles, styles)
+      ;
   };
 }
 
-export function drawBottomLineFn(nodeSize: PairNumber, orientation: Orientation) {
+export function drawBottomLineFn(nodeSize: PairNumber, orientation: Orientation, customStyle?: object) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
+  const styles = Object.assign({}, defaultFillStyle, customStyle);
+
   return (nodeEnter: HierarchyPointNodeSelection) => {
     nodeEnter.append('text')
       .classed('node-bottom-line', true)
       .text(d => d.data.bottomLine)
-      .style('fill', 'black')
       .attr('font-size', 9)
       .attr('stroke-width', '0px')
       .attr('text-anchor', 'middle')
       .attr('x', nodeWidth / 2)
       .attr('y', nodeHeight + 14)
+      .call(_setStyles, styles)
       ;
   };
 }
@@ -244,7 +272,9 @@ function _drawExtendRectangle(width: number, height: number) {
   };
 }
 
-function _drawExtendEllipse(rx: number, ry: number) {
+function _drawExtendEllipse(rx: number, ry: number, customerAttrs?: object) {
+  const attrs = Object.assign({}, defaultBorderAttrs, customerAttrs);
+
   return (nodeEnter: HierarchyPointNodeSelection, xys: PairNumber[]) => {
     xys.forEach(([x, y]) => {
       nodeEnter.append('ellipse')
@@ -254,12 +284,14 @@ function _drawExtendEllipse(rx: number, ry: number) {
         .attr('cy', y)
         .attr('rx', rx)
         .attr('ry', ry)
-        .attr('fill', '#f5a5a5');
+        .call(_setAttrs, attrs);
     });
   };
 }
 
-function _drawExtendCircle(r: number) {
+function _drawExtendCircle(r: number, customAttrs?: object) {
+  const attrs = Object.assign({}, defaultBorderAttrs, customAttrs);
+
   return (nodeEnter: HierarchyPointNodeSelection, xys: PairNumber[]) => {
     xys.forEach(([x, y]) => {
       nodeEnter.append('circle')
@@ -268,7 +300,7 @@ function _drawExtendCircle(r: number) {
         .attr('cx', x)
         .attr('cy', y)
         .attr('r', r)
-        .attr('fill', '#f5a5a5');
+        .call(_setAttrs, attrs);
     });
   };
 }

@@ -118,10 +118,10 @@ const isNotRoutesOrRouteNode = (d: ArchHierarchyPointNode) => !isRoutesOrRouteNo
 
 const defaultColor = '#fff';
 
-function _getNodeColor(useLightColor = true) {
+function _getNodeColor(useLightColor = true, useLightTheme = false) {
   return (pointNode: ArchHierarchyPointNode) => {
     const elementType = getElementType(pointNode);
-    const color = ArchConfig.getElementColor(elementType, useLightColor);
+    const color = ArchConfig.getElementColor(elementType, useLightColor, useLightTheme);
     return color ? color : defaultColor;
   };
 }

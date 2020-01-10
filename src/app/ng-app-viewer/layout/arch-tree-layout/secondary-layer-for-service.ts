@@ -11,18 +11,23 @@ import { ArchHierarchyNodeDrawer } from './arch-hierarchy-node-drawer';
 import { PairNumber } from '@core/models/arch-data-format';
 import { drawThreeGearsFn, drawRectangleFn } from './arch-hierarchy-node-shape';
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
+import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
+import { HierarchyNode } from 'd3';
 
 // service has injector, dependency
 const _setAttrs = d3_util.setAttrs;
+const injectorTexts = { [AnalysisElementType.Module] : 'ModuleInjector', [AnalysisElementType.Component]: 'ElementInjector'};
 
 // service
 const serviceNodeColor = ArchConfig.getElementColors(AnalysisElementType.Service)[1];
-const serviceNodeName = (node: ArchHierarchyPointNode) => node.data.name;
+const serviceNodeName = (node: ArchHierarchyPointNode) => {
+  const category = injectorTexts[node.data.elementType];
+  return node.data.name + ' ' + (category ? category : 'PlatformInjector');
+}
 
 // injector
-const injectorNodeSize: PairNumber = [120, 22];
-const injectorNodeOffset: PairNumber = [ -25, 3 ];
-const injectorTexts = { [AnalysisElementType.Module] : 'Module Injector', [AnalysisElementType.Component]: 'Element Injector'};
+const injectorNodeSize: PairNumber = [120, 32];
+const injectorNodeOffset: PairNumber = [ -25, -5 ];
 const injectorText = (node: ArchHierarchyPointNode) => injectorTexts[node.data.elementType];
 const injectorRectAttrs = {
   'fill': '#ff7e26',
@@ -34,26 +39,50 @@ const injectorRectAttrs = {
 };
 const injectorTextAttrs = {
   'fill': 'white',
-  'font-size': '9px'
+  'font-size': '9px',
+};
+const injectorDivAttrs = {
+  'font-size': '9px',
+  'background-color': '#fb6702',
+  'float': 'right',
+  'border-radius': '5px',
+  'padding': '2px 6px 0px 6px',
+  'border': '1px solid #ff9c59',
+  'display': 'inline-block',
+  'color': '#000000',
+  'opacity': '0.8',
+  'font-weight': '500',
+  'word-wrap': 'break-word'
 };
 
 // dependency
-const dependencyNodeSize: PairNumber = [60, 22];
-const dependencyNodeOffset: PairNumber = [ 0, -3 ];
+const dependencyNodeSize: PairNumber = [120, 22];
+const dependencyNodeOffset: PairNumber = [ 25, -8 ];
+const dependenciesDivAttrs = {
+  'font-size': '9px',
+  'background-color': '#e0a000',
+  'border-radius': '5px',
+  'padding': '2px 6px 0px 6px',
+  'border': '1px solid #ff9c59',
+  'display': 'inline-block',
+  'color': '#000000',
+  'opacity': '1',
+  'font-weight': '500'
+};
 
 const placeNode = (halfOffset: PairNumber, nodeSize: PairNumber, offsetMinusWidth = true) => {
   const [ nodeWidth, nodeHeight ] = nodeSize;
-  return function(pointNode: ArchHierarchyPointNode) {
+  return function(pointNode: ArchHierarchyPointNode, offset: PairNumber = [0, 0]) {
     const host: d3Element = d3.select(this);
-    // let { x, y } = pointNode['realPosition'];
     let { x, y } = pointNode;
-    x += ((offsetMinusWidth ? -nodeWidth : 0) + halfOffset[0]);
-    y += halfOffset[1];
+    const [ offsetX, offsetY ] = offset;
+    x += ((offsetMinusWidth ? -nodeWidth : 0) + halfOffset[0]) + offsetX;
+    y += halfOffset[1] + offsetY;
 
     d3_util.translateTo(host, x, y);
+    return {x, y};
   };
 };
-
 
 export class SecondaryLayerForService {
   private rootGroup: d3Element;
@@ -85,64 +114,112 @@ export class SecondaryLayerForService {
   }
 
   drawInjector() {
-    const nodes = this.treeRoot.descendants()
-      .filter(node => {
-        const injector = node.data.getRelatedInjectorArchNgPonents();
-        return injector && Array.isArray(injector) && injector.length;
+    const root = this.treeRoot.data;
+    const injectorTree = root.injectorSubTree;
+    const injectorRoot = injectorTree.root;
+    const injectorHierarchy = d3.hierarchy(injectorRoot);
+
+    const drawInjectorNodes = () => {
+      const nodes = injectorHierarchy.descendants();
+      const rootModuleNode = nodes.find(node => node.data.rootModule);
+
+      let count = 2;
+      const placeNodeFn = placeNode(injectorNodeOffset, this.nodeDrawer.nodeSize);
+      const nodeEnter = this.secondaryLayer
+        .selectAll('.secondary_injector')
+        .data(nodes)
+        .enter()
+        .append('g')
+        .classed('secondary_injector', true)
+        .each(function (pointNode: HierarchyNode<InjectorTreeNode>) {
+          let hostPoint;
+          const offset = [0, 0];
+          if (pointNode.data.host) {
+            hostPoint = pointNode.data.host._hierarchyNode;
+          } else if (count > 0) {
+            hostPoint = rootModuleNode.data.host._hierarchyNode;
+            offset[1] = count * -80;
+
+            --count;
+          }
+
+          if (hostPoint) {
+            const injectorPosition = placeNodeFn.bind(this)(hostPoint, offset);
+            if (!pointNode.hasOwnProperty('positions')) {
+              pointNode['positions'] = {};
+            }
+            pointNode['positions']['injector'] = injectorPosition;
+          }
+        });
+
+      d3_svg.svgForeignExtendableDiv(nodeEnter, {text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs);
+    };
+
+    const drawInjectorLinks = () => {
+      const links = injectorHierarchy.links();
+      const injectorLinksGroup = this.secondaryLayer.append('g').classed('injector_links', true);
+      const linkEnter = injectorLinksGroup.selectAll('link').data(links).enter();
+
+      const lineStyle = {
+        'stroke': '#1e5799',
+        'stroke-width': 1
+      };
+      const getPosition = (point: any) => [point.positions.injector.x, point.positions.injector.y] as PairNumber;
+      linkEnter.each(function(link) {
+        const host: d3Element = d3.select(this);
+        const { source, target } = link;
+        const startPoint: PairNumber = getPosition(source);
+        const endPoint: PairNumber = getPosition(target);
+        startPoint[0] += injectorNodeSize[0] / 2;
+        startPoint[1] += injectorNodeSize[1] - 4;
+        endPoint[0] += injectorNodeSize[0] / 2;
+        endPoint[1] += 1;
+
+        d3_svg.svgLine(host, null, startPoint, endPoint, null, lineStyle);
       });
 
-    const gNode = this.secondaryLayer
-      .selectAll('.secondary_injector')
-      .data(nodes, function(_datum: DiagramTreeNode) {
-        const archNgPonent = _datum.data.getRelatedInjectorArchNgPonents();
-        return _datum as any;
-      });
+      return injectorLinksGroup;
+    };
 
-    const nodeEnter = gNode
-      .enter()
-      .append('g')
-      .classed('secondary_injector', true)
-      .each(placeNode(injectorNodeOffset, this.nodeDrawer.nodeSize));
+    drawInjectorNodes();
 
-      d3_svg.svgForeignDivText(nodeEnter, {text: serviceNodeName}, injectorNodeSize, null, injectorTextAttrs);
-    // d3_svg.svgRect(nodeEnter, '', [0, 0], injectorNodeSize, injectorRectAttrs);
-    // d3_svg.svgText(nodeEnter, serviceNodeName, '', [5, 10], injectorTextAttrs);
-    // d3_svg.svgText(nodeEnter, injectorText, '', [5, 19], injectorTextAttrs);
+    const linksGroup = drawInjectorLinks();
+    linksGroup.lower();
   }
 
   drawDependency() {
     const nodes = this.treeRoot.descendants()
-    .filter(node => {
-      const injector = node.data.getRelatedCtorDependencies();
-      return injector && Array.isArray(injector) && injector.length;
-    });
-
-    const gNode = this.secondaryLayer
-      .selectAll('.secondary_dependency')
-      .data(nodes, function(_datum: DiagramTreeNode) {
-        const archNgPonent = _datum.data.getRelatedInjectorArchNgPonents();
-        return _datum as any;
+      .filter(node => {
+        const injector = node.data.getRelatedCtorDependencies();
+        return injector && Array.isArray(injector) && injector.length;
       });
 
-    const nodeEnter = gNode
+    const placeNodeFn = placeNode(dependencyNodeOffset, this.nodeDrawer.nodeSize, false);
+    const nodeEnter = this.secondaryLayer
+      .selectAll('.secondary_dependency')
+      .data(nodes)
       .enter()
       .append('g')
       .classed('secondary_dependency', true)
-      .each(placeNode(dependencyNodeOffset, this.nodeDrawer.nodeSize, false));
+      .each(function(pointNode: ArchHierarchyPointNode) {
+        placeNodeFn.bind(this)(pointNode);
+      });
 
-      const rectStyle = {
-        'stroke': '#888888',
-        'stroke-width': '1px',
-        'opacity': '.8',
-      };
+    // const rectStyle = {
+    //   'stroke': '#888888',
+    //   'stroke-width': '1px',
+    //   'opacity': '0.8',
+    // };
+
+    d3_svg.svgForeignExtendableDiv(nodeEnter, {text: () => 'Dependencies'}, dependencyNodeSize, null, dependenciesDivAttrs);
 
     // d3_svg.svgRect(nodeEnter, '', [0, 0], dependencyNodeSize, serviceRectAttrs);
     // d3_svg.svgText(nodeEnter, () => 'dependency', '', [5, 14], serviceTextAttrs);
-    const [ width, height ] = this.nodeDrawer.nodeSize;
-    nodeEnter.call(drawRectangleFn([ width, height - 10 ]));
-    nodeEnter.call(drawThreeGearsFn());
-    nodeEnter
-      .call(d3_util.setStyles, rectStyle)
-      .attr('fill', serviceNodeColor);
+    // const [ width, height ] = this.nodeDrawer.nodeSize;
+    // nodeEnter.call(drawRectangleFn([ width, height - 10 ]));
+    // nodeEnter.call(drawThreeGearsFn());
+    // nodeEnter
+    //   .call(d3_util.setStyles, rectStyle)
+    //   .attr('fill', serviceNodeColor);
   }
 }

@@ -13,7 +13,7 @@ import { DiagramLayoutToken, DiagramLayout } from './diagram-layout';
 import { DiagramLinkableContext } from '@core/diagram-element-linkable/diagram-linkable-context';
 import { Callbacks, MapDataCallbackFlag, getCallback } from './../models/meta-data';
 import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
-import { LayoutOptions } from '@core/diagram/layout-options';
+import { LayoutOptions, LayoutFeature } from '@core/diagram/layout-options';
 import { DiagramElementFeature } from '@core/diagram/diagram-definition';
 import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
@@ -114,7 +114,8 @@ export class DiagramOrganizer {
       archTree = layoutData;
     }
 
-    const diagramTree = new DiagramTreeContext(archTree, mapNodeFn);
+    const hasInjectorLayer = layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector)
+    const diagramTree = new DiagramTreeContext(archTree, mapNodeFn, hasInjectorLayer);
     if (traverseTreeContext) {
       traverseTreeContext(diagramTree);
     }
