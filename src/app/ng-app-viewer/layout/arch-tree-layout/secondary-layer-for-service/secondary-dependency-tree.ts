@@ -67,15 +67,14 @@ export class SecondaryDependencyTree {
       .classed('secondary_dependency', true)
       .each(function(pointNode: ArchHierarchyPointNode) {
         placeNode.bind(this)(pointNode);
-      });
+      })
+      .call(d3_svg.svgForeignExtendableDiv({text: () => 'Dependencies'}, dependencyNodeSize, null, dependenciesDivAttrs));
 
     // const rectStyle = {
     //   'stroke': '#888888',
     //   'stroke-width': '1px',
     //   'opacity': '0.8',
     // };
-
-    d3_svg.svgForeignExtendableDiv(nodeEnter, {text: () => 'Dependencies'}, dependencyNodeSize, null, dependenciesDivAttrs);
 
     // d3_svg.svgRect(nodeEnter, '', [0, 0], dependencyNodeSize, serviceRectAttrs);
     // d3_svg.svgText(nodeEnter, () => 'dependency', '', [5, 14], serviceTextAttrs);
