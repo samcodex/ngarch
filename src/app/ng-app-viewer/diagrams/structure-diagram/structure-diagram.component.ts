@@ -83,7 +83,7 @@ export class StructureDiagramComponent extends SvgZoomBoardComponent
     if (data) {
       const collapseNode = (context: DiagramTreeContext) => {
         if (context.root.children) {
-          context.root.children.forEach(child => child.isCollapsed = true);
+          context.root.children.forEach(child => child.collapse());
         }
       };
 

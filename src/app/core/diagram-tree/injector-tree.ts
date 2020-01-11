@@ -30,9 +30,15 @@ export class InjectorTreeNode {
   parent: InjectorTreeNode;
   rootModule = false;
 
+  private _isCollapsed = false;
+
   constructor(parent: InjectorTreeNode, host: DiagramTreeNode, category?: InjectorCategory) {
     this.parent = parent;
     this.host = host;
+
+    if (host) {
+      host.injectorTreeNode = this;
+    }
 
     if (category) {
       this.category = category;
@@ -53,11 +59,23 @@ export class InjectorTreeNode {
     return this.host ? this.host.elementType : null;
   }
 
+  get isCollapsed(): boolean {
+    return this._isCollapsed;
+  }
+
   appendChildren(node: InjectorTreeNode) {
     if (!this.children) {
       this.children = [];
     }
     this.children.push(node);
+  }
+
+  collapse() {
+    this._isCollapsed = true;
+  }
+
+  expand() {
+    this._isCollapsed = false;
   }
 
   setRootModuleInjector() {
@@ -78,13 +96,9 @@ export class InjectorTree {
   createInjectorTree(root: DiagramTreeNode) {
     const platformInjector = this.createPlatformInjectorNode();
 
-console.log(root);
     levelOrder(root, function(node: DiagramTreeNode, upInjector: InjectorTreeNode) {
       const archNgPonent = node.archPonent;
       const injectors = node.getRelatedInjectorArchNgPonents();
-      if (node.name === 'ArchComponent') {
-        console.log(injectors);
-      }
       if (archNgPonent.isLazyLoadingModule || injectors && injectors.length) {
         return new InjectorTreeNode(upInjector, node);
       } else {

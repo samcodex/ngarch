@@ -110,7 +110,7 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     this.organizer.clear();
 
     const collapseNode = (context: DiagramTreeContext) => {
-      context.root.children.forEach(child => child.isCollapsed = true);
+      context.root.children.forEach(child => child.collapse());
     };
 
     if (data) {

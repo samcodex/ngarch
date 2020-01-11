@@ -5,7 +5,7 @@ import { ArchNode } from './../arch-tree/arch-tree';
 import { DiagramTreeContext } from './diagram-tree-context';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { ArchNgPonentModule, ArchNgPonentComponent } from '@core/arch-ngponent';
-import { InjectorTree } from './injector-tree';
+import { InjectorTree, InjectorTreeNode } from './injector-tree';
 import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
 
 export class DiagramTreeNode extends DiagramElement {
@@ -20,13 +20,14 @@ export class DiagramTreeNode extends DiagramElement {
   disabled = false;
   bottomLine: string;
   topLine: string;
-  isCollapsed = false;
+  private isCollapsed = false;
   isSelected = false;
   isClickable = true;
 
   _hierarchyNode: any;
 
   injectorSubTree: InjectorTree;
+  injectorTreeNode: InjectorTreeNode;
   dependencySubTreeNode: DiagramSubTreeDependency;
 
   constructor(tree: DiagramTreeContext, node: ArchNode, parent: DiagramTreeNode, mapNodeFn?: Function) {
@@ -91,6 +92,23 @@ export class DiagramTreeNode extends DiagramElement {
 
   toggleCollapsed() {
     this.isCollapsed = !this.isCollapsed;
+    if (this.injectorTreeNode) {
+      this.isCollapsed ? this.injectorTreeNode.collapse() : this.injectorTreeNode.expand();
+    }
+  }
+
+  collapse() {
+    this.isCollapsed = true;
+    if (this.injectorTreeNode) {
+      this.injectorTreeNode.collapse();
+    }
+  }
+
+  expand() {
+    this.isCollapsed = false;
+    if (this.injectorTreeNode) {
+      this.injectorTreeNode.expand();
+    }
   }
 
   toggleSelected() {

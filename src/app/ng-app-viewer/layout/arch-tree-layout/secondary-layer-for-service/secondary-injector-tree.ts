@@ -70,7 +70,7 @@ export class SecondaryInjectorTree {
     const root = this.treeRoot.data;
     const injectorTree = root.injectorSubTree;
     const injectorRoot = injectorTree.root;
-    this.injectorHierarchy = d3.hierarchy(injectorRoot);
+    this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) => injectorNode.isCollapsed ? null : injectorNode.children);
 
     this.drawInjectorNodes();
 
@@ -82,6 +82,7 @@ export class SecondaryInjectorTree {
     const nodes = this.injectorHierarchy.descendants();
     const rootModuleNode = nodes.find(node => node.data.rootModule);
 
+    // two PlatformInjector, NullInjector & PlatformModuleInjector
     let count = 2;
     const placeNode = d3_shape.placeNodeFn(injectorNodeOffset, this.nodeDrawer.nodeSize);
     const nodeEnter = this.secondaryLayer
