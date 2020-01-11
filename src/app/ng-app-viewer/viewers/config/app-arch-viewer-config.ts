@@ -4,11 +4,11 @@ import { UiElementItem } from '@core/models/ui-element-item';
 import { Orientation } from '@core/diagram/layout-options';
 import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from './arch-viewer-definition';
 
-const compositionDetails = ['Including:', '@NgModule/declarations (Module-Component)',
-'@NgModule/providers or ModuleWithProviders (Module-Service)', '@NgModule/imports/RouterModule.forRoot/forChild (Module-Routes)',
-'@Component/providers(Component-Service)'];
-const dependencyDetails = ['Including:', '@NgModule/imports (Module-Module)', 'HTML Template (Component/Directive/Pipe)',
-'Component\'s constructor (Component-Service)', 'Service\'s constructor (Service-Service)'];
+// const compositionDetails = ['Including:', '@NgModule/declarations (Module-Component)',
+// '@NgModule/providers or ModuleWithProviders (Module-Service)', '@NgModule/imports/RouterModule.forRoot/forChild (Module-Routes)',
+// '@Component/providers(Component-Service)'];
+// const dependencyDetails = ['Including:', '@NgModule/imports (Module-Module)', 'HTML Template (Component/Directive/Pipe)',
+// 'Component\'s constructor (Component-Service)', 'Service\'s constructor (Service-Service)'];
 
 
 const filterByUsed = (item: UiElementItem) => item.isUsed !== false;
@@ -20,7 +20,7 @@ const hierarchyOptions: UiElementCategory[] = [
     type: ArchViewerOptionCategory.Hierarchy,
     inputType: MetaInputType.RadioGroup,
     items: [
-      { name: 'UI Architecture', value: ArchViewerHierarchy.FullView,
+      { name: 'Architecture Overview', value: ArchViewerHierarchy.FullView,
         type: null, isChecked: true
       },
       { name: 'Component Hierarchy', value: ArchViewerHierarchy.ComponentHierarchy,
@@ -30,7 +30,7 @@ const hierarchyOptions: UiElementCategory[] = [
         type: null, isChecked: false
       },
       { name: 'Injector & Dependency Hierarchy', value: ArchViewerHierarchy.InjectorHierarchy,
-        type: null, isChecked: false
+        type: null, isChecked: true
       }
     ].filter(filterByUsed)
   }

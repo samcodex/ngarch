@@ -45,6 +45,15 @@ const injectorDivAttrs = {
   'word-wrap': 'break-word'
 };
 
+const lineStyle = {
+  'stroke': '#1e5799',
+  'stroke-width': 2
+};
+
+const getPosition = (point: any) => [point.positions.injector.x, point.positions.injector.y] as PairNumber;
+const startPointOffset = [injectorNodeSize[0] / 2, injectorNodeSize[1] - 4];
+const endPointOffset = [ injectorNodeSize[0] / 2, 1];
+
 export class SecondaryInjectorTree {
   private injectorHierarchy: d3.HierarchyNode<InjectorTreeNode>;
 
@@ -110,20 +119,15 @@ export class SecondaryInjectorTree {
     const injectorLinksGroup = this.secondaryLayer.append('g').classed('injector_links', true);
     const linkEnter = injectorLinksGroup.selectAll('link').data(links).enter();
 
-    const lineStyle = {
-      'stroke': '#1e5799',
-      'stroke-width': 1
-    };
-    const getPosition = (point: any) => [point.positions.injector.x, point.positions.injector.y] as PairNumber;
     linkEnter.each(function(link) {
       const host: d3Element = d3.select(this);
       const { source, target } = link;
       const startPoint: PairNumber = getPosition(source);
       const endPoint: PairNumber = getPosition(target);
-      startPoint[0] += injectorNodeSize[0] / 2;
-      startPoint[1] += injectorNodeSize[1] - 4;
-      endPoint[0] += injectorNodeSize[0] / 2;
-      endPoint[1] += 1;
+      startPoint[0] += startPointOffset[0];
+      startPoint[1] += startPointOffset[1];
+      endPoint[0] += endPointOffset[0];
+      endPoint[1] += endPointOffset[1];
 
       d3_svg.svgLine(host, null, startPoint, endPoint, null, lineStyle);
     });
