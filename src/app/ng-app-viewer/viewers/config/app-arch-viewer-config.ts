@@ -30,7 +30,7 @@ const hierarchyOptions: UiElementCategory[] = [
         type: null, isChecked: false
       },
       { name: 'Injector & Dependency Hierarchy', value: ArchViewerHierarchy.InjectorHierarchy,
-        type: null, isChecked: true
+        type: null, isChecked: false
       }
     ].filter(filterByUsed)
   }
