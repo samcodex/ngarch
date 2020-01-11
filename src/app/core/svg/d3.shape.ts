@@ -8,25 +8,27 @@ import { appendRightBracket, appendLeftBracket } from './svg-defs';
 import { d3_util } from './d3.util';
 import { PairNumber } from '@core/models/arch-data-format';
 import { d3_svg } from './d3.svg';
-import { ArchHierarchyPointLink } from 'app/ng-app-viewer/layout/arch-tree-layout/arch-hierarchy';
+import { ArchHierarchyPointLink } from './../../ng-app-viewer/layout/arch-tree-layout/arch-hierarchy';
+import { ArchHierarchyPointNode } from './../../ng-app-viewer/layout/arch-tree-layout/arch-hierarchy';
 
 const _setAttrs = d3_util.setAttrs;
 const _setGroupAttrs = d3_util.setGroupAttrs;
 const _transformD3Element = d3_util.transformD3Element;
 
-export namespace d3_shape {
-  export const clickAndDblclick = _clickCancel;
-  export const createNodeEvent = _createNodeEvent;
-  export const styleMouseOver = _styleMouseOver;
-  export const createCircleLetterIcon = _createCircleLetterIcon;
-  export const createLettersActionBar = _createLettersActionBar;
-  export const appendGroupPath = _appendGroupPath;
-  export const combineGroupPaths = _combineGroupPaths;
-  export const appendPairBracket = _appendPairBracket;
-  export const drawActionBar = _drawActionBar;
-  export const drawNodeTip = _drawNodeTip;
-  export const drawLinkTip = _drawLinkTip;
-}
+// funtions
+const _placeNodeFn = (halfOffset: PairNumber, nodeSize: PairNumber, offsetMinusWidth = true) => {
+  const [ nodeWidth, nodeHeight ] = nodeSize;
+  return function(pointNode: ArchHierarchyPointNode, offset: PairNumber = [0, 0]) {
+    const host: d3Element = d3.select(this);
+    let { x, y } = pointNode;
+    const [ offsetX, offsetY ] = offset;
+    x += ((offsetMinusWidth ? -nodeWidth : 0) + halfOffset[0]) + offsetX;
+    y += halfOffset[1] + offsetY;
+
+    d3_util.translateTo(host, x, y);
+    return {x, y};
+  };
+};
 
 function _clickCancel() {
   // we want to a distinguish single/double click
@@ -596,4 +598,19 @@ function _drawLinkTip() {
     d3_util.toggleShowHide(linkTip, false);
     return linkTip;
   };
+}
+
+export namespace d3_shape {
+  export const clickAndDblclick = _clickCancel;
+  export const createNodeEvent = _createNodeEvent;
+  export const styleMouseOver = _styleMouseOver;
+  export const createCircleLetterIcon = _createCircleLetterIcon;
+  export const createLettersActionBar = _createLettersActionBar;
+  export const appendGroupPath = _appendGroupPath;
+  export const combineGroupPaths = _combineGroupPaths;
+  export const appendPairBracket = _appendPairBracket;
+  export const drawActionBar = _drawActionBar;
+  export const drawNodeTip = _drawNodeTip;
+  export const drawLinkTip = _drawLinkTip;
+  export const placeNodeFn = _placeNodeFn;
 }

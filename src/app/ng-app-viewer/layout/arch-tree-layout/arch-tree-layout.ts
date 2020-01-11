@@ -16,7 +16,7 @@ import { AnalysisElementType } from '@core/models/analysis-element';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
 import { ArchHierarchy, ArchHierarchyPointNode, ArchHierarchyPointLink, HierarchyPointNodeSelection, ArchHierarchyHelper, HierarchyPointLinkSelection } from './arch-hierarchy';
 import { ArchHierarchyNodeDrawer, duration, linkStyle, linkCoverStyle, lightThemePathColor } from './arch-hierarchy-node-drawer';
-import { SecondaryLayerForService } from './secondary-layer-for-service';
+import { SecondaryLayerForService } from './secondary-layer-for-service/secondary-layer-for-service';
 import { d3_svg } from '@core/svg/d3.svg';
 
 let foreignStyle = '';
