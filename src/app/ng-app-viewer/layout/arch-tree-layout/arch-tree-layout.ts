@@ -82,20 +82,24 @@ export class ArchTreeLayout extends DiagramLayout {
     this.drawComponentNodes();
 
     if (this.hasSecondaryLayer) {
-      // this.treeContainer.attr('fill-opacity', '0.8');
-      if (this.secondaryLayerForService) {
-        this.secondaryLayerForService.clear();
-      } else {
-        // cover
-        // const size = d3_util.getDimension(this.rootGroup);
-        // const cover = this.rootGroup.append('g').classed('main_group_cover', true);
-        // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.4'});
+      const drawSecondaryLayer = () => {
+        // this.treeContainer.attr('fill-opacity', '0.8');
+        if (this.secondaryLayerForService) {
+          this.secondaryLayerForService.clear();
+        } else {
+          // cover
+          // const size = d3_util.getDimension(this.rootGroup);
+          // const cover = this.rootGroup.append('g').classed('main_group_cover', true);
+          // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.4'});
 
-        this.secondaryLayerForService = new SecondaryLayerForService(this.rootGroup, this.treeRoot,
-          this.layoutOptions, this.nodeDrawer);
-      }
+          this.secondaryLayerForService = new SecondaryLayerForService(this.rootGroup, this.treeRoot,
+            this.layoutOptions, this.nodeDrawer);
+        }
 
-      this.secondaryLayerForService.draw();
+        this.secondaryLayerForService.draw();
+      };
+
+      drawSecondaryLayer();
     } else {
       this.secondaryLayerForService = null;
     }

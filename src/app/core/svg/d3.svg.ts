@@ -121,21 +121,23 @@ export interface D3Callbacks {
   text?: (d: any) => string;
 }
 
-function _assignProperties(node: d3Element, callbacks: D3Callbacks, textAttrs?: object, textStyles?: object) {
+function _assignProperties(callbacks: D3Callbacks, textAttrs?: object, textStyles?: object) {
   const { each, html, text } = callbacks;
-  if (text) {
-    node.text(text);
-  }
-  if (html) {
-    node.html(html);
-  }
-  if (each) {
-    node.each(each);
-  }
+  return (node: d3Element) => {
+    if (text) {
+      node.text(text);
+    }
+    if (html) {
+      node.html(html);
+    }
+    if (each) {
+      node.each(each);
+    }
 
-  node
-    .call(_setStyles, textStyles)
-    .call(_setAttrs, textAttrs);
+    node
+      .call(_setStyles, textStyles)
+      .call(_setAttrs, textAttrs);
+  };
 }
 
 function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
@@ -154,9 +156,8 @@ function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
     .append('xhtml:div')
     .classed(classed, true)
     .style('width', width + 'px')
-    .style('height', height + 'px');
-
-  _assignProperties(textDiv, callbacks, textAttrs, styles);
+    .style('height', height + 'px')
+    .call(_assignProperties(callbacks, textAttrs, styles));
 
   return foreign;
 }
@@ -193,48 +194,37 @@ function _svgForeignDivText(host: d3Element, callbacks: D3Callbacks, size: PairN
       if (dNode.hasOwnProperty('isClickable') && !!dNode.isClickable) {
         hostDiv.style('cursor', 'pointer');
       }
-    });
-
-      _assignProperties(textDiv, callbacks, textAttrs, styles);
-
+    })
+    .call(_assignProperties(callbacks, textAttrs, styles));
 
   return foreign;
 }
 
 // extend div to fit the content
-function _svgForeignExtendableDiv(host: d3Element, callbacks: D3Callbacks, size: PairNumber,
-    textAttrs?: object, textStyles?: object): d3Element {
+function _svgForeignExtendableDiv(callbacks: D3Callbacks, size: PairNumber,
+    textAttrs?: object, textStyles?: object) {
 
   const [ width, height ] = size;
   const styles = Object.assign({}, divBreakStyle, textStyles);
 
-  const foreign = host
-    .append('foreignObject')
-    .attr('width', width)
-    ;
+  return (host: d3Element) => {
+    host
+      .append('foreignObject')
+      .attr('width', width)
+      .append('xhtml:div')
+      .each(function(d, i) {
+        const hostDiv: d3Element = d3.select(this);
+        const eachSize = d3_util.getRectDimension(hostDiv);
 
-  const textDiv = foreign
-    .append('xhtml:div')
-    // .text(htmlFn)
-    // .style('width', width + 'px')
-    .each(function(d, i) {
-      const hostDiv: d3Element = d3.select(this);
-      const eachSize = d3_util.getRectDimension(hostDiv);
+        // parent - foreignObject
+        const element = hostDiv.node() as Element;
+        const parent = d3.select(element.parentNode as any);
 
-      // parent - foreignObject
-      const element = hostDiv.node() as Element;
-      const parent = d3.select(element.parentNode as any);
-
-      const divOffset = textStyles.hasOwnProperty('padding') ? 8 : 0;
-      const divHeight = eachSize.height > height ? eachSize.height + 4 : height;
-      parent.attr('height', divHeight);
-      hostDiv.style('height', (divHeight - divOffset) + 'px');
-    });
-
-    _assignProperties(textDiv, callbacks, textAttrs, styles);
-    // textDiv
-    //   .call(_setStyles, styles)
-    //   .call(_setAttrs, textAttrs);
-
-  return foreign;
+        const divOffset = textStyles.hasOwnProperty('padding') ? 8 : 0;
+        const divHeight = eachSize.height > height ? eachSize.height + 4 : height;
+        parent.attr('height', divHeight);
+        hostDiv.style('height', (divHeight - divOffset) + 'px');
+      })
+      .call(_assignProperties(callbacks, textAttrs, styles));
+  };
 }

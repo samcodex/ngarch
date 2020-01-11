@@ -109,9 +109,8 @@ export class SecondaryInjectorTree {
           }
           pointNode['positions']['injector'] = injectorPosition;
         }
-      });
-
-    d3_svg.svgForeignExtendableDiv(nodeEnter, {text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs);
+      })
+      .call(d3_svg.svgForeignExtendableDiv({text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs));
   }
 
   private drawInjectorLinks() {
@@ -119,18 +118,19 @@ export class SecondaryInjectorTree {
     const injectorLinksGroup = this.secondaryLayer.append('g').classed('injector_links', true);
     const linkEnter = injectorLinksGroup.selectAll('link').data(links).enter();
 
-    linkEnter.each(function(link) {
-      const host: d3Element = d3.select(this);
-      const { source, target } = link;
-      const startPoint: PairNumber = getPosition(source);
-      const endPoint: PairNumber = getPosition(target);
-      startPoint[0] += startPointOffset[0];
-      startPoint[1] += startPointOffset[1];
-      endPoint[0] += endPointOffset[0];
-      endPoint[1] += endPointOffset[1];
+    linkEnter
+      .each(function(link) {
+        const host: d3Element = d3.select(this);
+        const { source, target } = link;
+        const startPoint: PairNumber = getPosition(source);
+        const endPoint: PairNumber = getPosition(target);
+        startPoint[0] += startPointOffset[0];
+        startPoint[1] += startPointOffset[1];
+        endPoint[0] += endPointOffset[0];
+        endPoint[1] += endPointOffset[1];
 
-      d3_svg.svgLine(host, null, startPoint, endPoint, null, lineStyle);
-    });
+        d3_svg.svgLine(host, null, startPoint, endPoint, null, lineStyle);
+      });
 
     return injectorLinksGroup;
   }
