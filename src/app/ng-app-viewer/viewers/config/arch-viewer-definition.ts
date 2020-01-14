@@ -36,3 +36,7 @@ export const mapOfViewerHierarchyToArchTree: { [ key in ArchViewerHierarchy ]: A
 };
 
 export const mapViewerHierarchyToArchTree = (hierarchy: ArchViewerHierarchy) => mapOfViewerHierarchyToArchTree[hierarchy];
+
+export interface ViewerContentHierarchyIndicator {
+  contentHierarchy: ArchViewerHierarchy;
+}

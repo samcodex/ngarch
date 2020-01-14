@@ -10,6 +10,7 @@ import { NgPonentType } from '@core/ngponent-tsponent/ngponent-definition';
 import { ArchPonentFeature } from '@core/arch-ngponent/arch-ngponent-definition';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { DiagramViewerType, ViewerType } from './ng-app-viewer-definition';
+import { ArchViewerHierarchy } from '../viewers/config/arch-viewer-definition';
 
 export enum PonentActionPurpose {
   Typescript = 'Typescript',
@@ -34,7 +35,7 @@ export type PonentActionItem = UiElementItem<DiagramTreeNode | DiagramLinkableEl
 
 export interface ArchUiDiagramComponent {
   data: any;
-  fromViewer: ViewerType | DiagramViewerType;
+  fromViewer: ArchViewerHierarchy | ViewerType | DiagramViewerType;
   options?: any;
 }
 

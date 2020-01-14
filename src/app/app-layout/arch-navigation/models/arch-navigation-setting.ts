@@ -31,6 +31,24 @@ const appDiagram: NavigationItem[] = [
     order: 2
   },
   {
+    id: 'component_hierarchy',
+    name: 'Component Hierarchy',
+    title: 'Component Hierarchy',
+    path: NavigationPaths.NgAppViewer,
+    dataKey: 'viewer',
+    dataId: 'component-hierarchy',
+    category: NavigationCategory.ARCHITECTURE_VIEWER
+  },
+  {
+    id: 'routing_hierarchy',
+    name: 'Routing Hierarchy',
+    title: 'Routing Hierarchy',
+    path: NavigationPaths.NgAppViewer,
+    dataKey: 'viewer',
+    dataId: 'routing-hierarchy',
+    category: NavigationCategory.ARCHITECTURE_VIEWER
+  },
+  {
     id: 'service_dependency_tree',
     name: 'Service Dependency Tree',
     title: 'Service Dependency Tree',

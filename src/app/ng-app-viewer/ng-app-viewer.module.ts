@@ -20,7 +20,11 @@ import { ModuleStructureViewerComponent } from './viewers/module-structure-viewe
 import { CodeDiagramComponent } from './diagrams/code-diagram/code-diagram.component';
 import { ViewerExplanationComponent } from './shared/viewer-explanation/viewer-explanation.component';
 import { ViewerGenericUsageComponent } from './shared/viewer-generic-usage/viewer-generic-usage.component';
+import { ArchViewerHierarchy } from './viewers/config/arch-viewer-definition';
+import { DependencyDiagramComponent } from './diagrams/dependency-diagram/dependency-diagram.component';
 
+// use the last sub-path to indicate the content component,
+// use contentHierarchy to indicate the content hierarchy
 const routes: Route[] = [
   {
     path: '',
@@ -38,6 +42,16 @@ const routes: Route[] = [
   {
     path: 'viewer/service-dep',
     component: NgAppViewerComponent
+  },
+  {
+    path: 'viewer/component-hierarchy',
+    component: NgAppViewerComponent,
+    data: {contentHierarchy: ArchViewerHierarchy.ComponentHierarchy}
+  },
+  {
+    path: 'viewer/routing-hierarchy',
+    component: NgAppViewerComponent,
+    data: {contentHierarchy: ArchViewerHierarchy.RoutingHierarchy}
   }
 ];
 
@@ -68,6 +82,7 @@ const routes: Route[] = [
     CodeDiagramComponent,
     ViewerExplanationComponent,
     ViewerGenericUsageComponent,
+    DependencyDiagramComponent,
   ],
   entryComponents: [
     PonentCliComponent,
@@ -78,7 +93,8 @@ const routes: Route[] = [
     ClassVisualizerComponent,
     ModuleStructureViewerComponent,
     CodeDiagramComponent,
-    ViewerExplanationComponent
+    ViewerExplanationComponent,
+    DependencyDiagramComponent
   ]
 })
 export class NgAppViewerModule { }

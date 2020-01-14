@@ -9,6 +9,7 @@ import { ViewPurposeToUiClass, PonentActionPurpose, findPonentViewerUiClass } fr
 import { PonentActionItem } from '../models/viewer-content-types';
 import { TypeOfViewerComponentMap, ViewerType, getNgAppViewerTypeByPath, DiagramViewerType } from '../models/ng-app-viewer-definition';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
+import { ArchViewerHierarchy } from '../viewers/config/arch-viewer-definition';
 
 const uiPanelElementTheme: ArchPartTheme = {
   Header: {
@@ -36,17 +37,20 @@ export class NgAppViewerService {
   private mapOfTypeToUiClass: ViewPurposeToUiClass[];
   private mainViewer: ViewerType;
   private mapOfViewer: TypeOfViewerComponentMap;
+  private contentHierarchy: ArchViewerHierarchy;
 
   constructor(
     private ngArchUiService: NgArchUiService,
     private toastr: ToastrService
   ) { }
 
-  initializeMainViewer(resolver: ComponentFactoryResolver, viewerId: string, mapOfViewerCom: TypeOfViewerComponentMap, mapOfPanelClass: ViewPurposeToUiClass[]) {
+  initializeMainViewer(resolver: ComponentFactoryResolver, viewerId: string, contentHierarchy: ArchViewerHierarchy,
+      mapOfViewerCom: TypeOfViewerComponentMap, mapOfPanelClass: ViewPurposeToUiClass[]) {
     // initialize service
     this.mapOfTypeToUiClass = mapOfPanelClass;
     this.mapOfViewer = mapOfViewerCom;
     this.mainViewer = getNgAppViewerTypeByPath(viewerId);
+    this.contentHierarchy = contentHierarchy;
 
     // register resolver
     this.ngArchUiService.registerResolver(resolver);
@@ -54,6 +58,12 @@ export class NgAppViewerService {
     // initialize desktop
     const clazz = this.mapOfViewer[this.mainViewer];
     this.ngArchUiService.assignDesktopComponentClass(clazz);
+  }
+
+  // since the viewer content component is set in method 'initializeMainViewer',
+  // contentHierarchy is already set and can be accessed by the content component
+  getContentHierarchy(): ArchViewerHierarchy {
+    return this.contentHierarchy;
   }
 
   // createWindowOnDesktop(elementType: AnalysisElementType, title: string, transferData: object ): ArchWindow {
@@ -76,7 +86,7 @@ export class NgAppViewerService {
     const ponentType = item.ngPonentType;
     const elementType = mapNgPonentTypeToElementType(ponentType);
     const title = node.name + ` - ${purpose}`;
-    const data = uiData ? uiData : node.archNode;
+    const data = uiData || node.archNode || item;
     const transferData = { data, fromViewer, options };
     const uiType = elementType === AnalysisElementType.Module ? ArchUiType.Window : ArchUiType.Panel;
 
@@ -94,7 +104,7 @@ export class NgAppViewerService {
     this.openNgPonentOnTop(<DiagramTreeNode>diagramElement, purpose, fromViewer, uiData, options);
   }
 
-  openViewerExplanationPanel(viewerType: ViewerType | DiagramViewerType) {
+  openViewerExplanationPanel(viewerType: ArchViewerHierarchy | ViewerType | DiagramViewerType) {
     const transferData = { fromViewer: viewerType };
     this.openUiElementOnTop(null, null, PonentActionPurpose.ViewerExplanation, 'Viewer Explanation', transferData);
   }
