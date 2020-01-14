@@ -22,7 +22,7 @@ import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-defini
 })
 export class ClassVisualizerComponent implements OnInit, AfterViewInit, OnDestroy,
     NgArchUiContentComponent, ArchUiDiagramComponent {
-  data: ArchNode;
+  data: ArchNode | ArchNgPonent;
   fromViewer: ViewerType | DiagramViewerType;
 
   private host: d3Element;
@@ -51,8 +51,9 @@ export class ClassVisualizerComponent implements OnInit, AfterViewInit, OnDestro
     // console.log('size, ', size);
     // console.log('size2 - height', size2.height);
     this.board.setSize(size.width, size.height - 210);
+    const archNgPonent: ArchNgPonent = this.data instanceof ArchNgPonent ? this.data : this.data.archNgPonent;
 
-    this.updateOrganizer([this.data.archNgPonent], null);
+    this.updateOrganizer([archNgPonent], null);
   }
 
   archOnResize(wrapperWindow) {

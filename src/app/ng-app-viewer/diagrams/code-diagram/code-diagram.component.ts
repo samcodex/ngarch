@@ -16,7 +16,7 @@ const languages = [ 'typescript', 'html', 'css' ];
   styleUrls: ['./code-diagram.component.scss']
 })
 export class CodeDiagramComponent implements OnInit, ArchUiDiagramComponent {
-  data: ArchNode;     // pass dynamically
+  data: ArchNode | ArchNgPonent;     // pass dynamically
   fromViewer: ViewerType | DiagramViewerType;
 
   language: string;       // pass dynamically
@@ -30,7 +30,7 @@ export class CodeDiagramComponent implements OnInit, ArchUiDiagramComponent {
   ) { }
 
   ngOnInit() {
-    this.archNgPonent = this.data.archNgPonent;
+    this.archNgPonent = this.data instanceof ArchNgPonent ? this.data : this.data.archNgPonent;
     this.language = languages.includes(this.language) ? this.language : languages[0];
 
     if (this.language === 'html') {
