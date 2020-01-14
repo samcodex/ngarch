@@ -114,7 +114,7 @@ export class DiagramOrganizer {
       archTree = layoutData;
     }
 
-    const hasInjectorLayer = layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector)
+    const hasInjectorLayer = layoutOptions.features && layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector);
     const diagramTree = new DiagramTreeContext(archTree, mapNodeFn, hasInjectorLayer);
     if (traverseTreeContext) {
       traverseTreeContext(diagramTree);

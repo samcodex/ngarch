@@ -118,7 +118,7 @@ export class ArchTreeLayout extends DiagramLayout {
     this.layoutOptions = layoutOptions || {};
     this.layoutOptions.orientation = layoutOptions.orientation || Orientation.TopToBottom;
     this.layoutOptions.infoLevel = layoutOptions.infoLevel || NodeInfoLevel.Basic;
-    this.hasSecondaryLayer = this.layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector);
+    this.hasSecondaryLayer = this.layoutOptions.features && this.layoutOptions.features.includes(LayoutFeature.SecondaryLayerForInjector);
 
     const { orientation, infoLevel } = this.layoutOptions;
     this.nodeDrawer = new ArchHierarchyNodeDrawer(orientation, infoLevel, this.hasSecondaryLayer);
