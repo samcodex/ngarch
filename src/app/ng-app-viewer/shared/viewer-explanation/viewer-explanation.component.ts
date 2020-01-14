@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 
 import { ArchUiDiagramComponent } from '../../models/viewer-content-types';
 import { ViewerType, DiagramViewerType } from '../../models/ng-app-viewer-definition';
+import { ArchViewerHierarchy } from '../../viewers/config/arch-viewer-definition';
 
 const typeOfActivityDiagram = [ ViewerType.AppArchViewer, DiagramViewerType.ActivityDiagram ];
 const typeOfModuleStructure = [ ViewerType.ModuleStructureTree, DiagramViewerType.StructureDiagram ];
+const typeOfComponentHierarchy = [ ArchViewerHierarchy.ComponentHierarchy ];
+const typeOfRougingHierarchy = [ ArchViewerHierarchy.RoutingHierarchy ];
 
 @Component({
   selector: 'arch-viewer-explanation',
@@ -13,7 +16,7 @@ const typeOfModuleStructure = [ ViewerType.ModuleStructureTree, DiagramViewerTyp
 })
 export class ViewerExplanationComponent implements OnInit, ArchUiDiagramComponent {
   data: any;
-  fromViewer: ViewerType | DiagramViewerType;
+  fromViewer: ArchViewerHierarchy | ViewerType | DiagramViewerType;
 
   constructor() { }
 
@@ -21,10 +24,18 @@ export class ViewerExplanationComponent implements OnInit, ArchUiDiagramComponen
   }
 
   isActivityDiagram() {
-    return typeOfActivityDiagram.includes(this.fromViewer);
+    return typeOfActivityDiagram.includes(this.fromViewer as any);
   }
 
   isModuleStructure() {
-    return typeOfModuleStructure.includes(this.fromViewer);
+    return typeOfModuleStructure.includes(this.fromViewer as any);
+  }
+
+  isComponentHierarchy() {
+    return typeOfComponentHierarchy.includes(this.fromViewer as any);
+  }
+
+  isRoutingHierarchy() {
+    return typeOfRougingHierarchy.includes(this.fromViewer as any);
   }
 }

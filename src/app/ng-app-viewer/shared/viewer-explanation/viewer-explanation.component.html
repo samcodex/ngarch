@@ -6,6 +6,14 @@
   <div *ngTemplateOutlet="expModuleStructure"></div>
 </ng-container>
 
+<ng-container *ngIf="isComponentHierarchy()">
+  <div *ngTemplateOutlet="expComponentHierarchy"></div>
+</ng-container>
+
+<ng-container *ngIf="isRoutingHierarchy()">
+  <div *ngTemplateOutlet="expRoutingHierarchy"></div>
+</ng-container>
+
 <ng-template #expActivityDiagram>
   <p>Use <b>Architecture View</b> to illustrate the application activity and refer to the Route(s),
     NgModules and Components involved in the execution of the views. It focuses on</p>
@@ -21,6 +29,22 @@
 
 <ng-template #expModuleStructure>
   <p>Use <b>Module Structure</b> to show the structure of NgModule and Component, exposing the whole/part relationship of NgModule and Component.
+  <ul>
+    <li>Use NgModule's metadata to show what it includes and provides.</li>
+    <li>Use Component template to show the component's hierarchy</li>
+  </ul>
+</ng-template>
+
+<ng-template #expComponentHierarchy>
+  <p>Use <b>Component Hierarchy</b> to show the structure of NgModule and Component, exposing the whole/part relationship of NgModule and Component.
+  <ul>
+    <li>Use NgModule's metadata to show what it includes and provides.</li>
+    <li>Use Component template to show the component's hierarchy</li>
+  </ul>
+</ng-template>
+
+<ng-template #expRoutingHierarchy>
+  <p>Use <b>Routing Hierarchy</b> to show the structure of NgModule and Component, exposing the whole/part relationship of NgModule and Component.
   <ul>
     <li>Use NgModule's metadata to show what it includes and provides.</li>
     <li>Use Component template to show the component's hierarchy</li>
