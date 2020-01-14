@@ -1,4 +1,5 @@
 import { forOwn } from 'lodash-es';
+import { PairNumber } from '@core/models/arch-data-format';
 
 export namespace util {
   export function copyProperty(desc: object, src: object, properties: string[]) {
@@ -64,6 +65,8 @@ export namespace util {
   export const isDeepEqual = _isDeepEqual;
   export const resolvePaths = _resolvePaths;
   export const clearObject = _clearObject;
+  export const circularPoint = _circularPoint;
+  export const circularPoints = _circularPoints;
 }
 
 const extensions = ['html', 'ts', 'scss', 'htm', 'css'];
@@ -157,4 +160,21 @@ function _clearObject(obj: object) {
   Object.getOwnPropertyNames(obj).forEach(function (prop) {
     delete obj[prop];
   });
+}
+
+function _circularPoint (origin: PairNumber, angle: number, radius: number): PairNumber {
+  const [x, y] = origin;
+  // return [ x + Math.cos(angle) * radius, y + Math.sin(angle) * radius ];
+  return [ x - Math.sin(angle) * radius, y + Math.cos(angle) * radius ];
+}
+
+function _circularPoints(size: number, origin: PairNumber, radius: number): PairNumber[] {
+  const points = [];
+  const step = 2 * Math.PI / size;
+  for (let theta = 0;  theta < 2 * Math.PI;  theta += step) {
+    const point = _circularPoint(origin, theta, radius);
+    points.push(point);
+  }
+
+  return points;
 }

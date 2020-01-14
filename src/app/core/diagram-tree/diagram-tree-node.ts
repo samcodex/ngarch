@@ -69,7 +69,7 @@ export class DiagramTreeNode extends DiagramElement {
   }
 
   // ModuleInjector or ElementInjector
-  getRelatedInjectorArchNgPonents(): ArchNgPonentModule[] | ArchNgPonentComponent[] {
+  getRelatedInjectorArchNgPonents(): ArchNgPonentInjectable[] {
     return this.archNode.getRelatedInjectorArchNgPonents();
   }
 

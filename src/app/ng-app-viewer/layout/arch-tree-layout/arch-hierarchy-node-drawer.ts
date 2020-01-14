@@ -177,8 +177,8 @@ export class ArchHierarchyNodeDrawer {
 
     // draw top line text
     nodeEnter
-    .filter(hasTopLine)
-    .call(drawTopLineFn(this.nodeSize, this.orientation, customFillAttrs));
+      .filter(hasTopLine)
+      .call(drawTopLineFn(this.nodeSize, this.orientation, customFillAttrs));
 
     // draw bottom line text
     nodeEnter

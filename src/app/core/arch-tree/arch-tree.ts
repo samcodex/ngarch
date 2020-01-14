@@ -113,7 +113,7 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
   }
 
   // ModuleInjector or ElementInjector
-  getRelatedInjectorArchNgPonents(): ArchNgPonentModule[] | ArchNgPonentComponent[] {
+  getRelatedInjectorArchNgPonents(): ArchNgPonentInjectable[] {
     return this.getRelatedArchNgPonentsByType(AnalysisElementType._Injector);
   }
 
