@@ -24,4 +24,10 @@ export class DiagramTreeContext extends DiagramElementContext {
   traverse(callback: Function) {
     this.root.traverse(callback);
   }
+
+  traverseInjectorTree(callback: Function) {
+    if (this.root.injectorSubTree) {
+      this.root.injectorSubTree.traverse(callback);
+    }
+  }
 }

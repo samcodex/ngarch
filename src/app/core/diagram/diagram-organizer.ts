@@ -125,6 +125,10 @@ export class DiagramOrganizer {
       diagramTree.traverse((node: DiagramTreeNode) => {
         this.assignElementFeatures(node);
       });
+
+      diagramTree.traverseInjectorTree((node: DiagramTreeNode) => {
+        this.assignElementFeatures(node);
+      });
     }
 
     this.board.resetBoardContext(layoutOptions);
