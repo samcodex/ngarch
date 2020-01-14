@@ -1,5 +1,6 @@
 import { Injectable, ComponentFactoryResolver } from '@angular/core';
 import { NgArchUiService, ArchUi, ArchUiType, ArchPartTheme } from 'ng-arch-ui';
+import { ToastrService } from 'ngx-toastr';
 
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { ArchNgPonent } from '@core/arch-ngponent';
@@ -37,7 +38,8 @@ export class NgAppViewerService {
   private mapOfViewer: TypeOfViewerComponentMap;
 
   constructor(
-    private ngArchUiService: NgArchUiService
+    private ngArchUiService: NgArchUiService,
+    private toastr: ToastrService
   ) { }
 
   initializeMainViewer(resolver: ComponentFactoryResolver, viewerId: string, mapOfViewerCom: TypeOfViewerComponentMap, mapOfPanelClass: ViewPurposeToUiClass[]) {
@@ -101,16 +103,20 @@ export class NgAppViewerService {
     title: string, transferData: object) {
 
     const uiClass = this.findUiClass(elementType, purpose);
-    const { clazz, archUiOptions, resolve } = uiClass;
-    const usedUiType: ArchUiType = uiType || uiClass.uiType;
+    if (uiClass) {
+      const { clazz, archUiOptions, resolve } = uiClass;
+      const usedUiType: ArchUiType = uiType || uiClass.uiType;
 
-    if (clazz) {
-      const archWindow = getUiCreator(usedUiType)(title, clazz);
-      const passingData = Object.assign({}, resolve, transferData);
+      if (clazz) {
+        const archWindow = getUiCreator(usedUiType)(title, clazz);
+        const passingData = Object.assign({}, resolve, transferData);
 
-      this.ngArchUiService.renderElementOnTop(archWindow, passingData, archUiOptions, uiElementThemes[usedUiType]);
+        this.ngArchUiService.renderElementOnTop(archWindow, passingData, archUiOptions, uiElementThemes[usedUiType]);
+      } else {
+        console.error(`Cannot find the viewer class of '${elementType}'(type) and '${purpose}'(purpose)! Please check the configuration of ViewPurposeToUiClass[]`);
+      }
     } else {
-      console.error(`Cannot find the viewer class of '${elementType}'(type) and '${purpose}'(purpose)! Please check the configuration of ViewPurposeToUiClass[]`);
+      this.toastr.warning(`Cannot find the viewer configuration for "${elementType}" & "${purpose}"`, 'Development Issue')
     }
   }
 
