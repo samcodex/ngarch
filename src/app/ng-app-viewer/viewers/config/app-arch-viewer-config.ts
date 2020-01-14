@@ -1,4 +1,4 @@
-import { UiElementCategory, UiElementSection } from '@core/models/ui-element-category';
+import { UiElementCategory, UiElementSection, findItemByValueFromSection } from '@core/models/ui-element-category';
 import { MetaInputType } from '@config/meta-config';
 import { UiElementItem } from '@core/models/ui-element-item';
 import { Orientation } from '@core/diagram/layout-options';
@@ -23,12 +23,12 @@ const hierarchyOptions: UiElementCategory[] = [
       { name: 'Architecture Overview', value: ArchViewerHierarchy.FullView,
         type: null, isChecked: true
       },
-      { name: 'Component Hierarchy', value: ArchViewerHierarchy.ComponentHierarchy,
-        type: null, isChecked: false
-      },
-      { name: 'Routing Hierarchy', value: ArchViewerHierarchy.RoutingHierarchy,
-        type: null, isChecked: false
-      },
+      // { name: 'Component Hierarchy', value: ArchViewerHierarchy.ComponentHierarchy,
+      //   type: null, isChecked: false
+      // },
+      // { name: 'Routing Hierarchy', value: ArchViewerHierarchy.RoutingHierarchy,
+      //   type: null, isChecked: false
+      // },
       { name: 'Injector & Dependency Hierarchy', value: ArchViewerHierarchy.InjectorHierarchy,
         type: null, isChecked: false
       }
@@ -149,3 +149,25 @@ export const appViewerOptions: UiElementSection[] = [
   //   categories: viewerDescription
   // }
 ];
+
+export const disableOrientationLeftToRight = (options: UiElementSection[], status: boolean = true) => {
+  const foundItem = findItemByValueFromSection(options, ArchViewerOptionCategory.Orientation, Orientation.LeftToRight);
+
+  if (foundItem) {
+    foundItem.isDisabled = status;
+  }
+};
+
+export const disableExtraContentServiceProvider = (options: UiElementSection[], status: boolean = true) => {
+    const foundItem = findItemByValueFromSection(options, ArchViewerOptionCategory.ExtraService, ArchViewerExtraContent.LayerServiceProvider);
+    if (foundItem) {
+      foundItem.isDisabled = status;
+    }
+};
+
+export const disableInjectorAndDependencyHierarchy = (options: UiElementSection[], status: boolean = true) => {
+    const foundItem = findItemByValueFromSection(options, ArchViewerOptionCategory.Hierarchy, ArchViewerHierarchy.InjectorHierarchy);
+    if (foundItem) {
+      foundItem.isDisabled = status;
+    }
+};

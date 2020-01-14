@@ -35,3 +35,12 @@ export function findCategoryFromSection<T>(sections: UiElementSection<any, T>[],
   return category;
 }
 
+export function findItemByValueFromSection<T>(sections: UiElementSection<any, T>[], categoryType: T, itemValue: any): UiElementItem {
+  const category = findCategoryFromSection(sections, categoryType);
+  return category ? category.items.find(item => item.value === itemValue) : null;
+}
+
+export function findItemByTypeFromSection<T>(sections: UiElementSection<any, T>[], categoryType: T, itemType: any): UiElementItem {
+  const category = findCategoryFromSection(sections, categoryType);
+  return category ? category.items.find(item => item.type === itemType) : null;
+}

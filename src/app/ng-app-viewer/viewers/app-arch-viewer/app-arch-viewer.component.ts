@@ -24,6 +24,7 @@ import { DiagramTreeContext } from '@core/diagram-tree/diagram-tree-context';
 import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { NgPonentType } from '@core/ngponent-tsponent';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
+import { disableOrientationLeftToRight, disableExtraContentServiceProvider, disableInjectorAndDependencyHierarchy } from './../config/app-arch-viewer-config';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {
@@ -51,16 +52,6 @@ const mapDiagramTreeNode = (node: DiagramTreeNode) => {
 
 const hierarchies = [
   {
-    id: 'component',
-    name: 'Component Hierarchy',
-    over: false
-  },
-  {
-    id: 'route',
-    name: 'Routing Hierarchy',
-    over: false
-  },
-  {
     id: 'injector',
     name: 'Injector Hierarchy',
     over: false
@@ -71,6 +62,13 @@ const hierarchies = [
     over: false
   }
 ];
+
+const listNotAllowedHierarchy = [ArchViewerHierarchy.ComponentHierarchy, ArchViewerHierarchy.RoutingHierarchy];
+const titlesOfSpecificHierarchy = {
+  [ ArchViewerHierarchy.RoutingHierarchy ]: 'Routing Hierarchy',
+  [ ArchViewerHierarchy.ComponentHierarchy ]: 'Component Hierarchy'
+};
+const defaultHeaderTitle = 'Architecture View';
 
 @Component({
   templateUrl: './app-arch-viewer.component.html',
@@ -88,9 +86,12 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   optionData: UiElementData;
 
   viewerType = ViewerType.AppArchViewer;
+  contentHierarchy: ArchViewerHierarchy = null;
+  headerTitle = defaultHeaderTitle;
+
   @ViewChild('svgBoard') svgBoardRef: ElementRef;
 
-  hierarchies = hierarchies;
+  hierarchies: any;
   treeName: string;
 
   constructor(
@@ -109,8 +110,19 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   ngOnInit() {
     super.onInit(this.svgBoardRef);
 
+    const specificHierarchies = Object.keys(titlesOfSpecificHierarchy);
+    this.contentHierarchy = this.ngAppViewerService.getContentHierarchy();
+    const isSpecificHierarchy = specificHierarchies.includes(this.contentHierarchy);
+    this.headerTitle = titlesOfSpecificHierarchy[this.contentHierarchy] || defaultHeaderTitle;
+
+    if (!isSpecificHierarchy) {
+      this.hierarchies = hierarchies;
+    }
+
     this.setBoardMaxSize();
-    this.optionData = this.optionsService.getOptionDataForRuntimeStructure();
+
+    const optionData = this.optionsService.getOptionDataForRuntimeStructure();
+    this.optionData = optionData.filter(element => isSpecificHierarchy ? element.type !== 'hierarchies' : true);
 
     this.setupStream();
   }
@@ -142,7 +154,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   onClickViewerExplanation() {
-    this.ngAppViewerService.openViewerExplanationPanel(ViewerType.AppArchViewer);
+    this.ngAppViewerService.openViewerExplanationPanel(this.contentHierarchy || ViewerType.AppArchViewer);
   }
 
   private setBoardMaxSize() {
@@ -153,6 +165,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   private setupStream() {
     const treeSource = this.optionsService.getViewerHierarchy()
       .pipe(
+        map((hierarchy) => this.contentHierarchy || hierarchy),
         map((hierarchy) => ([hierarchy, mapViewerHierarchyToArchTree(hierarchy)])),
         mergeMap(([hierarchy, treeType]: [ArchViewerHierarchy, ArchTreeType]) => zip(
           of(hierarchy),
@@ -174,6 +187,13 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
       )
       .subscribe( ([ [hierarchy, data], orientation, nodeType, viewerType, extraContent ]) => {
         this.treeName = data.name;
+        if (hierarchy === ArchViewerHierarchy.InjectorHierarchy || hierarchy === ArchViewerHierarchy.FullView) {
+          disableOrientationLeftToRight(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
+          disableExtraContentServiceProvider(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
+          disableInjectorAndDependencyHierarchy(this.optionData, orientation === Orientation.LeftToRight
+            || extraContent === ArchViewerExtraContent.LayerServiceProvider);
+        }
+
         this.updateOrganizer(data, hierarchy, orientation, nodeType, viewerType, extraContent);
       });
   }

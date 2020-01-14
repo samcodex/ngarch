@@ -1,27 +1,19 @@
 <arch-tian (expand)="onExpand($event)" (drag)="onDrag($event)">
   <arch-tian-header>
     <div class="viewer-header-bar">
-      <span class="viewer-header">Architecture View</span>
+      <span class="viewer-header">{{ headerTitle }}</span>
       <span class="viewer-explanation-icon">
         <i class="material-icons" (click)="onClickViewerExplanation()">help_outline</i>
       </span>
-      <div class="viewer-explanation-hierarchies">
+      <div class="viewer-explanation-hierarchies" *ngIf="hierarchies">
         contains
         <div class="viewer-hierarchy-item" *ngFor="let hierarchy of hierarchies; let last = last">
           <span class="viewer-hierarchy-name" (mouseover)="hierarchy.over=true" (mouseout)="hierarchy.over=false">
             {{ hierarchy.name }}</span>
           <span *ngIf="!last">,&nbsp;</span>
 
-          <div class="viewer-hierarchy-detail" *ngIf="hierarchy.id === 'route' && hierarchy.over">
-            Routing Hierarchy
-          </div>
-
           <div class="viewer-hierarchy-detail" *ngIf="hierarchy.id === 'injector' && hierarchy.over">
             Injector Hierarchy
-          </div>
-
-          <div class="viewer-hierarchy-detail" *ngIf="hierarchy.id === 'component' && hierarchy.over">
-            Component Hierarchy
           </div>
 
           <div class="viewer-hierarchy-detail" *ngIf="hierarchy.id === 'dependency' && hierarchy.over">
