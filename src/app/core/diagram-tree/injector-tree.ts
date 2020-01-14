@@ -1,16 +1,19 @@
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
+import { DiagramElement } from './../diagram/diagram-element';
+import { ArchNgPonent } from '@core/arch-ngponent/arch-ngponent';
 
-enum InjectorCategory {
+enum InjectorNodeCategory {
   NullInjector = 'NullInjector',
   PlatformModuleInjector = 'PlatformModuleInjector',
   ModuleInjector = 'ModuleInjector',
-  ElementInjector = 'ElementInjector'
+  ElementInjector = 'ElementInjector',
+  ServiceProvider = 'ServiceProvider'
 }
 
 const ElementTypeToInjectorCategory = {
-  [ AnalysisElementType.Module ]: InjectorCategory.ModuleInjector,
-  [ AnalysisElementType.Component ]: InjectorCategory.ElementInjector,
+  [ AnalysisElementType.Module ]: InjectorNodeCategory.ModuleInjector,
+  [ AnalysisElementType.Component ]: InjectorNodeCategory.ElementInjector,
 };
 
 const levelOrder = (node: {parent: any, children: any[]}, callback: Function, hook?: any) => {
@@ -23,27 +26,26 @@ const levelOrder = (node: {parent: any, children: any[]}, callback: Function, ho
   };
 };
 
-export class InjectorTreeNode {
-  category: InjectorCategory;
+export class InjectorTreeNode extends DiagramElement {
+  category: InjectorNodeCategory;
   host: DiagramTreeNode;
   children: InjectorTreeNode[];
   parent: InjectorTreeNode;
   rootModule = false;
+  providers: InjectorTreeNode[];
 
   private _isCollapsed = false;
 
-  constructor(parent: InjectorTreeNode, host: DiagramTreeNode, category?: InjectorCategory) {
+  constructor(type: AnalysisElementType, archPonent: ArchNgPonent, parent: InjectorTreeNode, host: DiagramTreeNode,
+      category?: InjectorNodeCategory, name?: string) {
+    super(type, archPonent, name || category || ElementTypeToInjectorCategory[host.elementType]);
+
     this.parent = parent;
     this.host = host;
+    this.category = category || ElementTypeToInjectorCategory[host.elementType];
 
     if (host) {
       host.injectorTreeNode = this;
-    }
-
-    if (category) {
-      this.category = category;
-    } else if (host) {
-      this.category = ElementTypeToInjectorCategory[host.elementType];
     }
 
     if (parent) {
@@ -51,16 +53,16 @@ export class InjectorTreeNode {
     }
   }
 
-  get name(): string {
-    return this.host ? this.host.name : this.category;
-  }
-
-  get elementType(): AnalysisElementType {
-    return this.host ? this.host.elementType : null;
-  }
-
   get isCollapsed(): boolean {
     return this._isCollapsed;
+  }
+
+  get isInjectorNode(): boolean {
+    return !this.isProviderNode;
+  }
+
+  get isProviderNode(): boolean {
+    return this.category === InjectorNodeCategory.ServiceProvider;
   }
 
   appendChildren(node: InjectorTreeNode) {
@@ -81,6 +83,18 @@ export class InjectorTreeNode {
   setRootModuleInjector() {
     this.rootModule = true;
   }
+
+  traverse(callback: Function) {
+    if (callback) {
+      callback(this);
+
+      if (this.children) {
+        this.children.forEach(child => {
+          child.traverse(callback);
+        });
+      }
+    }
+  }
 }
 
 export class InjectorTree {
@@ -100,7 +114,14 @@ export class InjectorTree {
       const archNgPonent = node.archPonent;
       const injectors = node.getRelatedInjectorArchNgPonents();
       if (archNgPonent.isLazyLoadingModule || injectors && injectors.length) {
-        return new InjectorTreeNode(upInjector, node);
+        const newNode = new InjectorTreeNode(AnalysisElementType._Injector, null, upInjector, node);
+        if (injectors) {
+          newNode.providers = injectors.map(injector =>
+            new InjectorTreeNode(AnalysisElementType._Provider, injector, newNode, null,
+              InjectorNodeCategory.ServiceProvider, injector.name));
+        }
+
+        return newNode;
       } else {
         return upInjector;
       }
@@ -109,9 +130,15 @@ export class InjectorTree {
     this.rootModuleInjector.setRootModuleInjector();
   }
 
+  traverse(callback: Function) {
+    this.root.traverse(callback);
+  }
+
   private createPlatformInjectorNode(): InjectorTreeNode {
-    const nullInjector = new InjectorTreeNode(null, null, InjectorCategory.NullInjector);
-    const platformInjector = new InjectorTreeNode(nullInjector, null, InjectorCategory.PlatformModuleInjector);
+    const nullInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
+      null, null, InjectorNodeCategory.NullInjector);
+    const platformInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
+      nullInjector, null, InjectorNodeCategory.PlatformModuleInjector);
 
     this.root = nullInjector;
 
