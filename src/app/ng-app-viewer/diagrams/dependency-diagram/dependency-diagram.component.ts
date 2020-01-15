@@ -72,8 +72,6 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
   private setupStream() {
     if (this.archNgPonent) {
       const archTree = convertArchPonentToDependencyTree(this.archNgPonent);
-      console.log(archTree);
-
       this.updateOrganizer(archTree, null);
     }
   }
