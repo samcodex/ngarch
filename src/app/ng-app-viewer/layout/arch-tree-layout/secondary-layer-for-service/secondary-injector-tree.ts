@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 import { get } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 
 import { LayoutOptions } from '@core/diagram/layout-options';
-import { ArchHierarchyPointNode } from '../arch-hierarchy';
+import { ArchHierarchyPointNode, ArchHierarchyHelper } from '../arch-hierarchy';
 import { d3Element } from '@core/svg/d3-def-types';
 import { d3_svg } from '@core/svg/d3.svg';
 import { d3_util } from '@core/svg/d3.util';
@@ -13,7 +14,8 @@ import { drawThreeGearsFn, drawRectangleFn, drawText } from '../arch-hierarchy-n
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
 import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
 import { HierarchyNode } from 'd3';
-import { ArchNgPonentInjectable } from '@core/arch-ngponent';
+import { getArchPonentActions, PonentActionItem } from '../../../models/viewer-content-types';
+import { d3_shape } from '@core/svg/d3.shape';
 
 // service has injector, dependency
 const _setAttrs = d3_util.setAttrs;
@@ -42,7 +44,8 @@ const lineStyle = {
 const rectStyle = {
   'stroke': '#888888',
   'stroke-width': '1px',
-  'opacity': '1'
+  'opacity': '1',
+  'cursor': 'pointer'
 };
 const providerColor = ArchConfig.getElementColor(AnalysisElementType.Service);
 const normalTextColor = '#000000';
@@ -67,7 +70,7 @@ const calcNodePositionFn = (halfOffset: PairNumber, nodeSize: PairNumber) => {
 function calcCircleX(r: number, y: number) {
   return Math.sqrt(Math.pow(r, 2 ) - Math.pow(y, 2));
 }
-const radius = 180;
+const radius = 200;
 const totalVertical = 6;
 const intervalVertical = radius * 2 / totalVertical;
 const xRanges = [-1, 1 ];
@@ -89,8 +92,15 @@ const serviceNodeName = (node: ArchHierarchyPointNode) => {
   return node.data.name + ' ' + (category ? category : 'PlatformInjector');
 };
 const drawInjectorRect = d3_svg.svgForeignExtendableDiv({text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs);
-const isInjectorNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode;
-const isProviderNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof ArchNgPonentInjectable;
+const isInjectorNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode && node.data.isInjectorNode;
+const isProviderNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode && node.data.isProviderNode;
+
+// provider actions
+const ponentActions = getArchPonentActions();
+const mapNodeToActions = () => cloneDeep(ponentActions[AnalysisElementType.Service]);
+const barColorFn = ArchHierarchyHelper.getNodeColor(false);
+const actionColorFn = ArchHierarchyHelper.getNodeColor();
+const actionY = 35;
 
 export class SecondaryInjectorTree {
   private injectorHierarchy: d3.HierarchyNode<InjectorTreeNode>;
@@ -100,7 +110,8 @@ export class SecondaryInjectorTree {
     private rootGroup: d3Element,
     private treeRoot: ArchHierarchyPointNode,
     private layoutOptions: LayoutOptions,
-    private nodeDrawer: ArchHierarchyNodeDrawer
+    private nodeDrawer: ArchHierarchyNodeDrawer,
+    private mainLayerCallbacks: { onClickAction: any, zoomFactorFn: any }
   ) {
   }
 
@@ -108,19 +119,7 @@ export class SecondaryInjectorTree {
     const root = this.treeRoot.data;
     const injectorTree = root.injectorSubTree;
     const injectorRoot = injectorTree.root;
-    this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) => {
-      const children = [];
-      if (!injectorNode.isCollapsed) {
-        children.push.apply(children, injectorNode.children);
-      }
-
-      if (injectorNode.host) {
-        const injectors = injectorNode.host.getRelatedInjectorArchNgPonents();
-        children.push.apply(children, injectors);
-      }
-
-      return children;
-    });
+    this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) => !injectorNode.isCollapsed ? injectorNode.children : null);
 
     // calculate Injector nodes' position
     const calcPosition = calcNodePositionFn(injectorNodeOffset, this.nodeDrawer.nodeSize);
@@ -150,11 +149,15 @@ export class SecondaryInjectorTree {
           const providerNodes = pointNode.children.filter(isProviderNode);
           if (providerNodes && providerNodes.length) {
             providerNodes.forEach((node, idx) => {
-              let [x, y] = points[idx];
-              x += injectorPosition.x;
-              y += injectorPosition.y;
-              // center
-              node['positions'] = { 'injector': {x, y} };
+              if (idx < points.length ) {
+                let [x, y] = points[idx];
+                x += injectorPosition.x;
+                y += injectorPosition.y;
+                // center
+                node['positions'] = { 'injector': {x, y} };
+              } else {
+                console.error('[TODO] - Need to display more providers');
+              }
             });
           }
         }
@@ -169,6 +172,7 @@ export class SecondaryInjectorTree {
   private drawInjectorNodes() {
     const nodes = this.injectorHierarchy.descendants();
     const nodeSize = this.nodeDrawer.nodeSize;
+    const [ nodeWidth, nodeHeight ] = nodeSize;
 
     const nodeEnter = this.secondaryLayer
       .selectAll('.secondary_injector')
@@ -188,7 +192,7 @@ export class SecondaryInjectorTree {
       .filter(isInjectorNode)
       .call(drawInjectorRect);
 
-    nodeEnter
+    const providerNode = nodeEnter
       .filter(isProviderNode)
       .call((self) => {
         drawRectangleFn(nodeSize, rectStyle)(self as any);
@@ -197,6 +201,9 @@ export class SecondaryInjectorTree {
       })
       .call(_setStyles, rectStyle)
       .attr('fill', providerColor);
+
+    d3_shape.drawActionBar(this.secondaryLayer, nodeWidth + 20, actionY)(providerNode, mapNodeToActions,
+      this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
   }
 
   private drawInjectorLinks() {
@@ -219,5 +226,13 @@ export class SecondaryInjectorTree {
       });
 
     return injectorLinksGroup;
+  }
+
+  private onClickActionItem(action: PonentActionItem) {
+    this.mainLayerCallbacks.onClickAction(action);
+  }
+
+  private getZoomFactorFn() {
+    return this.mainLayerCallbacks.zoomFactorFn();
   }
 }
