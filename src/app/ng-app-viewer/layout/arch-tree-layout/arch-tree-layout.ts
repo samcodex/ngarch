@@ -92,8 +92,13 @@ export class ArchTreeLayout extends DiagramLayout {
           // const cover = this.rootGroup.append('g').classed('main_group_cover', true);
           // d3_svg.svgRect(cover, '', [size.x, size.y], [size.width, size.height], {'fill': '#e0e0e0', 'opacity': '0.4'});
 
-          this.secondaryLayerForService = new SecondaryLayerForService(this.rootGroup, this.treeRoot,
-            this.layoutOptions, this.nodeDrawer);
+          this.secondaryLayerForService = new SecondaryLayerForService(
+            this.rootGroup,
+            this.treeRoot,
+            this.layoutOptions,
+            this.nodeDrawer,
+            { onClickAction: this.onClickActionItem.bind(this), zoomFactorFn: this.getZoomFactorFn.bind(this)}
+          );
         }
 
         this.secondaryLayerForService.draw();
@@ -183,7 +188,7 @@ export class ArchTreeLayout extends DiagramLayout {
 
     // attach event handler
     this.attachNodeClickHandler(nodeEnter);
-    this.attachNodeMouseOverHandler(nodeEnter);
+    // this.attachNodeMouseOverHandler(nodeEnter);
 
     // draw node shape
     this.nodeDrawer.drawNodeShape(nodeEnter);
@@ -205,7 +210,7 @@ export class ArchTreeLayout extends DiagramLayout {
     const barColorFn = ArchHierarchyHelper.getNodeColor(false);
     const actionColorFn = ArchHierarchyHelper.getNodeColor();
     const actionY = this.layoutOptions.infoLevel === NodeInfoLevel.Basic ? 35 : 80;
-    d3_shape.drawActionBar(nodeWidth + 20, actionY)(nodeEnter, mapNodeToActions,
+    d3_shape.drawActionBar(this.rootGroup, nodeWidth + 20, actionY)(nodeEnter, mapNodeToActions,
       this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
 
     // node tip
@@ -335,20 +340,20 @@ export class ArchTreeLayout extends DiagramLayout {
     d3_shape.createNodeEvent<ArchHierarchyPointNode>(nodeEnter, dblFn, clickFn);
   }
 
-  private attachNodeMouseOverHandler(nodeEnter: HierarchyPointNodeSelection) {
-    const rootGroup = this.rootGroup;
+  // private attachNodeMouseOverHandler(nodeEnter: HierarchyPointNodeSelection) {
+  //   const rootGroup = this.rootGroup;
 
-    function mouseToggle() {
-      const host = d3.select(this);
-      d3_util.toggleSelectorShowHide(host, '.action_bar');
-      d3_util.toggleShowHideInNewHost(host, '.node_tip_group', null, rootGroup);
-    }
+  //   function mouseToggle() {
+  //     const host = d3.select(this);
+  //     d3_util.toggleSelectorShowHide(host, '.action_bar');
+  //     d3_util.toggleShowHideInNewHost(host, '.node_tip_group', null, rootGroup);
+  //   }
 
-    nodeEnter
-      .on('mouseover', mouseToggle)
-      .on('mouseout', mouseToggle)
-      ;
-  }
+  //   nodeEnter
+  //     .on('mouseover', mouseToggle)
+  //     .on('mouseout', mouseToggle)
+  //     ;
+  // }
 
   private attachLinkMouseOverHandler(linkEnter: HierarchyPointLinkSelection) {
     const rootGroup = this.rootGroup;

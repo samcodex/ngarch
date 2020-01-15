@@ -464,7 +464,7 @@ const actionItemSize = 20;
 const itemMarginHorizontal = 2;
 const barExpandWidth = 10;
 // node's action bar and action items
-function _drawActionBar(barStartX: number, barY = -15, rightToLeft = true, hasCloseButton = false) {
+function _drawActionBar(hostGroup: d3Element<any, any>, barStartX: number, barY = -15, rightToLeft = true, hasCloseButton = false) {
   return (nodeEnter: d3Element, mapNodeToActions: Function, callback: Function, zoomFactorFn?: Function,
       barColorFn?: (pNode: d3.HierarchyPointNode<any>) => string,
       actionColorFn?: (pNode: d3.HierarchyPointNode<any>) => string): d3Element => {
@@ -528,6 +528,17 @@ function _drawActionBar(barStartX: number, barY = -15, rightToLeft = true, hasCl
         }
       }
     });
+
+    function mouseToggle() {
+      const host = d3.select(this);
+      d3_util.toggleSelectorShowHide(host, '.action_bar');
+      d3_util.toggleShowHideInNewHost(host, '.node_tip_group', null, hostGroup);
+    }
+
+    nodeEnter
+      .on('mouseover', mouseToggle)
+      .on('mouseout', mouseToggle)
+      ;
 
     d3_util.toggleShowHide(nodeActionBar, false);
     return nodeActionBar;
