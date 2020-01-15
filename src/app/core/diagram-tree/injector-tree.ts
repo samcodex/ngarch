@@ -32,7 +32,6 @@ export class InjectorTreeNode extends DiagramElement {
   children: InjectorTreeNode[];
   parent: InjectorTreeNode;
   rootModule = false;
-  providers: InjectorTreeNode[];
 
   private _isCollapsed = false;
 
@@ -63,6 +62,14 @@ export class InjectorTreeNode extends DiagramElement {
 
   get isProviderNode(): boolean {
     return this.category === InjectorNodeCategory.ServiceProvider;
+  }
+
+  getProviderChildren(): InjectorTreeNode[] {
+    return this.children ? this.children.filter(child => child.isProviderNode) : null;
+  }
+
+  getInjectorChildren(): InjectorTreeNode[] {
+    return this.children ? this.children.filter(child => child.isInjectorNode) : null;
   }
 
   appendChildren(node: InjectorTreeNode) {
@@ -116,7 +123,7 @@ export class InjectorTree {
       if (archNgPonent.isLazyLoadingModule || injectors && injectors.length) {
         const newNode = new InjectorTreeNode(AnalysisElementType._Injector, null, upInjector, node);
         if (injectors) {
-          newNode.providers = injectors.map(injector =>
+          injectors.forEach(injector =>
             new InjectorTreeNode(AnalysisElementType._Provider, injector, newNode, null,
               InjectorNodeCategory.ServiceProvider, injector.name));
         }
