@@ -143,6 +143,7 @@ const _ponentActions: {[key in AnalysisElementType]?: PonentActionPurpose[] } = 
   [ AnalysisElementType.Component ]: [
     // PonentActionPurpose.ArchitectureView,
     // PonentActionPurpose.StructureDiagram,
+    PonentActionPurpose.DependencyDiagram,
     PonentActionPurpose.ClassVisualizer,
     PonentActionPurpose.Typescript,
     PonentActionPurpose.Html,

@@ -3,7 +3,8 @@ export enum ArchTreeType {
   ComponentUsageTree = 'ComponentUsageTree',        // ComponentHierarchy, it is template->selector & route->children
   InjectorAndDependencyTree = 'InjectorAndDependencyTree',  // for Injector, Provider and Dependency hierarchy
   RoutingHierarchyTree = 'RoutingHierarchyTree',    // RoutingHierarchy
-  ModuleStructureTree = 'ModuleStructureTree'       //
+  ModuleStructureTree = 'ModuleStructureTree',      //
+  ServiceDependencyTree = 'ServiceDependencyTree'
 }
 
 export enum ArchNodeMetaType {

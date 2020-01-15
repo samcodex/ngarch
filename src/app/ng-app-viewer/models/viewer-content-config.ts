@@ -1,4 +1,3 @@
-import { ViewerExplanationComponent } from './../shared/viewer-explanation/viewer-explanation.component';
 import { ArchUiType } from 'ng-arch-ui';
 
 import { AnalysisElementType } from '@core/models/analysis-element';
@@ -8,6 +7,8 @@ import { ActivityDiagramComponent } from './../diagrams/activity-diagram/activit
 import { ClassVisualizerComponent } from './../diagrams/class-visualizer/class-visualizer.component';
 import { StructureDiagramComponent } from '../diagrams/structure-diagram/structure-diagram.component';
 import { CodeDiagramComponent } from './../diagrams/code-diagram/code-diagram.component';
+import { DependencyDiagramComponent } from './../diagrams/dependency-diagram/dependency-diagram.component';
+import { ViewerExplanationComponent } from './../shared/viewer-explanation/viewer-explanation.component';
 
 const _mapOfGenericPurpose: ViewPurposeToUiClass[] = [
   {
@@ -31,6 +32,11 @@ const _mapOfGenericPurpose: ViewPurposeToUiClass[] = [
     clazz: ViewerExplanationComponent,
     archUiOptions: { width: '600px', height: '300px'},
     uiType: ArchUiType.Panel
+  },
+  {
+    purpose: PonentActionPurpose.DependencyDiagram,
+    clazz: DependencyDiagramComponent,
+    archUiOptions: { width: '600px'}
   }
 ];
 
