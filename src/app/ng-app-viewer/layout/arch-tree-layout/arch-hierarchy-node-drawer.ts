@@ -207,7 +207,7 @@ export class ArchHierarchyNodeDrawer {
       .attr('fill', ArchHierarchyHelper.getNodeColor(true, this.hasSecondaryLayer));
   }
 
-  drawNodeExpandButtonFn() {
+  drawNodeExpandButtonFn(forSecondaryLayer = true) {
     const [ nodeWidth, nodeHeight ] = this.nodeSize;
     const actionRectAttrs = {
       x: nodeWidth,
@@ -225,7 +225,7 @@ export class ArchHierarchyNodeDrawer {
         //   return `M${nodeWidth} 0 h${nodeActionWidth} v${nodeHeight} h-${nodeActionWidth}`;
         // })
         .append('rect')
-        .attr('fill', ArchHierarchyHelper.getNodeColor(false, this.hasSecondaryLayer))
+        .attr('fill', ArchHierarchyHelper.getNodeColor(false, forSecondaryLayer && this.hasSecondaryLayer))
         // .style('cursor', 'pointer')
         .call(d3_util.setAttrs, actionRectAttrs)
         .call(d3_util.setStyles, customRectStyles)
