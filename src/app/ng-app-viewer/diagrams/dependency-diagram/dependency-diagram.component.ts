@@ -37,8 +37,6 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
   viewerType = DiagramViewerType.StructureDiagram;
   @ViewChild('svgBoard') svgBoardRef: ElementRef;
 
-  archNgPonent: ArchNgPonent;
-
   constructor(
     elementRef: ElementRef,
     organizer: DiagramOrganizer,
@@ -53,9 +51,8 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
   ngOnInit() {
     super.onInit(this.svgBoardRef);
 
-    this.archNgPonent = this.data instanceof ArchNode ? this.data.archNgPonent : this.data;
-
     this.setBoardMaxSize();
+
     this.setupStream();
   }
 
@@ -70,8 +67,20 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
   }
 
   private setupStream() {
-    if (this.archNgPonent) {
-      const archTree = convertArchPonentToDependencyTree(this.archNgPonent);
+    if (this.data) {
+      let archTree = null;
+      if (this.data instanceof ArchNode) {
+        if (this.data.dependencyArchTree) {
+          archTree = this.data.dependencyArchTree;
+        } else {
+          archTree = convertArchPonentToDependencyTree(this.data.archNgPonent);
+          // even setDependencyTree works, should not update the tree model here
+          // this.data.setDependencyTree(archTree);
+        }
+      } else {
+        archTree = convertArchPonentToDependencyTree(this.data);
+      }
+
       this.updateOrganizer(archTree, null);
     }
   }

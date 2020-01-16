@@ -1,10 +1,9 @@
 import { ArchNgPonentComponent } from '@core/arch-ngponent/arch-ngponent-component';
 import { ArchStoreData } from '../models/arch-store-data';
 import { EnhancedStoreData } from '../helpers/enhanced-store-data';
-import { ArchNgPonentModule, ArchPonentFeature, ArchNgPonent, ArchNgPonentRoutes, ArchNgPonentRoute, isArchModule } from '@core/arch-ngponent';
+import { ArchNgPonentModule, ArchPonentFeature, ArchNgPonent, ArchNgPonentRoutes, ArchNgPonentRoute } from '@core/arch-ngponent';
 import { archNgPonentHelper } from '@core/arch-ngponent/arch-ngponent-helper';
-import { TsPonent, NgPonentType } from '@core/ngponent-tsponent';
-import { RelationshipType } from '@core/arch-relationship/relationship-definition';
+import { TsPonent } from '@core/ngponent-tsponent';
 import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 import { AnalysisElementType } from '@core/models/analysis-element';

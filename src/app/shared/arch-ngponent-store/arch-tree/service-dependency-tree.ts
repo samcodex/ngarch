@@ -12,6 +12,13 @@ export function buildServiceDependencyTree(archStore: ArchStoreData, projectName
 
   const tree = ngHierarch.buildArchTree();
 
+  tree.traverse((node: ArchNode) => {
+    const archPonent = node.archNgPonent;
+    if (archPonent instanceof ArchNgPonentComponent) {
+      node.setDependencyArchTree(convertArchPonentToDependencyTree(archPonent));
+    }
+  });
+
   return tree;
 }
 

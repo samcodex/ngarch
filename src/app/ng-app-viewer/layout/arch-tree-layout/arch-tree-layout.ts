@@ -141,6 +141,7 @@ export class ArchTreeLayout extends DiagramLayout {
     this.treeRoot.sum( () => 1);
 
     // traverse all tree nodes
+    // reference d3.hierarchy to DiagramTreeNode
     this.treeRoot.descendants().forEach( (dNode, index) => {
       dNode.data._hierarchyNode = dNode;
     });

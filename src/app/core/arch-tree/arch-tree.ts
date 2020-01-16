@@ -19,6 +19,8 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
   private _relatedArchNgPonents: { [key in AnalysisElementType]?: ArchWrapper<ArchNode, ArchNgPonent> };
   private _expectAnalysisType: AnalysisElementType;
 
+  private _dependencyArchTree: ArchTree;
+
   constructor(tree: ArchTree, parent: ArchNode, archNgPonent: T, name?: string) {
     this._archTree = tree;
     this._parent = parent;
@@ -74,6 +76,14 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
   get archPonentType (): NgPonentType {
     const archNgPonent = this._archNgPonent ? this._archNgPonent : null;
     return archNgPonent ? archNgPonent.ngPonentType : null;
+  }
+
+  get dependencyArchTree(): ArchTree {
+    return this._dependencyArchTree;
+  }
+
+  setDependencyArchTree(tree: ArchTree) {
+    this._dependencyArchTree = tree;
   }
 
   appendChildNode(node: ArchNode) {
@@ -168,6 +178,18 @@ export class ArchNode<T extends ArchNgPonent = ArchNgPonent> {
     }
   }
 
+  traverse(callback: Function) {
+    if (callback) {
+      callback(this);
+
+      if (this._children) {
+        this._children.forEach(child => {
+          child.traverse(callback);
+        });
+      }
+    }
+  }
+
   // clone(archTree: ArchTree, parent: ArchNode): ArchNode {
   //   const clonedNode = new ArchNode(archTree, parent, this._archNgPonent, this.name);
   //   clonedNode._tsPonent = this._tsPonent;
@@ -206,6 +228,10 @@ export class ArchTree {
 
   createRootNode<T extends ArchNgPonent = ArchNgPonent>(archPonent: T): ArchNode<T> {
     return this.archRoot = new ArchNode<T>(this, null, archPonent);
+  }
+
+  traverse(callback: Function) {
+    this.archRoot.traverse(callback);
   }
 
   // clone(): ArchTree {
