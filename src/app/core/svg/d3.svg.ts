@@ -108,11 +108,13 @@ function _svgElement(host: d3Element, element: string,
 const divBreakStyle = {
   'overflow-wrap': 'break-word',
   'word-break': 'break-word',
+  'user-select': 'none'
 };
 const divScrollStyle = {
-  overflow: 'auto',
-  direction: 'rtl',
-  position: 'absolute'
+  'overflow': 'auto',
+  'direction': 'rtl',
+  'position': 'absolute',
+  'user-select': 'none'
 };
 
 export interface D3Callbacks {

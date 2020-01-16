@@ -73,7 +73,8 @@ const svgTextStyle = {
 };
 
 const defaultFillStyle = {
-  'fill': 'black'
+  'fill': 'black',
+  'user-select': 'none'
 };
 
 const defaultBorderAttrs = {
