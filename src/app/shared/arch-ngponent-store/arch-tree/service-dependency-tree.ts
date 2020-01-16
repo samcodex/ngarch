@@ -20,6 +20,7 @@ export function buildServiceDependencyTree(archStore: ArchStoreData, projectName
   return tree;
 }
 
+const useServiceInstance = true;
 export function convertArchPonentToDependencyTree(rootArchPonent: ArchNgPonent): ArchTree {
   if (rootArchPonent instanceof ArchNgPonentComponent || rootArchPonent instanceof ArchNgPonentInjectable) {
     const treeType = ArchTreeType.ServiceDependencyTree;
@@ -37,7 +38,9 @@ export function convertArchPonentToDependencyTree(rootArchPonent: ArchNgPonent):
       if (dependencies && dependencies.length) {
         const validDependencies = dependencies.filter(filterExist);
         if (validDependencies.length) {
-          existDependencies.push.apply(existDependencies, validDependencies);
+          if (!useServiceInstance) {
+            existDependencies.push.apply(existDependencies, validDependencies);
+          }
           validDependencies.forEach(validDependency => {
             const validNode = node.appendChildNgPonent(validDependency);
 
