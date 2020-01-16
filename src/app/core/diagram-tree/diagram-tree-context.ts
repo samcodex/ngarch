@@ -3,6 +3,7 @@ import { ArchTree } from './../arch-tree/arch-tree';
 import { DiagramElementContext } from '@core/diagram/diagram-element';
 import { InjectorTree } from './injector-tree';
 import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
+import { AnalysisElementType } from '@core/models/analysis-element';
 
 export class DiagramTreeContext extends DiagramElementContext {
   archTree: ArchTree;
@@ -17,6 +18,15 @@ export class DiagramTreeContext extends DiagramElementContext {
     if (hasInjectorSubTree) {
       const injectorTree = this.root.injectorSubTree = new InjectorTree();
       injectorTree.createInjectorTree(this.root);
+
+      this.root.traverse((node: DiagramTreeNode) => {
+        if (node.elementType === AnalysisElementType.Component) {
+          if (node.archNode.dependencyArchTree) {
+            node._dependencyDiagramTree = new DiagramTreeContext(node.archNode.dependencyArchTree);
+          }
+        }
+      });
+
       DiagramSubTreeDependency.createDependencySubTree(this.root);
     }
   }

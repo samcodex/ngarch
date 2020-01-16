@@ -5,7 +5,7 @@ import { buildServiceDependencyTree } from './service-dependency-tree';
 import { buildModuleStructureTree } from './module-structure-tree';
 import { buildRoutingHierarchyTree } from './routing-hierarchy-tree';
 
-export const mapOfArchTreeBuilder: { [key in ArchTreeType]: (storeData: any, projectName: string) => any } = {
+export const mapOfArchTreeBuilder: { [key in ArchTreeType]?: (storeData: any, projectName: string) => any } = {
   [ArchTreeType.RouteLoadingTree]: buildRouteLoadingTree,
   [ArchTreeType.RoutingHierarchyTree]: buildRoutingHierarchyTree,
   [ArchTreeType.ComponentUsageTree]: buildComponentUsageTree,

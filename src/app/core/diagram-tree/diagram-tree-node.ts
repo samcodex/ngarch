@@ -20,15 +20,18 @@ export class DiagramTreeNode extends DiagramElement {
   disabled = false;
   bottomLine: string;
   topLine: string;
-  private isCollapsed = false;
+  isCollapsed = false;
   isSelected = false;
   isClickable = true;
 
+  // reference to d3.hierarchy
   _hierarchyNode: any;
 
   injectorSubTree: InjectorTree;
   injectorTreeNode: InjectorTreeNode;
   dependencySubTreeNode: DiagramSubTreeDependency;
+
+  _dependencyDiagramTree: DiagramTreeContext;
 
   constructor(tree: DiagramTreeContext, node: ArchNode, parent: DiagramTreeNode, mapNodeFn?: Function) {
     super(node.archAnalysisType, node.archNgPonent, node.name);
