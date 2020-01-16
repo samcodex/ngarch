@@ -25,6 +25,7 @@ import { ViewerType } from '../../models/ng-app-viewer-definition';
 import { NgPonentType } from '@core/ngponent-tsponent';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 import { disableOrientationLeftToRight, disableExtraContentServiceProvider, disableInjectorAndDependencyHierarchy } from './../config/app-arch-viewer-config';
+import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
 
 const tianDividerWidth = 15;
 const mapDiagramTreeNode = (node: DiagramTreeNode) => {
@@ -232,8 +233,14 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
     }
   }
 
-  private onDoubleClickPonent(node: DiagramTreeNode) {
-    this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.ArchitectureView, this.viewerType);
+  private onDoubleClickPonent(node: DiagramTreeNode | InjectorTreeNode) {
+    if (node instanceof DiagramTreeNode) {
+      this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.ArchitectureView, this.viewerType);
+    } else if (node instanceof InjectorTreeNode) {
+      if (node.isProviderNode) {
+        this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.DependencyDiagram, this.viewerType);
+      }
+    }
   }
 
   private onClickAction(item: PonentActionItem) {

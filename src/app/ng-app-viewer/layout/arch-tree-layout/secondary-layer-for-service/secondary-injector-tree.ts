@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { get } from 'lodash-es';
 import { cloneDeep } from 'lodash-es';
 
-import { LayoutOptions } from '@core/diagram/layout-options';
+import { LayoutOptions, DiagramElementFeature } from '@core/diagram';
 import { ArchHierarchyPointNode, ArchHierarchyHelper } from '../arch-hierarchy';
 import { d3Element } from '@core/svg/d3-def-types';
 import { d3_svg } from '@core/svg/d3.svg';
@@ -101,6 +101,26 @@ const mapNodeToActions = () => cloneDeep(ponentActions[AnalysisElementType.Servi
 const barColorFn = ArchHierarchyHelper.getNodeColor(false);
 const actionColorFn = ArchHierarchyHelper.getNodeColor();
 const actionY = 35;
+
+// node single-click and double-click event handler
+const nodeDoubleClickFn = (diagramNode: ArchHierarchyPointNode) => {
+  const element = diagramNode.data;
+  if (element && 'getFeatureCallback' in element) {
+    const callback = element.getFeatureCallback(DiagramElementFeature.DblClick);
+    if (callback) {
+      callback.call(null, element);
+    }
+  }
+};
+const nodeClickFn = (diagramNode: ArchHierarchyPointNode) => {
+  const element = diagramNode.data;
+  if (element && 'getFeatureCallback' in element) {
+    const callback = element.getFeatureCallback(DiagramElementFeature.Click);
+    if (callback) {
+      callback.call(null, element);
+    }
+  }
+};
 
 export class SecondaryInjectorTree {
   private injectorHierarchy: d3.HierarchyNode<InjectorTreeNode>;
@@ -204,6 +224,8 @@ export class SecondaryInjectorTree {
 
     d3_shape.drawActionBar(this.secondaryLayer, nodeWidth + 20, actionY)(providerNode, mapNodeToActions,
       this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
+
+    d3_shape.createNodeEvent<ArchHierarchyPointNode>(providerNode, nodeDoubleClickFn, nodeClickFn);
   }
 
   private drawInjectorLinks() {

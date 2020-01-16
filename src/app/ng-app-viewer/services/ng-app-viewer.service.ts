@@ -1,3 +1,4 @@
+import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
 import { Injectable, ComponentFactoryResolver } from '@angular/core';
 import { NgArchUiService, ArchUi, ArchUiType, ArchPartTheme } from 'ng-arch-ui';
 import { ToastrService } from 'ngx-toastr';
@@ -80,13 +81,13 @@ export class NgAppViewerService {
   // }
 
 
-  openNgPonentOnTop(node: DiagramTreeNode, purpose: PonentActionPurpose, fromViewer: ViewerType | DiagramViewerType,
+  openNgPonentOnTop(node: DiagramTreeNode | InjectorTreeNode, purpose: PonentActionPurpose, fromViewer: ViewerType | DiagramViewerType,
       uiData?: any, options?: any) {
     const item: ArchNgPonent = node.getArchNgPonent();
     const ponentType = item.ngPonentType;
     const elementType = mapNgPonentTypeToElementType(ponentType);
     const title = node.name + ` - ${purpose}`;
-    const data = uiData || node.archNode || item;
+    const data = uiData || (node instanceof DiagramTreeNode ? node.archNode : null) || item;
     const transferData = { data, fromViewer, options };
     const uiType = elementType === AnalysisElementType.Module ? ArchUiType.Window : ArchUiType.Panel;
 
