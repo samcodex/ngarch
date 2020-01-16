@@ -1,10 +1,8 @@
-import { ArchNgPonentInjectable } from './../../../core/arch-ngponent/arch-ngponent-injectable';
-import { ArchNgPonentComponent } from './../../../core/arch-ngponent/arch-ngponent-component';
 import { ArchStoreData } from '../models/arch-store-data';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 import { ArchTree, ArchNode } from '@core/arch-tree/arch-tree';
 import { NgHierarchy, NgHierarchyTraverseType } from './ng-hierarchy';
-import { ArchNgPonent } from '@core/arch-ngponent';
+import { ArchNgPonent, ArchNgPonentComponent, ArchNgPonentInjectable } from '@core/arch-ngponent';
 
 export function buildServiceDependencyTree(archStore: ArchStoreData, projectName: string): ArchTree {
   const ngHierarch = new NgHierarchy(archStore, projectName,
