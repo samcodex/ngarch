@@ -160,13 +160,15 @@ export function drawModuleFn(nodeSize: PairNumber, folderIconLeft = true, shapeS
   };
 }
 
-export function drawRectangleFn(nodeSize: PairNumber, customBorderStyles?: object) {
+export function drawRectangleFn(nodeSize: PairNumber, customBorderStyles?: object, collapsible = true) {
   const [ nodeWidth, nodeHeight ] = nodeSize;
-  const drawExtendShape = _drawExtendRectangle(nodeWidth, nodeHeight);
+  const drawExtendShape = collapsible ? _drawExtendRectangle(nodeWidth, nodeHeight) : null;
   const borderStyles = Object.assign({}, defaultShapeStyles, customBorderStyles);
 
   return (nodeEnter: HierarchyPointNodeSelection) => {
-    drawExtendShape(nodeEnter, [[12, 6], [8, 3]]);
+    if (collapsible) {
+      drawExtendShape(nodeEnter, [[12, 6], [8, 3]]);
+    }
 
     nodeEnter.append('rect')
       .classed('node-rectangle', true)

@@ -215,7 +215,8 @@ export class ArchHierarchyNodeDrawer {
       width: nodeActionWidth,
       height: nodeHeight
     };
-    const customBorderStyles = { 'stroke': this.hasSecondaryLayer ? lightThemePathColor : normalPathColor };
+    const usingSecondaryLayer = forSecondaryLayer && this.hasSecondaryLayer;
+    const customBorderStyles = { 'stroke': usingSecondaryLayer ? lightThemePathColor : normalPathColor };
     const customRectStyles = Object.assign({}, rectStyle, customBorderStyles);
 
     return (nodeEnter: HierarchyPointNodeSelection) => {
@@ -225,7 +226,7 @@ export class ArchHierarchyNodeDrawer {
         //   return `M${nodeWidth} 0 h${nodeActionWidth} v${nodeHeight} h-${nodeActionWidth}`;
         // })
         .append('rect')
-        .attr('fill', ArchHierarchyHelper.getNodeColor(false, forSecondaryLayer && this.hasSecondaryLayer))
+        .attr('fill', ArchHierarchyHelper.getNodeColor(false, usingSecondaryLayer))
         // .style('cursor', 'pointer')
         .call(d3_util.setAttrs, actionRectAttrs)
         .call(d3_util.setStyles, customRectStyles)
