@@ -102,28 +102,29 @@ class DependencyProjector {
   }
 
   draw() {
+    // projector host
     const { x, y } = this.hostNode;
-
-    this.projectorHost = this.hostLayer
-      .append('g')
-      .classed('projector-group', true);
-
-    const projectorRect = d3_svg.svgRect(this.projectorHost, null, [ 0, 0 ], [ 200, 200 ]);
-
+    this.projectorHost = this.hostLayer.append('g').classed('projector-group', true);
     d3_util.translateTo(this.projectorHost, x, y);
+
+    // pane
+    const projectorPane = d3_svg.svgRect(this.projectorHost, null, [ 0, 0 ], [ 200, 200 ]);
+    const textFn = () => this.hostNode.data.name + ' - Dependency';
+    const paneTitle = d3_svg.svgText(this.projectorHost, textFn, null, [0, 0], {'fill': '#1e5799'}, {'font-size': '10px'});
+    // links group
     const projectLinksGroup = this.projectorHost.append('g').classed('dependency_links', true);
 
     this.drawNodes();
-
     this.drawLinks(projectLinksGroup);
-
     this.projectorHost.lower();
 
+    // pane
     const size = d3_util.getDimension(this.projectorHost);
     const defaultPaneAttrs = { fill: 'lightgray', opacity: 0.5, 'stroke': '#888888', 'stroke-width': '1px' };
     const paneAttrs = { x: size.x - margin, y: size.y - margin,
       width: size.width + 2 * margin, height: size.height + 2 * margin };
-    projectorRect.call(_setAttrs, Object.assign({}, defaultPaneAttrs, paneAttrs ));
+    projectorPane.call(_setAttrs, Object.assign({}, defaultPaneAttrs, paneAttrs ));
+    paneTitle.call(_setAttrs, { x: size.x, y: size.y});
   }
 
   private drawNodes() {

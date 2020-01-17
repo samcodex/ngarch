@@ -74,14 +74,14 @@ const totalVertical = 6;
 const intervalVertical = radius * 2 / totalVertical;
 const xRanges = [-1, 1 ];
 const yRanges = [1, -1];
-const points = [];
+const circlePoints = [];
 const noise = 14;
 xRanges.forEach((xRange, index) => {
   const yRange = yRanges[index];
   for (let i = 0; i < totalVertical; i++) {
     const y = yRange * (radius - i * intervalVertical  - noise);
     const x = xRange * calcCircleX(radius, y);
-    points.push([x, y]);
+    circlePoints.push([x, y]);
   }
 });
 
@@ -168,8 +168,8 @@ export class SecondaryInjectorTree {
           const providerNodes = pointNode.children.filter(isProviderNode);
           if (providerNodes && providerNodes.length) {
             providerNodes.forEach((node, idx) => {
-              if (idx < points.length ) {
-                let [x, y] = points[idx];
+              if (idx < circlePoints.length ) {
+                let [x, y] = circlePoints[idx];
                 x += injectorPosition.x;
                 y += injectorPosition.y;
                 // center
