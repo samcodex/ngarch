@@ -61,14 +61,6 @@ export class DiagramTreeNode extends DiagramElement {
     return child ? child.grandChild : null;
   }
 
-  get isComponentPonent(): boolean {
-    return this.archPonent instanceof ArchNgPonentComponent;
-  }
-
-  get isInjectablePonent(): boolean {
-    return this.archPonent instanceof ArchNgPonentInjectable;
-  }
-
   getRelatedRoutePonent(): ArchNgPonentRoute {
     return this.archNode.getRelatedOfFirstRoutePonent();
   }

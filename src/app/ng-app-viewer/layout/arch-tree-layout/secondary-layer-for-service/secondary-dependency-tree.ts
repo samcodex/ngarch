@@ -12,8 +12,6 @@ import { ArchHierarchyNodeDrawer } from '../arch-hierarchy-node-drawer';
 import { PairNumber } from '@core/models/arch-data-format';
 import { drawThreeGearsFn, drawRectangleFn, drawText } from '../arch-hierarchy-node-shape';
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
-import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
-import { HierarchyNode } from 'd3';
 import { d3_shape } from '@core/svg/d3.shape';
 
 // service has injector, dependency
