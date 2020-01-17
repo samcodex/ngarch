@@ -29,7 +29,7 @@ export class SecondaryLayerForService {
 
     this.secondaryLayer = this.rootGroup.append('g').classed('secondary_layer_service', true);
     this.injectorTree = new SecondaryInjectorTree(this.secondaryLayer, rootGroup, treeRoot, layoutOptions, nodeDrawer, mainLayerCallbacks);
-    this.dependencyTree = new SecondaryDependencyTree(this.secondaryLayer, rootGroup, treeRoot, layoutOptions, nodeDrawer);
+    this.dependencyTree = new SecondaryDependencyTree(this.secondaryLayer, rootGroup, treeRoot, layoutOptions, nodeDrawer, mainLayerCallbacks);
   }
 
   clear() {
