@@ -87,8 +87,8 @@ xRanges.forEach((xRange, index) => {
 
 // service
 const serviceNodeName = (node: ArchHierarchyPointNode) => {
-  const category = injectorTexts[node.data.elementType];
-  return node.data.name + ' ' + (category ? category : 'PlatformInjector');
+  const data = node.data as any;
+  return (data.host ? data.host.name + ' ' : '') + data.category;
 };
 const drawInjectorRect = d3_svg.svgForeignExtendableDiv({text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs);
 const isInjectorNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode && node.data.isInjectorNode;

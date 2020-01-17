@@ -21,7 +21,7 @@ const hierarchyOptions: UiElementCategory[] = [
     inputType: MetaInputType.RadioGroup,
     items: [
       { name: 'Architecture Overview', value: ArchViewerHierarchy.FullView,
-        type: null, isChecked: true
+        type: null, isChecked: false
       },
       // { name: 'Component Hierarchy', value: ArchViewerHierarchy.ComponentHierarchy,
       //   type: null, isChecked: false
@@ -30,7 +30,7 @@ const hierarchyOptions: UiElementCategory[] = [
       //   type: null, isChecked: false
       // },
       { name: 'Injector & Dependency Hierarchy', value: ArchViewerHierarchy.InjectorHierarchy,
-        type: null, isChecked: false
+        type: null, isChecked: true
       }
     ].filter(filterByUsed)
   }
