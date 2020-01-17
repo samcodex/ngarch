@@ -13,7 +13,6 @@ import { PairNumber } from '@core/models/arch-data-format';
 import { drawThreeGearsFn, drawRectangleFn, drawText } from '../arch-hierarchy-node-shape';
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
 import { InjectorTreeNode } from '@core/diagram-tree/injector-tree';
-import { HierarchyNode } from 'd3';
 import { getArchPonentActions, PonentActionItem } from '../../../models/viewer-content-types';
 import { d3_shape } from '@core/svg/d3.shape';
 
@@ -146,7 +145,7 @@ export class SecondaryInjectorTree {
 
     const nodes = this.injectorHierarchy.descendants();
     const rootModuleNode = nodes.find(node => node.data.rootModule);
-    nodes.forEach(function (pointNode: HierarchyNode<InjectorTreeNode>, index) {
+    nodes.forEach(function (pointNode: d3.HierarchyNode<InjectorTreeNode>, index) {
       let hostPoint = null;
       if (index <= 1) {
         // two PlatformInjector, NullInjector & PlatformModuleInjector
@@ -200,7 +199,7 @@ export class SecondaryInjectorTree {
       .enter()
       .append('g')
       .classed('secondary_injector', true)
-      .each(function (pointNode: HierarchyNode<InjectorTreeNode>) {
+      .each(function (pointNode: d3.HierarchyNode<InjectorTreeNode>) {
         if (pointNode['positions']) {
           const host: d3Element = d3.select(this);
           const [x, y] = getInjectorPosition(pointNode);

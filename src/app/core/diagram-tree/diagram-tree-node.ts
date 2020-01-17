@@ -99,6 +99,10 @@ export class DiagramTreeNode extends DiagramElement {
     }
   }
 
+  collapseOnly() {
+    this.isCollapsed = true;
+  }
+
   collapse() {
     this.isCollapsed = true;
     if (this.injectorTreeNode) {

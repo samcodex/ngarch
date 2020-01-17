@@ -211,7 +211,7 @@ export class SecondaryDependencyTree {
       .append('g')
       .classed('secondary_dependency', true)
       .each(function(pointNode: ArchHierarchyPointNode) {
-        pointNode.data.collapse();
+        pointNode.data.collapseOnly();
         placeNode.bind(this)(pointNode);
       })
       .call(d3_svg.svgForeignExtendableDiv({text: () => 'Dependencies'}, dependencyNodeSize, null, dependenciesDivAttrs));
