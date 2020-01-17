@@ -42,12 +42,12 @@ const lineStyle = {
   'stroke-width': 1
 };
 const rectStyle = {
-  'stroke': '#888888',
+  'stroke': '#ff9c59',
   'stroke-width': '1px',
   'opacity': '1',
   'cursor': 'pointer'
 };
-const providerColor = ArchConfig.getElementColor(AnalysisElementType.Service);
+const providerColor = ArchConfig.getElementColor(AnalysisElementType._Provider);
 const normalTextColor = '#000000';
 
 // config - position
@@ -215,12 +215,14 @@ export class SecondaryInjectorTree {
     const providerNode = nodeEnter
       .filter(isProviderNode)
       .call((self) => {
-        drawRectangleFn(nodeSize, rectStyle)(self as any);
+        drawRectangleFn(nodeSize, rectStyle, false)(self as any);
         drawThreeGearsFn()(self as any);
         drawText(nodeSize, self as any, {color: normalTextColor});
       })
       .call(_setStyles, rectStyle)
       .attr('fill', providerColor);
+
+    this.nodeDrawer.drawNodeExpandButtonFn(false)(providerNode as any);
 
     d3_shape.drawActionBar(this.secondaryLayer, nodeWidth + 20, actionY)(providerNode, mapNodeToActions,
       this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
@@ -233,7 +235,7 @@ export class SecondaryInjectorTree {
     const injectorLinksGroup = this.secondaryLayer.append('g').classed('injector_links', true);
 
     injectorLinksGroup
-      .selectAll('link')
+      .selectAll('.injector_link')
       .data(links)
       .enter()
       .each(function(link) {
@@ -242,8 +244,8 @@ export class SecondaryInjectorTree {
         const startPoint = getInjectorPosition(source);
         const endPoint = getInjectorPosition(target);
 
-        if (startPoint && endPoint && startPoint[0] && startPoint[1] && endPoint[0] && endPoint[1]) {
-          d3_svg.svgLine(host, null, startPoint, endPoint, null, lineStyle);
+        if (startPoint && endPoint) {
+          d3_svg.svgLine(host, 'injector_link', startPoint, endPoint, null, lineStyle);
         }
       });
 
