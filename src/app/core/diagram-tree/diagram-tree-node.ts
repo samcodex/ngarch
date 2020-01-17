@@ -1,10 +1,9 @@
-import { ArchNgPonentInjectable } from './../arch-ngponent/arch-ngponent-injectable';
 import { ArchNgPonentRoute } from '@core/arch-ngponent/arch-ngponent-route';
 import { DiagramElement } from './../diagram/diagram-element';
 import { ArchNode } from './../arch-tree/arch-tree';
 import { DiagramTreeContext } from './diagram-tree-context';
 import { AnalysisElementType } from '@core/models/analysis-element';
-import { ArchNgPonentModule, ArchNgPonentComponent } from '@core/arch-ngponent';
+import { ArchNgPonentComponent, ArchNgPonentInjectable } from '@core/arch-ngponent';
 import { InjectorTree, InjectorTreeNode } from './injector-tree';
 import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
 
@@ -60,6 +59,14 @@ export class DiagramTreeNode extends DiagramElement {
   get gradGrandChild(): DiagramTreeNode {
     const child = this.firstChild;
     return child ? child.grandChild : null;
+  }
+
+  get isComponentPonent(): boolean {
+    return this.archPonent instanceof ArchNgPonentComponent;
+  }
+
+  get isInjectablePonent(): boolean {
+    return this.archPonent instanceof ArchNgPonentInjectable;
   }
 
   getRelatedRoutePonent(): ArchNgPonentRoute {

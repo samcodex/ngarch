@@ -15,7 +15,7 @@ export namespace ArchConfig {
     [ AnalysisElementType.Other ]: ['#F6F6E8', '#DADAD8'],
     [ AnalysisElementType.Routes ]: ['#F67B7B', '#f04949'],
     [ AnalysisElementType.Route ]: ['#F67B7B', '#f04949'],
-    [ AnalysisElementType._Provider ]: ['#ffe6e6', '#efd2d0']
+    [ AnalysisElementType._Provider ]: ['#ffa96e', '#fb6702']
   };
 
   // light theme colors
@@ -30,7 +30,7 @@ export namespace ArchConfig {
     [ AnalysisElementType.Other ]: ['#F6F6E8', '#DADAD8'],
     [ AnalysisElementType.Routes ]: ['#e7c2c2', '#f04949'],
     [ AnalysisElementType.Route ]: ['#e7c2c2', '#f04949'],
-    [ AnalysisElementType._Provider ]: ['#ffe6e6', '#efd2d0']
+    [ AnalysisElementType._Provider ]: ['#ffa96e', '#fb6702']
   };
 
   export function getElementColors(type: AnalysisElementType, lightTheme = false): [string, string] {
