@@ -19,7 +19,7 @@ const _setAttrs = d3_util.setAttrs;
 const _setStyles = d3_util.setStyles;
 
 // dependency
-const dependencyNodeSize: PairNumber = [96, 22];
+const dependencyNodeSize: PairNumber = [86, 22];
 const dependencyNodeOffset: PairNumber = [ 25, -8 ];
 const dependenciesDivAttrs = {
   'font-size': '9px',
@@ -73,7 +73,8 @@ class DependencyProjector {
   constructor(
     private hostLayer: d3Element,
     private nodeDrawer: ArchHierarchyNodeDrawer,
-    private hostNode: ArchHierarchyPointNode
+    private hostNode: ArchHierarchyPointNode,
+    private dock: d3Element
   ) {
     const treeLayout = d3.tree<DiagramTreeNode>();
     treeLayout.nodeSize(this.nodeDrawer.treeNodeSize);
@@ -94,20 +95,18 @@ class DependencyProjector {
 
   draw() {
     // projector host
-    const { x, y } = this.hostNode;
     this.projectorHost = this.hostLayer.append('g').classed('projector-group', true);
-    d3_util.translateTo(this.projectorHost, x, y + 150);
+    d3_util.translateTo(this.projectorHost, -100, 100);
 
-    // link
-    const lineOffsetX = dependencyNodeOffset[0] + dependencyNodeSize[0] / 2;
-    const targetPosition = { x: x + lineOffsetX, y: y + 150 - 20};
-    this.projectorLine = d3_svg.svgLine(this.hostLayer, null, [x + lineOffsetX - 15, y], [targetPosition.x, targetPosition.y], null, lineStyle);
+    // line
+    const targetPosition = { x: 0, y: 100 - 2 * margin};
+    this.projectorLine = d3_svg.svgLine(this.hostLayer, null, [dependencyNodeSize[0] / 2, dependencyNodeSize[1] / 2], [targetPosition.x, targetPosition.y], null, lineStyle);
     this.projectorLine.lower();
     const moveLinkTargetFn = d3_svg.moveLineTarget(this.projectorLine);
 
     // pane rectangle
     const projectorPane = d3_svg.svgRect(this.projectorHost, null, [ 0, 0 ], [ 200, 200 ]);
-    const textFn = () => this.hostNode.data.name + ' - Dependency';
+    const textFn = () => this.hostNode.data.name + ' Dependency';
     const paneTitle = d3_svg.svgText(this.projectorHost, textFn, null, [0, 0], {'fill': '#1e5799'}, {'font-size': '10px'});
 
     // links group
@@ -128,7 +127,10 @@ class DependencyProjector {
     // pane title position
     paneTitle.call(_setAttrs, { x: size.x, y: size.y});
 
-    d3_svg.draggable(this.projectorHost, moveLinkTargetFn);
+    // drag
+    d3_svg.draggable(this.projectorHost, (offset: Point) => {
+      moveLinkTargetFn(offset);
+    });
   }
 
   private drawNodes() {
@@ -173,7 +175,7 @@ class DependencyProjector {
 
   private drawLinks(projectLinksGroup: d3Element) {
     const nodeSize = this.nodeDrawer.nodeSize;
-    const [nodeWidth] = nodeSize;
+    const [nodeWidth, nodeHeight] = nodeSize;
     const links = this.dependencyHierarchy.links();
 
     projectLinksGroup
@@ -191,8 +193,9 @@ class DependencyProjector {
         }
 
         if (sourcePosition && targetPosition) {
-          sourcePosition[0] += nodeWidth / 2;
-          targetPosition[0] += nodeWidth / 2;
+          sourcePosition[0] += (nodeWidth / 2);
+          sourcePosition[1] += (2 * nodeHeight / 3);
+          targetPosition[0] += (nodeWidth / 2);
           d3_svg.svgLine(host, 'dependency_link', sourcePosition, targetPosition, null, lineStyle);
         }
       });
@@ -203,6 +206,8 @@ class DependencyProjector {
 }
 
 export class SecondaryDependencyTree {
+  private dependencyLayer: d3Element;
+
   constructor(
     private secondaryLayer: d3Element,
     private rootGroup: d3Element,
@@ -221,7 +226,7 @@ export class SecondaryDependencyTree {
       });
 
     const placeNode = d3_shape.placeNodeFn(dependencyNodeOffset, this.nodeDrawer.nodeSize, false);
-    const nodeEnter = this.secondaryLayer
+    const dependencyLayer = this.dependencyLayer = this.secondaryLayer
       .selectAll('.secondary_dependency')
       .data(nodes)
       .enter()
@@ -230,29 +235,32 @@ export class SecondaryDependencyTree {
       .each(function(pointNode: ArchHierarchyPointNode) {
         pointNode.data.collapseOnly();
         placeNode.bind(this)(pointNode);
-      })
+      });
+
+    const docks = dependencyLayer
+      // .append('g')
+      // .classed('dependency_dock', true)
       .call(d3_svg.svgForeignExtendableDiv({text: () => 'Dependencies'}, dependencyNodeSize, null, dependenciesDivAttrs));
 
-    const clickFn = this.onClickNode.bind(this);
-    d3_shape.createNodeEvent<ArchHierarchyPointNode>(nodeEnter, clickFn, clickFn);
-  }
+    const onClickNode = (diagramNode: ArchHierarchyPointNode, index: number, layers: any[]) => {
+      const element = diagramNode.data;
 
-  private onClickNode(diagramNode: ArchHierarchyPointNode) {
-    const element = diagramNode.data;
-
-    element.toggleCollapsed();
-    if (element.isCollapsed) {
-      if (diagramNode.hasOwnProperty('projector')) {
-        diagramNode['projector'].hide();
-      }
-    } else {
-      if (diagramNode.hasOwnProperty('projector')) {
-        diagramNode['projector'].show();
+      element.toggleCollapsed();
+      if (element.isCollapsed) {
+        if (diagramNode.hasOwnProperty('projector')) {
+          diagramNode['projector'].hide();
+        }
       } else {
-        const projector = new DependencyProjector(this.secondaryLayer, this.nodeDrawer, diagramNode);
-        projector.draw();
-        diagramNode['projector'] = projector;
+        if (diagramNode.hasOwnProperty('projector')) {
+          diagramNode['projector'].show();
+        } else {
+          const projector = new DependencyProjector(d3.select(layers[index]), this.nodeDrawer, diagramNode, d3.select(docks.nodes()[index]));
+          projector.draw();
+          diagramNode['projector'] = projector;
+        }
       }
-    }
+    };
+
+    d3_shape.createNodeEvent<ArchHierarchyPointNode>(dependencyLayer, onClickNode, onClickNode);
   }
 }

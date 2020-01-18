@@ -216,7 +216,7 @@ function _svgForeignExtendableDiv(callbacks: D3Callbacks, size: PairNumber,
   const styles = Object.assign({}, divBreakStyle, textStyles);
 
   return (host: d3Element) => {
-    host
+    return host
       .append('foreignObject')
       .attr('width', width)
       .append('xhtml:div')
