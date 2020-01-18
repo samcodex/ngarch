@@ -2,14 +2,14 @@ import * as d3 from 'd3';
 import { get } from 'lodash-es';
 
 import { LayoutOptions } from '@core/diagram/layout-options';
-import { ArchHierarchyPointNode, ArchHierarchyHelper, ArchHierarchyPointLink } from '../arch-hierarchy';
+import { ArchHierarchyPointNode, ArchHierarchyHelper, ArchHierarchyPointLink, HierarchyPointNodeSelection } from '../arch-hierarchy';
 import { d3Element } from '@core/svg/d3-def-types';
 import { d3_svg } from '@core/svg/d3.svg';
 import { d3_util } from '@core/svg/d3.util';
 import { DiagramTreeNode } from '@core/diagram-tree/diagram-tree-node';
 import { AnalysisElementType } from '@core/models/analysis-element';
 import { ArchHierarchyNodeDrawer } from '../arch-hierarchy-node-drawer';
-import { PairNumber } from '@core/models/arch-data-format';
+import { PairNumber, Point } from '@core/models/arch-data-format';
 import { drawThreeGearsFn, drawRectangleFn, drawText } from '../arch-hierarchy-node-shape';
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
 import { d3_shape } from '@core/svg/d3.shape';
@@ -17,9 +17,6 @@ import { d3_shape } from '@core/svg/d3.shape';
 // service has injector, dependency
 const _setAttrs = d3_util.setAttrs;
 const _setStyles = d3_util.setStyles;
-
-// service
-const serviceNodeColor = ArchConfig.getElementColors(AnalysisElementType.Service)[1];
 
 // dependency
 const dependencyNodeSize: PairNumber = [96, 22];
@@ -47,6 +44,7 @@ const rectStyle = {
   'opacity': '1',
   'cursor': 'pointer'
 };
+const componentColor = ArchConfig.getElementColor(AnalysisElementType.Component);
 const providerColor = ArchConfig.getElementColor(AnalysisElementType.Service);
 const normalTextColor = '#000000';
 
@@ -68,8 +66,9 @@ const isValidPosition = (position: PairNumber) => {
 const margin = 10;
 
 class DependencyProjector {
-  private dependencyHierarchy: d3.HierarchyNode<DiagramTreeNode>;
+  private dependencyHierarchy: ArchHierarchyPointNode;
   private projectorHost: d3Element;
+  private projectorLine: d3Element;
 
   constructor(
     private hostLayer: d3Element,
@@ -79,61 +78,67 @@ class DependencyProjector {
     const treeLayout = d3.tree<DiagramTreeNode>();
     treeLayout.nodeSize(this.nodeDrawer.treeNodeSize);
 
-    this.dependencyHierarchy = d3.hierarchy(this.hostNode.data._dependencyDiagramTree.root);
-    treeLayout(this.dependencyHierarchy);
+    const dependencyHierarchy = d3.hierarchy(this.hostNode.data._dependencyDiagramTree.root);
+    this.dependencyHierarchy = treeLayout(dependencyHierarchy);
   }
 
   show() {
-    this.projectorHost
-      .transition()
-      .duration(500)
-      .style('opacity', 1)
-      .attr('visibility', 'visible')
-      ;
+    d3_svg.transition(this.projectorHost).show();
+    d3_svg.transition(this.projectorLine).show();
   }
 
   hide() {
-    this.projectorHost
-      .transition()
-      .duration(500)
-      .style('opacity', 0)
-      .attr('visibility', 'hidden')
-      ;
+    d3_svg.transition(this.projectorHost).hide();
+    d3_svg.transition(this.projectorLine).hide();
   }
 
   draw() {
     // projector host
     const { x, y } = this.hostNode;
     this.projectorHost = this.hostLayer.append('g').classed('projector-group', true);
-    d3_util.translateTo(this.projectorHost, x, y);
+    d3_util.translateTo(this.projectorHost, x, y + 150);
 
-    // pane
+    // link
+    const lineOffsetX = dependencyNodeOffset[0] + dependencyNodeSize[0] / 2;
+    const targetPosition = { x: x + lineOffsetX, y: y + 150 - 20};
+    this.projectorLine = d3_svg.svgLine(this.hostLayer, null, [x + lineOffsetX - 15, y], [targetPosition.x, targetPosition.y], null, lineStyle);
+    this.projectorLine.lower();
+    const moveLinkTargetFn = d3_svg.moveLineTarget(this.projectorLine);
+
+    // pane rectangle
     const projectorPane = d3_svg.svgRect(this.projectorHost, null, [ 0, 0 ], [ 200, 200 ]);
     const textFn = () => this.hostNode.data.name + ' - Dependency';
     const paneTitle = d3_svg.svgText(this.projectorHost, textFn, null, [0, 0], {'fill': '#1e5799'}, {'font-size': '10px'});
+
     // links group
     const projectLinksGroup = this.projectorHost.append('g').classed('dependency_links', true);
 
+    // projector nodes
     this.drawNodes();
+    // projector links
     this.drawLinks(projectLinksGroup);
     this.projectorHost.lower();
 
-    // pane
+    // pane position and size
     const size = d3_util.getDimension(this.projectorHost);
     const defaultPaneAttrs = { fill: 'lightgray', opacity: 0.5, 'stroke': '#888888', 'stroke-width': '1px' };
     const paneAttrs = { x: size.x - margin, y: size.y - margin,
       width: size.width + 2 * margin, height: size.height + 2 * margin };
     projectorPane.call(_setAttrs, Object.assign({}, defaultPaneAttrs, paneAttrs ));
+    // pane title position
     paneTitle.call(_setAttrs, { x: size.x, y: size.y});
+
+    d3_svg.draggable(this.projectorHost, moveLinkTargetFn);
   }
 
   private drawNodes() {
-    const nodes = this.dependencyHierarchy.descendants().filter(node => node.depth > 0);
     const nodeSize = this.nodeDrawer.nodeSize;
     const placeNode = d3_shape.placeNodeFn(dependencyNodeOffset, nodeSize, false);
-    const projectorGroup = this.projectorHost;
 
-    const nodeEnter = projectorGroup
+    // nodes
+    const nodes = this.dependencyHierarchy.descendants(); // .filter(node => node.depth > 0);
+
+    const nodeEnter: HierarchyPointNodeSelection = this.projectorHost
       .selectAll('.project-node')
       .data(nodes)
       .enter()
@@ -145,17 +150,28 @@ class DependencyProjector {
       });
 
     nodeEnter
-      .call((self) => {
-        drawRectangleFn(nodeSize, rectStyle, false)(self as any);
-        drawThreeGearsFn()(self as any);
-        drawText(nodeSize, self as any, {color: normalTextColor});
-        this.nodeDrawer.drawNodeExpandButtonFn(false)(self as any);
+      .filter(ArchHierarchyHelper.isComponent)
+      .call((node: HierarchyPointNodeSelection) => {
+        drawRectangleFn(nodeSize, rectStyle, false)(node);
+        drawText(nodeSize, node, {color: normalTextColor});
+        this.nodeDrawer.drawNodeExpandButtonFn(false)(node);
+      })
+      .call(_setStyles, rectStyle)
+      .attr('fill', componentColor);
+
+    nodeEnter
+      .filter(ArchHierarchyHelper.isService)
+      .call((node: HierarchyPointNodeSelection) => {
+        drawRectangleFn(nodeSize, rectStyle, false)(node);
+        drawThreeGearsFn()(node);
+        drawText(nodeSize, node, {color: normalTextColor});
+        this.nodeDrawer.drawNodeExpandButtonFn(false)(node);
       })
       .call(_setStyles, rectStyle)
       .attr('fill', providerColor);
   }
 
-  drawLinks(projectLinksGroup: d3Element) {
+  private drawLinks(projectLinksGroup: d3Element) {
     const nodeSize = this.nodeDrawer.nodeSize;
     const [nodeWidth] = nodeSize;
     const links = this.dependencyHierarchy.links();
