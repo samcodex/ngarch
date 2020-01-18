@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 import { d3Element } from '@core/svg/d3-def-types';
 import { d3_util } from './d3.util';
-import { PairNumber } from '@core/models/arch-data-format';
+import { PairNumber, Point } from '@core/models/arch-data-format';
 
 const _setAttrs = d3_util.setAttrs;
 const _setStyles = d3_util.setStyles;
@@ -17,6 +17,12 @@ export namespace d3_svg {
   export const svgForeignDivText = _svgForeignDivText;
   export const svgForeignScrollableDiv = _svgForeignScrollableDiv;
   export const svgForeignExtendableDiv = _svgForeignExtendableDiv;
+  export const getTransformation = _getTransformation;
+  export const getTranslate = _getTranslate;
+  export const draggable = _draggable;
+  export const moveLineTarget = _moveLineTarget;
+  export const moveLineSource = _moveLineSource;
+  export const transition = _transition;
 }
 
 function _svgGroup(host: d3Element, classed: string, position: PairNumber): d3Element {
@@ -228,5 +234,117 @@ function _svgForeignExtendableDiv(callbacks: D3Callbacks, size: PairNumber,
         hostDiv.style('height', (divHeight - divOffset) + 'px');
       })
       .call(_assignProperties(callbacks, textAttrs, styles));
+  };
+}
+
+function _getTransformation(transform) {
+  // Create a dummy g for calculation purposes only. This will never
+  // be appended to the DOM and will be discarded once this function
+  // returns.
+  var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+  // Set the transform attribute to the provided string value.
+  g.setAttributeNS(null, "transform", transform);
+
+  // consolidate the SVGTransformList containing all transformations
+  // to a single SVGTransform of type SVG_TRANSFORM_MATRIX and get
+  // its SVGMatrix.
+  var matrix = g.transform.baseVal.consolidate().matrix;
+
+  // Below calculations are taken and adapted from the private function
+  // transform/decompose.js of D3's module d3-interpolate.
+  var {a, b, c, d, e, f} = matrix;   // ES6, if this doesn't work, use below assignment
+  // var a=matrix.a, b=matrix.b, c=matrix.c, d=matrix.d, e=matrix.e, f=matrix.f; // ES5
+  var scaleX, scaleY, skewX;
+  if (scaleX = Math.sqrt(a * a + b * b)) a /= scaleX, b /= scaleX;
+  if (skewX = a * c + b * d) c -= a * skewX, d -= b * skewX;
+  if (scaleY = Math.sqrt(c * c + d * d)) c /= scaleY, d /= scaleY, skewX /= scaleY;
+  if (a * d < b * c) a = -a, b = -b, skewX = -skewX, scaleX = -scaleX;
+  return {
+    translateX: e,
+    translateY: f,
+    rotate: Math.atan2(b, a) * 180 / Math.PI,
+    skewX: Math.atan(skewX) * 180 / Math.PI,
+    scaleX: scaleX,
+    scaleY: scaleY
+  };
+}
+
+function _getTranslate(element: d3Element): Point {
+  const transform = element.attr('transform');
+  const t = _getTransformation(transform);
+
+  return {x: t.translateX, y: t.translateY};
+}
+
+function _draggable(element: d3Element, callback?: Function) {
+  const offset: Point = {x: 0, y: 0};
+  const previous: Point = {x: 0, y: 0};
+  function dragstarted() {
+    if (!d3.event.active) {
+      const host = d3.select(this);
+      const position = _getTranslate(host);
+      Object.assign(previous, position);
+      offset.x = position.x - d3.event.x;
+      offset.y = position.y - d3.event.y;
+    }
+  }
+
+  function dragged() {
+    const host = d3.select(this);
+    const { x, y } = d3.event;
+    const newX = x + offset.x;
+    const newY = y + offset.y;
+    d3_util.translateTo(host, newX, newY);
+
+    if (callback) {
+      callback({x: newX - previous.x, y: newY - previous.y });
+      previous.x = newX;
+      previous.y = newY;
+    }
+  }
+
+  function dragended() {
+    if (!d3.event.active) {
+      offset.x = 0;
+      offset.y = 0;
+    }
+  }
+
+  element
+    .call(
+      d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended)
+    );
+}
+
+function _moveLineTarget(movedLink: d3Element) {
+  const lineTarget: Point = { x: parseFloat(movedLink.attr('x2')), y: parseFloat(movedLink.attr('y2'))};
+  return (offset: Point) => {
+    lineTarget.x += offset.x;
+    lineTarget.y += offset.y;
+    movedLink.attr('x2', lineTarget.x).attr('y2', lineTarget.y);
+  };
+}
+
+function _moveLineSource(movedLink: d3Element) {
+  const lineSource: Point = { x: parseFloat(movedLink.attr('x1')), y: parseFloat(movedLink.attr('y1'))};
+  return (offset: Point) => {
+    lineSource.x += offset.x;
+    lineSource.y += offset.y;
+    movedLink.attr('x1', lineSource.x).attr('y1', lineSource.y);
+  };
+}
+
+function _transition(element: d3Element, duration = 500) {
+  return {
+    show: () => {
+      element.transition().duration(duration).style('opacity', 1).attr('visibility', 'visible');
+    },
+    hide: () => {
+      element.transition().duration(duration).style('opacity', 0).attr('visibility', 'hidden');
+    }
   };
 }

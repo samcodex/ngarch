@@ -16,16 +16,19 @@ const _setGroupAttrs = d3_util.setGroupAttrs;
 const _transformD3Element = d3_util.transformD3Element;
 
 // funtions
-const _placeNodeFn = (halfOffset: PairNumber, nodeSize: PairNumber, offsetMinusWidth = true) => {
+const _placeNodeFn = (halfOffset: PairNumber, nodeSize: PairNumber, offsetMinusWidth = true, moveNode = true) => {
   const [ nodeWidth, nodeHeight ] = nodeSize;
   return function(pointNode: ArchHierarchyPointNode, offset: PairNumber = [0, 0]) {
-    const host: d3Element = d3.select(this);
     let { x, y } = pointNode;
     const [ offsetX, offsetY ] = offset;
     x += ((offsetMinusWidth ? -nodeWidth : 0) + halfOffset[0]) + offsetX;
     y += halfOffset[1] + offsetY;
 
-    d3_util.translateTo(host, x, y);
+    if (moveNode) {
+      const host: d3Element = d3.select(this);
+      d3_util.translateTo(host, x, y);
+    }
+
     return {x, y};
   };
 };
@@ -550,7 +553,7 @@ const tipRectAttrs = { fill: '#dcdcdc' };
 const tipRectStyles = { stroke: '#c0c0c0', 'stroke-width': '1', 'filter': 'url(#drop-shadow)' };
 const tipContentAttrs = { };
 const tipContentStyles = { color: '#fb1b1b', 'font-size': '11px', direction: 'none', 'margin-left': '5px', 'margin-top': '5px' };
-function _drawNodeTip() {
+function _drawNodeTip(hasMouseToggle = false) {
   return (nodeEnter: d3Element) => {
     const nodeTip = nodeEnter
       .filter((pointNode) => !!pointNode.data.nodeInfo)
@@ -576,6 +579,18 @@ function _drawNodeTip() {
       const div = d3_svg.svgForeignScrollableDiv(owner, { html: textFn }, tipBlockSize, tipContentAttrs, tipContentStyles);
       // const div = d3_svg.svgText(owner, textFn, 'tip_text', tipBlockSize, tipContentAttrs, tipContentStyles);
       div.attr('x', x).attr('y', y);
+
+      function mouseToggle() {
+        const hostTip = d3.select(this);
+        d3_util.toggleShowHideInNewHost(hostTip, '#' + tipId, null, owner, [x, y]);
+      }
+
+      if (hasMouseToggle) {
+        host
+          .on('mouseover', mouseToggle)
+          .on('mouseout', mouseToggle)
+          ;
+      }
     });
 
     d3_util.toggleShowHide(nodeTip, false);
