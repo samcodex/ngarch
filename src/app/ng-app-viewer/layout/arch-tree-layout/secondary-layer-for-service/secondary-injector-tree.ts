@@ -33,7 +33,8 @@ const injectorDivAttrs = {
   'color': '#000000',
   'opacity': '1',
   'font-weight': '500',
-  'word-wrap': 'break-word'
+  'word-wrap': 'break-word',
+  'min-width': '88%'
 };
 
 const lineStyle = {
@@ -207,7 +208,7 @@ export class SecondaryInjectorTree {
         }
       });
 
-    nodeEnter
+    const injectorNode = nodeEnter
       .filter(isInjectorNode)
       .call(drawInjectorRect);
 
@@ -227,6 +228,8 @@ export class SecondaryInjectorTree {
       this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
 
     d3_shape.createNodeEvent<ArchHierarchyPointNode>(providerNode, nodeDoubleClickFn, nodeClickFn);
+
+    d3_shape.drawNodeTip()(injectorNode);
   }
 
   private drawInjectorLinks() {

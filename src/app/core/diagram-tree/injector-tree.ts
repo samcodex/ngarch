@@ -32,6 +32,8 @@ export class InjectorTreeNode extends DiagramElement {
   children: InjectorTreeNode[];
   parent: InjectorTreeNode;
   rootModule = false;
+  nodeInfo: string;
+  upLinkInfo: string;
 
   private _isCollapsed = false;
 
@@ -144,8 +146,11 @@ export class InjectorTree {
   private createPlatformInjectorNode(): InjectorTreeNode {
     const nullInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
       null, null, InjectorNodeCategory.NullInjector);
+    nullInjector.nodeInfo = 'NullInjector';
+
     const platformInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
       nullInjector, null, InjectorNodeCategory.PlatformModuleInjector);
+    platformInjector.nodeInfo = 'PlatformInjector';
 
     this.root = nullInjector;
 
