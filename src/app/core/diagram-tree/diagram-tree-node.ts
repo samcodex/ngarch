@@ -3,9 +3,8 @@ import { DiagramElement } from './../diagram/diagram-element';
 import { ArchNode } from './../arch-tree/arch-tree';
 import { DiagramTreeContext } from './diagram-tree-context';
 import { AnalysisElementType } from '@core/models/analysis-element';
-import { ArchNgPonentComponent, ArchNgPonentInjectable } from '@core/arch-ngponent';
+import { ArchNgPonentInjectable } from '@core/arch-ngponent';
 import { InjectorTree, InjectorTreeNode } from './injector-tree';
-import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
 
 export class DiagramTreeNode extends DiagramElement {
   archNode: ArchNode;
@@ -28,7 +27,6 @@ export class DiagramTreeNode extends DiagramElement {
 
   injectorSubTree: InjectorTree;
   injectorTreeNode: InjectorTreeNode;
-  dependencySubTreeNode: DiagramSubTreeDependency;
 
   _dependencyDiagramTree: DiagramTreeContext;
 

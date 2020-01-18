@@ -2,7 +2,6 @@ import { DiagramTreeNode } from './diagram-tree-node';
 import { ArchTree } from './../arch-tree/arch-tree';
 import { DiagramElementContext } from '@core/diagram/diagram-element';
 import { InjectorTree } from './injector-tree';
-import { DiagramSubTreeDependency } from './dependency-sub-tree-node';
 import { AnalysisElementType } from '@core/models/analysis-element';
 
 export class DiagramTreeContext extends DiagramElementContext {
@@ -26,8 +25,6 @@ export class DiagramTreeContext extends DiagramElementContext {
           }
         }
       });
-
-      DiagramSubTreeDependency.createDependencySubTree(this.root);
     }
   }
 
