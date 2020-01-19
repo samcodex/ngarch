@@ -96,7 +96,7 @@ export class DiagramLink implements ElementDrawable {
     const el2Size = this.element2.getElementSize();
     let points = '';
 
-    if (!d3_util.isOverlay(el1Size, el2Size)) {
+    if (!d3_util.isOverlap(el1Size, el2Size)) {
       const [point1, point2] = this.calculateLinePoints();
       points = point1.x + ',' + point1.y + ' ' + point2.x + ',' + point2.y;
     }
@@ -127,8 +127,7 @@ export class DiagramLink implements ElementDrawable {
       let previousPoint: Point;
       forEach(shapePoints, (currentPoint) => {
         if (previousPoint) {
-          const linePoint = d3_util.findLineIntersectPoint(point1.x, point1.y, point2.x, point2.y,
-            previousPoint.x, previousPoint.y, currentPoint.x, currentPoint.y);
+          const linePoint = d3_util.findLineIntersectPoint(point1, point2, previousPoint, currentPoint);
 
           if (linePoint) {
             points[i - 1] = linePoint;

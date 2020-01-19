@@ -2,6 +2,7 @@ export type PairNumber = [number, number];
 export type NumberFunction = (...rest: any[]) => number;
 export type PairFunction = [ NumberFunction, NumberFunction ];
 export type PairNumberFunction = PairNumber | PairFunction;
+export type LineSegment = [ Point, Point ];
 
 export const getPairNumber = ( pair: PairNumberFunction ): PairNumber => {
   const [ first, second ] = pair;
@@ -56,4 +57,26 @@ export interface DiagramNodeOptions {
   margin?: PairNumberFunction;
   position?: PairNumberFunction;
   others?: any;
+}
+
+export const toElementBox = (size: RectangleSize): ElementBox =>
+  ({x: size.x, y: size.y, w: size.width, h: size.height});
+
+export function toRectanglePoints(rect: ElementBox): [ Point, Point, Point, Point ] {
+  const point1: Point = { x: rect.x, y: rect.y };
+  const point2: Point = { x: rect.x + rect.w, y: rect.y };
+  const point3: Point = { x: rect.x + rect.w, y: rect.y + rect.h };
+  const point4: Point = { x: rect.x, y: rect.y + rect.h };
+
+  return [ point1, point2, point3, point4 ];
+}
+
+export function toRectangleLines(rect: ElementBox): [ LineSegment, LineSegment, LineSegment, LineSegment ] {
+  const points: [ Point, Point, Point, Point ] = toRectanglePoints(rect);
+  const lines = [];
+  for (let i = 0; i < 4; i++) {
+    const next = (i + 1) % 4;
+    lines.push([points[i], points[next]]);
+  }
+  return lines as any;
 }

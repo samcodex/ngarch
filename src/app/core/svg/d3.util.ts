@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { forOwn } from 'lodash-es';
 
-import { RectangleSize, Point, ElementBox, PositionBox, PairNumber } from '../models/arch-data-format';
+import { RectangleSize, Point, ElementBox, PositionBox, PairNumber, toRectangleLines } from '../models/arch-data-format';
 import { D3Transform, D3FullAttributes, D3GroupFullAttributes } from './d3-def-types';
 import { d3Element } from '@core/svg/d3-def-types';
 
@@ -182,7 +182,21 @@ export namespace d3_util {
     return path;
   }
 
-  export function findLineIntersectPoint(x1, y1, x2, y2, x3, y3, x4, y4): Point {
+  export function findIntersectionOfLineRectangle(start: Point, end: Point, rect: ElementBox): Point {
+    let found: Point = null;
+    const lines = toRectangleLines(rect);
+    lines.some(line => {
+      found = findLineIntersectPoint(start, end, line[0], line[1]);
+      if (found) {
+        return true;
+      }
+    });
+
+    return found;
+  }
+
+  export function findLineIntersectPoint(point1: Point, point2: Point, point3: Point, point4: Point): Point {
+    const {x: x1, y: y1} = point1, {x: x2, y: y2} = point2, {x: x3, y: y3} = point3, {x: x4, y: y4} = point4;
     const denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 
     // lines are parallel
@@ -223,7 +237,7 @@ export namespace d3_util {
       && point.y > box.y && point.y + 2 < (box.y + box.h );
   }
 
-  export function isOverlay(box1: ElementBox, box2: ElementBox): boolean {
+  export function isOverlap(box1: ElementBox, box2: ElementBox): boolean {
     const pos1 = new PositionBox(box1);
     const pos2 = new PositionBox(box2);
 
