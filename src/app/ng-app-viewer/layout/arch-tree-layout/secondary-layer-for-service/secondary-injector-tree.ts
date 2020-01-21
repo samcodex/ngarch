@@ -45,7 +45,8 @@ const rectStyle = {
   'stroke': '#ff9c59',
   'stroke-width': '1px',
   'opacity': '1',
-  'cursor': 'pointer'
+  'cursor': 'pointer',
+  'filter': 'url(#drop-shadow-light)'
 };
 const providerColor = ArchConfig.getElementColor(AnalysisElementType._Provider);
 const normalTextColor = '#000000';
@@ -122,6 +123,10 @@ const nodeClickFn = (diagramNode: ArchHierarchyPointNode) => {
   }
 };
 
+const filterInjectorNode = (node: InjectorTreeNode) => {
+  return !!node && !!node.host && node.host.isCollapsed ? node.host.isCollapsedByUser : true;
+};
+
 export class SecondaryInjectorTree {
   private injectorHierarchy: d3.HierarchyNode<InjectorTreeNode>;
 
@@ -139,7 +144,9 @@ export class SecondaryInjectorTree {
     const root = this.treeRoot.data;
     const injectorTree = root.injectorSubTree;
     const injectorRoot = injectorTree.root;
-    this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) => !injectorNode.isCollapsed ? injectorNode.children : null);
+    // this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) => !injectorNode.isCollapsed ? injectorNode.children : null);
+    this.injectorHierarchy = d3.hierarchy(injectorRoot, (injectorNode) =>
+      !injectorNode.isCollapsed && injectorNode.children ? injectorNode.children.filter(filterInjectorNode) : null);
 
     // calculate Injector nodes' position
     const calcPosition = calcNodePositionFn(injectorNodeOffset, this.nodeDrawer.nodeSize);
@@ -200,6 +207,7 @@ export class SecondaryInjectorTree {
       .enter()
       .append('g')
       .classed('secondary_injector', true)
+      .call(_setAttrs, { 'filter': 'url(#drop-shadow-light)' })
       .each(function (pointNode: d3.HierarchyNode<InjectorTreeNode>) {
         if (pointNode['positions']) {
           const host: d3Element = d3.select(this);
@@ -229,7 +237,7 @@ export class SecondaryInjectorTree {
 
     d3_shape.createNodeEvent<ArchHierarchyPointNode>(providerNode, nodeDoubleClickFn, nodeClickFn);
 
-    d3_shape.drawNodeTip()(injectorNode);
+    // d3_shape.drawNodeTip(true)(injectorNode);
   }
 
   private drawInjectorLinks() {

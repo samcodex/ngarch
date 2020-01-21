@@ -52,8 +52,8 @@ const componentColor = ArchConfig.getElementColor(AnalysisElementType.Component)
 const providerColor = ArchConfig.getElementColor(AnalysisElementType.Service);
 const normalTextColor = '#000000';
 const defaultPaneAttrs = {
-  'fill': 'lightgray',
-  'opacity': 0.5,
+  'fill': '#ffffff',
+  'opacity': '0.4',
   'stroke': '#888888',
   'stroke-width': '1px'
 };
@@ -93,6 +93,10 @@ class DependencyProjector {
     this.dependencyHierarchy = treeLayout(dependencyHierarchy);
   }
 
+  isReady(): boolean {
+    return !!this.projectorHost && !this.projectorHost.empty() && !!this.projectorLine && !this.projectorLine.empty();
+  }
+
   show() {
     d3_svg.transition(this.projectorHost).show();
     this.showLine();
@@ -116,6 +120,11 @@ class DependencyProjector {
     this.projectorHost = this.hostLayer.append('g').classed('projector-group', true).call(_setStyles, { cursor: 'pointer'});
     d3_util.translateTo(this.projectorHost, -1 * distance, distance);
 
+    // pane rectangle
+    const paneRect = d3_svg.svgRect(this.projectorHost, null, [0, 0], [0, 0]).call(_setAttrs, defaultPaneAttrs);
+    // pane title
+    const textFn = () => this.hostNode.data.name + ' Dependency';
+    const paneTitle = d3_svg.svgText(this.projectorHost, textFn, null, [0, 0], {'fill': '#1e5799'}, {'font-size': '10px'});
     // links group
     const projectLinksGroup = this.projectorHost.append('g').classed('dependency_links', true);
 
@@ -125,10 +134,10 @@ class DependencyProjector {
     this.drawLinks(projectLinksGroup);
     this.projectorHost.lower();
 
-    this.drawPane();
+    this.drawPane(paneRect, paneTitle);
   }
 
-  private drawPane() {
+  private drawPane(paneRect: d3Element, paneTitle: d3Element) {
     const dockSize = d3_util.getDimension(this.dock);
 
     // pane
@@ -141,11 +150,13 @@ class DependencyProjector {
     const lineStart = { x: dependencyNodeSize[0] / 2, y: dependencyNodeSize[1] / 2 };
     const lineEnd = { x: 0, y: distance - 2 * margin};
 
-    // pane rectangle
-    d3_svg.svgRect(this.projectorHost, null, [paneSize.x, paneSize.y], [paneSize.width, paneSize.height]).call(_setAttrs, defaultPaneAttrs);
-    // pane title
-    const textFn = () => this.hostNode.data.name + ' Dependency';
-    d3_svg.svgText(this.projectorHost, textFn, null, [size.x, size.y], {'fill': '#1e5799'}, {'font-size': '10px'});
+    // // pane rectangle
+    // d3_svg.svgRect(this.projectorHost, null, [paneSize.x, paneSize.y], [paneSize.width, paneSize.height]).call(_setAttrs, defaultPaneAttrs);
+    // // pane title
+    // const textFn = () => this.hostNode.data.name + ' Dependency';
+    // d3_svg.svgText(this.projectorHost, textFn, null, [size.x, size.y], {'fill': '#1e5799'}, {'font-size': '10px'});
+    paneRect.call(_setAttrs, paneSize);
+    paneTitle.call(_setAttrs, { x: size.x, y: size.y});
 
     this.dragPane(lineStart, lineEnd, dockSize, paneSize);
   }
@@ -170,7 +181,7 @@ class DependencyProjector {
     };
 
     // line
-    this.projectorLine = d3_svg.svgLine(this.hostLayer, null, [lineStart.x, lineStart.y], [lineEnd.x, lineEnd.y], null, lineStyle);
+    this.projectorLine = d3_svg.svgLine(this.hostLayer, 'projector-line', [lineStart.x, lineStart.y], [lineEnd.x, lineEnd.y], null, lineStyle);
     this.projectorLine.lower();
     const moveLinkTargetFn = moveLineTarget(this.projectorLine, lineStart);
 
@@ -296,6 +307,7 @@ export class SecondaryDependencyTree {
       .enter()
       .append('g')
       .classed('secondary_dependency', true)
+      .call(_setAttrs, { 'filter': 'url(#drop-shadow-light)' })
       .each(function(pointNode: ArchHierarchyPointNode) {
         pointNode.data.collapseOnly();
         placeNode.bind(this)(pointNode);
@@ -308,13 +320,13 @@ export class SecondaryDependencyTree {
     const onClickNode = (diagramNode: ArchHierarchyPointNode, index: number, layers: any[]) => {
       const element = diagramNode.data;
 
-      element.toggleCollapsed();
+      element.toggleCollapsed(null);
       if (element.isCollapsed) {
         if (diagramNode.hasOwnProperty('projector')) {
           diagramNode['projector'].hide();
         }
       } else {
-        if (diagramNode.hasOwnProperty('projector')) {
+        if (diagramNode.hasOwnProperty('projector') && diagramNode['projector'].isReady()) {
           diagramNode['projector'].show();
         } else {
           const projector = new DependencyProjector(d3.select(layers[index]), this.nodeDrawer, diagramNode, d3.select(docks.nodes()[index]));

@@ -18,8 +18,9 @@ export namespace ArchHierarchy {
   export const getProviderNodes = _getProviderNodes;
 }
 
-function _toggleCollapse(node: ArchHierarchyPointNode) {
-  node.data.toggleCollapsed();
+function _toggleCollapsedChildren(node: ArchHierarchyPointNode) {
+  node.data.toggleCollapsed(null);
+  node.data.toggleCollapsedChildren();
 }
 
 function _isCollapsed(node: ArchHierarchyPointNode) {
@@ -27,7 +28,7 @@ function _isCollapsed(node: ArchHierarchyPointNode) {
 }
 
 function _toggleArchHierarchyNode(node: ArchHierarchyPointNode) {
-  _toggleCollapse(node);
+  _toggleCollapsedChildren(node);
   _changeChildrenForCollapse(node);
 }
 
@@ -39,12 +40,14 @@ function _alignChildrenWithCollapseStatus(node: ArchHierarchyPointNode) {
 }
 
 function _changeChildrenForCollapse(node: ArchHierarchyPointNode): ArchHierarchyPointNode[] {
-  return _isCollapsed(node) ? _hideChildren(node) : _showChildren(node);
-
   function _hideChildren(pNode: ArchHierarchyPointNode): ArchHierarchyPointNode[] {
     if (!!pNode.children) {
       pNode['_children'] = pNode.children;
       pNode.children = null;
+    }
+
+    if (pNode['_children']) {
+      pNode['_children'].forEach(_hideChildren);
     }
 
     return pNode['_children'];
@@ -56,8 +59,14 @@ function _changeChildrenForCollapse(node: ArchHierarchyPointNode): ArchHierarchy
       pNode['_children'] = null;
     }
 
+    if (pNode.children) {
+      pNode.children.forEach(_showChildren);
+    }
+
     return pNode.children;
   }
+
+  return _isCollapsed(node) ? _hideChildren(node) : _showChildren(node);
 }
 
 function _getProviderNodes(node: ArchHierarchyPointNode): ArchNgPonentInjectable[] {
