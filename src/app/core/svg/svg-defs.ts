@@ -1,6 +1,7 @@
 import { d3Element } from '@core/svg/d3-def-types';
 
 export enum LineEndShapeId {
+  DropShadowLight = 'drop-shadow-light',
   DropShadow = 'drop-shadow',
   Triangle = 'Triangle',
   ArrowLine = 'ArrowLine',
@@ -23,6 +24,31 @@ export namespace svg_defs {
       .attr('in', 'blur')
       .attr('dx', 2)
       .attr('dy', 5)
+      .attr('result', 'offsetBlur');
+
+    const feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode')
+      .attr('in', 'offsetBlur');
+    feMerge.append('feMergeNode')
+      .attr('in', 'SourceGraphic');
+
+    defineDropShadowLight(defs);
+  }
+
+  function defineDropShadowLight(defs: d3Element) {
+    const filter = defs.append('filter')
+      .attr('id', LineEndShapeId.DropShadowLight)
+      .attr('height', '150%');
+
+    filter.append('feGaussianBlur')
+      .attr('in', 'SourceAlpha')
+      .attr('stdDeviation', 3)
+      .attr('result', 'blur');
+
+    filter.append('feOffset')
+      .attr('in', 'blur')
+      .attr('dx', 2)
+      .attr('dy', 2)
       .attr('result', 'offsetBlur');
 
     const feMerge = filter.append('feMerge');
