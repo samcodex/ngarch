@@ -11,12 +11,12 @@ const lightThemeTextColor = '#9d9d9d';
 const normalTextColor = '#000000';
 
 // types
-interface ContentNodes {
-  container: HierarchyPointNodeSelection;
-  header: HierarchyPointNodeSelection;
-  main: HierarchyPointNodeSelection;
-  footer: HierarchyPointNodeSelection;
-}
+// interface ContentNodes {
+//   container: HierarchyPointNodeSelection;
+//   header: HierarchyPointNodeSelection;
+//   main: HierarchyPointNodeSelection;
+//   footer: HierarchyPointNodeSelection;
+// }
 
 type MapNodeToNumber = (d: ArchHierarchyPointNode) => number;
 interface OrientationConfig {
@@ -244,12 +244,13 @@ export class ArchHierarchyNodeDrawer {
     };
   }
 
-  drawNodeContent(nodeEnter: HierarchyPointNodeSelection, textOpacity?: object): ContentNodes {
+  drawNodeContent(nodeEnter: HierarchyPointNodeSelection, textOpacity?: object) /*: ContentNodes*/ {
     const nodeSize = this.nodeSize;
     const color = this.hasSecondaryLayer ? lightThemeTextColor : normalTextColor;
     const textStyles = Object.assign({}, textOpacity, { color });
-    return this._infoLevel === NodeInfoLevel.Basic
-      ? drawText(nodeSize, nodeEnter, textStyles) as any
+
+    this._infoLevel === NodeInfoLevel.Basic
+      ? drawText(nodeSize, nodeEnter, textStyles)
       : drawDetailInfoContent(nodeSize, nodeEnter, false);
   }
 }

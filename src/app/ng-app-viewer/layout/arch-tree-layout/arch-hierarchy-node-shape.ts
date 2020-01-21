@@ -15,12 +15,12 @@ import { NgPonentType } from '@core/ngponent-tsponent';
 const _setAttrs = d3_util.setAttrs;
 const _setStyles = d3_util.setStyles;
 
-interface ContentNodes {
-  container: HierarchyPointNodeSelection;
-  header: HierarchyPointNodeSelection;
-  main: HierarchyPointNodeSelection;
-  footer: HierarchyPointNodeSelection;
-}
+// interface ContentNodes {
+//   container: HierarchyPointNodeSelection;
+//   header: HierarchyPointNodeSelection;
+//   main: HierarchyPointNodeSelection;
+//   footer: HierarchyPointNodeSelection;
+// }
 
 // configuration
 export const linkStyle = {
@@ -87,7 +87,7 @@ export function drawText(nodeSize: PairNumber, nodeEnter: HierarchyPointNodeSele
 }
 
 export function drawDetailInfoContent(nodeSize: PairNumber, nodeEnter: HierarchyPointNodeSelection,
-    basicInfo = true): ContentNodes {
+    basicInfo = true) /*: ContentNodes*/ {
   // config
   const contentMarginBottom = 4;
   const contentHeaderHeight = 17;
@@ -114,6 +114,7 @@ export function drawDetailInfoContent(nodeSize: PairNumber, nodeEnter: Hierarchy
       nodeWidth, mainContentMarginHorizon , svgTextStyle);
   }
 
+  // main
   const contentMain = d3_svg.svgGroup(contentNode, 'main', [0, contentHeaderHeight + 2]);
   if (basicInfo) {
     // text for NgModule, Component, Directive, Service
@@ -121,7 +122,8 @@ export function drawDetailInfoContent(nodeSize: PairNumber, nodeEnter: Hierarchy
     // text for Routes and Route
     d3_svg.svgTextFitContainer(contentMain.filter(ArchHierarchyHelper.isRoutesOrRouteNode), textFn, null, [0, 6], nodeWidth, mainContentMarginHorizon, svgTextStyle);
   } else {
-    d3_svg.svgForeignScrollableDiv(contentMain, { each: appendProviderContent}, [nodeWidth - 2, contentMainHeight], null, textMainStyle);
+    d3_svg.svgForeignScrollableDiv(contentMain.filter(ArchHierarchyHelper.isNotRoutesOrRouteNode), { each: appendProviderContent}, [nodeWidth - 2, contentMainHeight], null, textMainStyle);
+    d3_svg.svgTextFitContainer(contentMain.filter(ArchHierarchyHelper.isRoutesOrRouteNode), textFn, null, [0, 24], nodeWidth, mainContentMarginHorizon, svgTextStyle);
   }
 
   // footer
@@ -129,7 +131,7 @@ export function drawDetailInfoContent(nodeSize: PairNumber, nodeEnter: Hierarchy
   d3_svg.svgRect(contentFooter, 'footer', [1, -1], [nodeWidth - 2, contentFooterHeight], rectAttrs);
   d3_svg.svgLine(contentFooter, null, [0, 0], [nodeWidth, 0]);
 
-  return { container: contentNode, header: contentHeader, main: contentMain, footer: contentFooter };
+  // return { container: contentNode, header: contentHeader, main: contentMain, footer: contentFooter };
 }
 
 export function drawModuleFn(nodeSize: PairNumber, folderIconLeft = true, shapeStyles?: object) {
