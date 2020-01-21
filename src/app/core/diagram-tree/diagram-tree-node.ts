@@ -21,6 +21,7 @@ export class DiagramTreeNode extends DiagramElement {
   isCollapsed = false;
   isSelected = false;
   isClickable = true;
+  isCollapsedByUser = false;
 
   // reference to d3.hierarchy
   _hierarchyNode: any;
@@ -90,11 +91,16 @@ export class DiagramTreeNode extends DiagramElement {
     }
   }
 
-  toggleCollapsed() {
-    this.isCollapsed = !this.isCollapsed;
+  toggleCollapsed(collapsed: boolean): boolean {
+    // if this method is triggered by its parent, collapsed is true or false
+    // if this method is triggered by user, collapsed is null
+    this.isCollapsedByUser = collapsed === null;
+    this.isCollapsed = collapsed === true || collapsed === false ? collapsed : !this.isCollapsed;
     if (this.injectorTreeNode) {
       this.isCollapsed ? this.injectorTreeNode.collapse() : this.injectorTreeNode.expand();
     }
+
+    return this.isCollapsed;
   }
 
   collapseOnly() {
@@ -121,18 +127,22 @@ export class DiagramTreeNode extends DiagramElement {
 
   toggleCollapsedChildren() {
     if (this.children) {
-      this.children.forEach(child => child.toggleCollapsed());
+      this.children.forEach(child => {
+        child.toggleCollapsed(this.isCollapsed);
+        child.toggleCollapsedChildren();
+      });
     }
   }
 
   toggleCollapsedChildrenWhichNoRoutes() {
+
     if (this.children) {
       this.children.forEach(child => {
 
         if (child.getElementType() === AnalysisElementType.Routes || child.getElementType() === AnalysisElementType.Route) {
           child.toggleCollapsedChildrenWhichNoRoutes();
         } else {
-          child.toggleCollapsed();
+          child.toggleCollapsed(this.isCollapsed);
         }
       });
     }
