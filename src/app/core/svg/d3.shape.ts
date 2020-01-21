@@ -550,10 +550,11 @@ function _drawActionBar(hostGroup: d3Element<any, any>, barStartX: number, barY 
 
 const tipBlockSize: PairNumber = [ 150, 50 ];
 const tipRectAttrs = { fill: '#dcdcdc' };
-const tipRectStyles = { stroke: '#c0c0c0', 'stroke-width': '1', 'filter': 'url(#drop-shadow)' };
+const tipRectStyles = { stroke: '#c0c0c0', 'stroke-width': '1', 'filter': 'url(#drop-shadow-light)' };
 const tipContentAttrs = { };
-const tipContentStyles = { color: '#fb1b1b', 'font-size': '11px', direction: 'none', 'margin-left': '5px', 'margin-top': '5px' };
-function _drawNodeTip(hasMouseToggle = false) {
+const tipContentStyles = { color: '#fb1b1b', 'font-size': '11px', direction: 'none', 'margin-left': '5px',
+  'margin-top': '5px', 'margin-right': '10px', 'margin-bottom': '3px' };
+function _drawNodeTip(hasMouseToggle = false, selector?: string) {
   return (nodeEnter: d3Element) => {
     const nodeTip = nodeEnter
       .filter((pointNode) => !!pointNode.data.nodeInfo)
@@ -569,26 +570,38 @@ function _drawNodeTip(hasMouseToggle = false) {
       const x = width + 5;
       const y = -40;
       const tipId = 'node_tip_' + index;
+      const containerWidth = tipBlockSize[0] + 10;
 
       const textFn = () => {
         return pointNode.data.nodeInfo;
       };
 
       owner.attr('id', tipId);
-      d3_svg.svgRect(owner, 'tip_rect', [ x, y ], tipBlockSize, tipRectAttrs, tipRectStyles);
-      const div = d3_svg.svgForeignScrollableDiv(owner, { html: textFn }, tipBlockSize, tipContentAttrs, tipContentStyles);
+      d3_svg.svgRect(owner, 'tip_rect', [ x, y ], [containerWidth, tipBlockSize[1]], tipRectAttrs, tipRectStyles);
+      const div = d3_svg.svgForeignDivText(owner, { html: textFn }, tipBlockSize, tipContentAttrs, tipContentStyles, containerWidth);
       // const div = d3_svg.svgText(owner, textFn, 'tip_text', tipBlockSize, tipContentAttrs, tipContentStyles);
       div.attr('x', x).attr('y', y);
 
-      function mouseToggle() {
-        const hostTip = d3.select(this);
-        d3_util.toggleShowHideInNewHost(hostTip, '#' + tipId, null, owner, [x, y]);
+      function mouseToggle(hostTip: d3Element) {
+        return function() {
+          const { offsetX, offsetY } = d3.event;
+          // const hostTip = d3.select(this);
+          // d3_util.toggleShowHideInNewHost(hostTip, '#' + tipId, null, owner, [x, y]);
+          d3_util.toggleShowHideInNewHost(hostTip, '#' + tipId, null, owner, [offsetX, offsetY]);
+          if (hostTip.style('visibility') === 'visible') {
+            hostTip.raise();
+          } else {
+            hostTip.lower();
+          }
+        };
       }
 
       if (hasMouseToggle) {
-        host
-          .on('mouseover', mouseToggle)
-          .on('mouseout', mouseToggle)
+        const toggle = mouseToggle(host);
+        const hostTip = selector ? host.select(selector) : host;
+        hostTip
+          .on('mouseover', toggle)
+          .on('mouseout', toggle)
           ;
       }
     });

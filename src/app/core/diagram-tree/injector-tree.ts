@@ -124,10 +124,15 @@ export class InjectorTree {
       const injectors = node.getRelatedInjectorArchNgPonents();
       if (archNgPonent.isLazyLoadingModule || injectors && injectors.length) {
         const newNode = new InjectorTreeNode(AnalysisElementType._Injector, null, upInjector, node);
+        newNode.nodeInfo = 'Injector Hierarchy - ';
+        newNode.nodeInfo += node.elementType === AnalysisElementType.Component ? 'Element Injector' : 'Module Injector';
+
         if (injectors) {
-          injectors.forEach(injector =>
-            new InjectorTreeNode(AnalysisElementType._Provider, injector, newNode, null,
-              InjectorNodeCategory.ServiceProvider, injector.name));
+          injectors.forEach(injector => {
+            const providerNode = new InjectorTreeNode(AnalysisElementType._Provider, injector, newNode, null,
+              InjectorNodeCategory.ServiceProvider, injector.name);
+            providerNode.nodeInfo = 'Service Provider';
+          });
         }
 
         return newNode;
@@ -146,11 +151,11 @@ export class InjectorTree {
   private createPlatformInjectorNode(): InjectorTreeNode {
     const nullInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
       null, null, InjectorNodeCategory.NullInjector);
-    nullInjector.nodeInfo = 'NullInjector';
+    nullInjector.nodeInfo = 'NullInjector, the top of the tree';
 
     const platformInjector = new InjectorTreeNode(AnalysisElementType._Injector, null,
       nullInjector, null, InjectorNodeCategory.PlatformModuleInjector);
-    platformInjector.nodeInfo = 'PlatformInjector';
+    platformInjector.nodeInfo = 'ModuleInjector, configured by PlatformModule';
 
     this.root = nullInjector;
 

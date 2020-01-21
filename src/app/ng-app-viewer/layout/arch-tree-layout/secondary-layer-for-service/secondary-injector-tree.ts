@@ -92,7 +92,7 @@ const serviceNodeName = (node: ArchHierarchyPointNode) => {
   const data = node.data as any;
   return (data.host ? data.host.name + ' ' : '') + data.category;
 };
-const drawInjectorRect = d3_svg.svgForeignExtendableDiv({text: serviceNodeName}, injectorNodeSize, null, injectorDivAttrs);
+const drawInjectorRect = d3_svg.svgForeignExtendableDiv({text: serviceNodeName}, injectorNodeSize, { class: 'injector-pane'}, injectorDivAttrs);
 const isInjectorNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode && node.data.isInjectorNode;
 const isProviderNode = (node: d3.HierarchyCircularNode<any>): boolean => node.data instanceof InjectorTreeNode && node.data.isProviderNode;
 
@@ -222,6 +222,7 @@ export class SecondaryInjectorTree {
 
     const providerNode = nodeEnter
       .filter(isProviderNode)
+      .classed('injector-provider', true)
       .call((self) => {
         drawRectangleFn(nodeSize, rectStyle, false)(self as any);
         drawThreeGearsFn()(self as any);
@@ -237,7 +238,8 @@ export class SecondaryInjectorTree {
 
     d3_shape.createNodeEvent<ArchHierarchyPointNode>(providerNode, nodeDoubleClickFn, nodeClickFn);
 
-    // d3_shape.drawNodeTip(true)(injectorNode);
+    d3_shape.drawNodeTip(true, '.injector-pane')(injectorNode);
+    d3_shape.drawNodeTip(true, '.injector-provider')(providerNode);
   }
 
   private drawInjectorLinks() {

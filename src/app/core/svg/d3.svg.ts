@@ -149,7 +149,7 @@ function _assignProperties(callbacks: D3Callbacks, textAttrs?: object, textStyle
 }
 
 function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
-    size: PairNumber, textAttrs?: object, textStyles?: object): d3Element {
+    size: PairNumber, textAttrs?: object, textStyles?: object, foreignObjectWidth?: number): d3Element {
 
   const classed = '--foreign-scrollable--';
   const [ width, height ] = size;
@@ -157,7 +157,7 @@ function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
 
   const foreign = host
     .append('foreignObject')
-    .attr('width', width)
+    .attr('width', foreignObjectWidth || width)
     .attr('height', height);
 
   const textDiv = foreign
@@ -174,14 +174,14 @@ function _svgForeignScrollableDiv(host: d3Element, callbacks: D3Callbacks,
  * display text in foreignObject div, wrap the text
  */
 function _svgForeignDivText(host: d3Element, callbacks: D3Callbacks, size: PairNumber,
-    textAttrs?: object, textStyles?: object): d3Element {
+    textAttrs?: object, textStyles?: object, foreignObjectWidth?: number): d3Element {
 
   const [ width, height ] = size;
   const styles = Object.assign({}, divBreakStyle, textStyles);
 
   const foreign = host
     .append('foreignObject')
-    .attr('width', width);
+    .attr('width', foreignObjectWidth || width);
 
   const textDiv = foreign
     .append('xhtml:div')
