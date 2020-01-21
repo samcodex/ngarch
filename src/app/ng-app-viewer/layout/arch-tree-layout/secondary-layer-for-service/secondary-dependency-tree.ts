@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { get } from 'lodash-es';
+import { get, cloneDeep } from 'lodash-es';
 
 import { LayoutOptions } from '@core/diagram/layout-options';
 import { ArchHierarchyPointNode, ArchHierarchyHelper, ArchHierarchyPointLink, HierarchyPointNodeSelection } from '../arch-hierarchy';
@@ -13,6 +13,7 @@ import { PairNumber, Point, ElementBox, toElementBox, RectangleSize } from '@cor
 import { drawThreeGearsFn, drawRectangleFn, drawText } from '../arch-hierarchy-node-shape';
 import { ArchConfig } from '@core/diagram-impls/element/diagram-element.config';
 import { d3_shape } from '@core/svg/d3.shape';
+import { PonentActionItem, getArchPonentActions } from './../../../models/viewer-content-types';
 
 // service has injector, dependency
 const _setAttrs = d3_util.setAttrs;
@@ -21,6 +22,13 @@ const margin = 10;
 const distance = 100;
 const minWidth = 200;
 const minHeight = 200;
+
+// action
+const ponentActions = getArchPonentActions();
+const mapNodeToActions = () => cloneDeep(ponentActions[AnalysisElementType.Service]);
+const barColorFn = ArchHierarchyHelper.getNodeColor(false);
+const actionColorFn = ArchHierarchyHelper.getNodeColor();
+const actionY = 35;
 
 // dependency
 const dependencyNodeSize: PairNumber = [86, 22];
@@ -84,7 +92,8 @@ class DependencyProjector {
     private hostLayer: d3Element,
     private nodeDrawer: ArchHierarchyNodeDrawer,
     private hostNode: ArchHierarchyPointNode,
-    private dock: d3Element
+    private dock: d3Element,
+    private mainLayerCallbacks: { onClickAction: any, zoomFactorFn: any }
   ) {
     const treeLayout = d3.tree<DiagramTreeNode>();
     treeLayout.nodeSize(this.nodeDrawer.treeNodeSize);
@@ -210,6 +219,7 @@ class DependencyProjector {
 
   private drawNodes() {
     const nodeSize = this.nodeDrawer.nodeSize;
+    const [ nodeWidth, nodeHeight ] = nodeSize;
     const placeNode = d3_shape.placeNodeFn(dependencyNodeOffset, nodeSize, false);
 
     // nodes
@@ -226,7 +236,7 @@ class DependencyProjector {
         setPositions(pointNode, 'dependency', [place.x, place.y]);
       });
 
-    nodeEnter
+    const componentNode = nodeEnter
       .filter(ArchHierarchyHelper.isComponent)
       .call((node: HierarchyPointNodeSelection) => {
         drawRectangleFn(nodeSize, rectStyle, false)(node);
@@ -236,7 +246,7 @@ class DependencyProjector {
       .call(_setStyles, rectStyle)
       .attr('fill', componentColor);
 
-    nodeEnter
+    const serviceNode = nodeEnter
       .filter(ArchHierarchyHelper.isService)
       .call((node: HierarchyPointNodeSelection) => {
         drawRectangleFn(nodeSize, rectStyle, false)(node);
@@ -246,6 +256,11 @@ class DependencyProjector {
       })
       .call(_setStyles, rectStyle)
       .attr('fill', providerColor);
+
+    d3_shape.drawActionBar(this.projectorHost, nodeWidth + 20, actionY)(serviceNode, mapNodeToActions,
+      this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
+    d3_shape.drawActionBar(this.projectorHost, nodeWidth + 20, actionY)(componentNode, mapNodeToActions,
+      this.onClickActionItem.bind(this), this.getZoomFactorFn(), barColorFn, actionColorFn);
   }
 
   private drawLinks(projectLinksGroup: d3Element) {
@@ -278,6 +293,13 @@ class DependencyProjector {
     return projectLinksGroup;
   }
 
+  private onClickActionItem(action: PonentActionItem) {
+    this.mainLayerCallbacks.onClickAction(action);
+  }
+
+  private getZoomFactorFn() {
+    return this.mainLayerCallbacks.zoomFactorFn();
+  }
 }
 
 export class SecondaryDependencyTree {
@@ -329,7 +351,8 @@ export class SecondaryDependencyTree {
         if (diagramNode.hasOwnProperty('projector') && diagramNode['projector'].isReady()) {
           diagramNode['projector'].show();
         } else {
-          const projector = new DependencyProjector(d3.select(layers[index]), this.nodeDrawer, diagramNode, d3.select(docks.nodes()[index]));
+          const projector = new DependencyProjector(d3.select(layers[index]), this.nodeDrawer, diagramNode, d3.select(docks.nodes()[index]),
+            { onClickAction: this.onClickActionItem.bind(this), zoomFactorFn: this.getZoomFactorFn.bind(this)});
           projector.draw();
           diagramNode['projector'] = projector;
         }
@@ -337,5 +360,13 @@ export class SecondaryDependencyTree {
     };
 
     d3_shape.createNodeEvent<ArchHierarchyPointNode>(dependencyLayer, onClickNode, onClickNode);
+  }
+
+  private onClickActionItem(action: PonentActionItem) {
+    this.mainLayerCallbacks.onClickAction(action);
+  }
+
+  private getZoomFactorFn() {
+    return this.mainLayerCallbacks.zoomFactorFn();
   }
 }

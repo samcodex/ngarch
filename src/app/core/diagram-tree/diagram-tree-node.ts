@@ -91,6 +91,20 @@ export class DiagramTreeNode extends DiagramElement {
     }
   }
 
+  traverseDependencyTree(callback: Function) {
+    if (callback) {
+      if (this._dependencyDiagramTree) {
+        this._dependencyDiagramTree.traverse(callback);
+      }
+
+      if (this.children) {
+        this.children.forEach(child => {
+          child.traverseDependencyTree(callback);
+        });
+      }
+    }
+  }
+
   toggleCollapsed(collapsed: boolean): boolean {
     // if this method is triggered by its parent, collapsed is true or false
     // if this method is triggered by user, collapsed is null

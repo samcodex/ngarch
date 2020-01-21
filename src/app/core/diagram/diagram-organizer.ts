@@ -129,6 +129,10 @@ export class DiagramOrganizer {
       diagramTree.traverseInjectorTree((node: DiagramTreeNode) => {
         this.assignElementFeatures(node);
       });
+
+      diagramTree.traverseDependencyTree((node: DiagramTreeNode) => {
+        this.assignElementFeatures(node);
+      });
     }
 
     this.board.resetBoardContext(layoutOptions);
