@@ -85,8 +85,11 @@ const isValidPosition = (position: PairNumber) => {
 class DependencyProjector {
   private dependencyHierarchy: ArchHierarchyPointNode;
   private projectorHost: d3Element;
-  private projectorLine: d3Element;
+  private projectorLink: d3Element;
   private isOverlayDock = false;
+
+  projectorHostClassed = 'projector-group';
+  projectorLinkClassed = 'dependency-links';
 
   constructor(
     private hostLayer: d3Element,
@@ -103,7 +106,9 @@ class DependencyProjector {
   }
 
   isReady(): boolean {
-    return !!this.projectorHost && !this.projectorHost.empty() && !!this.projectorLine && !this.projectorLine.empty();
+    const projectorHost = this.hostLayer.select('.' + this.projectorHostClassed);
+    const projectorLink = this.hostLayer.select('.' + this.projectorLinkClassed);
+    return !!projectorHost && !projectorHost.empty() && !!projectorLink && !projectorLink.empty();
   }
 
   show() {
@@ -117,16 +122,16 @@ class DependencyProjector {
   }
 
   showLine() {
-    d3_svg.transition(this.projectorLine).show();
+    d3_svg.transition(this.projectorLink).show();
   }
 
   hideLine() {
-    d3_svg.transition(this.projectorLine).hide();
+    d3_svg.transition(this.projectorLink).hide();
   }
 
   draw() {
     // projector host
-    this.projectorHost = this.hostLayer.append('g').classed('projector-group', true).call(_setStyles, { cursor: 'pointer'});
+    this.projectorHost = this.hostLayer.append('g').classed(this.projectorHostClassed, true).call(_setStyles, { cursor: 'pointer'});
     d3_util.translateTo(this.projectorHost, -1 * distance, distance);
 
     // pane rectangle
@@ -135,7 +140,7 @@ class DependencyProjector {
     const textFn = () => this.hostNode.data.name + ' Dependency';
     const paneTitle = d3_svg.svgText(this.projectorHost, textFn, null, [0, 0], {'fill': '#1e5799'}, {'font-size': '10px'});
     // links group
-    const projectLinksGroup = this.projectorHost.append('g').classed('dependency_links', true);
+    const projectLinksGroup = this.projectorHost.append('g').classed(this.projectorLinkClassed, true);
 
     // projector nodes
     this.drawNodes();
@@ -190,9 +195,9 @@ class DependencyProjector {
     };
 
     // line
-    this.projectorLine = d3_svg.svgLine(this.hostLayer, 'projector-line', [lineStart.x, lineStart.y], [lineEnd.x, lineEnd.y], null, lineStyle);
-    this.projectorLine.lower();
-    const moveLinkTargetFn = moveLineTarget(this.projectorLine, lineStart);
+    this.projectorLink = d3_svg.svgLine(this.hostLayer, 'projector-line', [lineStart.x, lineStart.y], [lineEnd.x, lineEnd.y], null, lineStyle);
+    this.projectorLink.lower();
+    const moveLinkTargetFn = moveLineTarget(this.projectorLink, lineStart);
 
     const paneBox2 = Object.assign({}, originPaneBox);
     paneBox2.x -= distance;
