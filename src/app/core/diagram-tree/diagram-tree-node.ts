@@ -156,7 +156,7 @@ export class DiagramTreeNode extends DiagramElement {
         if (child.getElementType() === AnalysisElementType.Routes || child.getElementType() === AnalysisElementType.Route) {
           child.toggleCollapsedChildrenWhichNoRoutes();
         } else {
-          child.toggleCollapsed(this.isCollapsed);
+          child.toggleCollapsed(null);
         }
       });
     }
