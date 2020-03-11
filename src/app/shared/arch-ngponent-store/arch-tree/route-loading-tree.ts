@@ -21,7 +21,7 @@ export function buildRouteLoadingTree(archStore: ArchStoreData, projectName: str
 
   // tree
   const treeType = ArchTreeType.RouteLoadingTree;
-  const tree = new ArchTree(treeType, treeType);
+  const tree = new ArchTree('Route Loading Tree', treeType);
 
   // 1. root ArchPonent - ArchNgPonentModule, appModule level
   const rootPonent: ArchNgPonentModule = archStore.getBootstrapModule();

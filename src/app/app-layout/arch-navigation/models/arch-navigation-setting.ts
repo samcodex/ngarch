@@ -12,8 +12,8 @@ const sortFn = (item1: NavigationItem, item2: NavigationItem) => {
 const appDiagram: NavigationItem[] = [
   {
     id: 'application_architecture',
-    name: 'Application Architecture',
-    title: 'Application Architecture',
+    name: 'Dependency Injection',
+    title: 'Dependency Injection',
     path: NavigationPaths.NgAppViewer,
     dataKey: 'viewer',
     dataId: 'app-arch',
