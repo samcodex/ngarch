@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_E2e: AngularCliCommand[] = [
+export const AngularCli_V6_E2e = [
   {
     command: AngularCliCommandType.E2e,
     description: 'Serves the application and runs end-to-end tests.',
@@ -61,4 +61,4 @@ export const AngularCli_V6_E2e: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

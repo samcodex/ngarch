@@ -32,7 +32,7 @@ export class StructureDiagramComponent extends SvgZoomBoardComponent
   fromViewer: ViewerType | DiagramViewerType;
 
   viewerType = DiagramViewerType.StructureDiagram;
-  @ViewChild('svgBoard') svgBoardRef: ElementRef;
+  @ViewChild('svgBoard', {static: true}) svgBoardRef: ElementRef;
 
   constructor(
     elementRef: ElementRef,

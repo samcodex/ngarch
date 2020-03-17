@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType, MetaInputType } from '../../../../../config';
+import { MetaDataType, MetaInputType } from '@config/meta-config';
 
-export const AngularCli_V1_Lint: AngularCliCommand[] = [
+export const AngularCli_V1_Lint = [
   {
     command: AngularCliCommandType.Lint,
     description: 'Lint you app code using tslint.',
@@ -49,4 +49,4 @@ export const AngularCli_V1_Lint: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

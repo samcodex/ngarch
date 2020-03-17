@@ -12,7 +12,7 @@ const routes: Routes = [
     children: [
       {
         path: MokuaiViewPaths.Details,
-        loadChildren: '../features/mokuai-detail/mokuai-detail.module#MokuaiDetailModule'
+        loadChildren: () => import('../features/mokuai-detail/mokuai-detail.module').then(m => m.MokuaiDetailModule)
       },
       {
         path: MokuaiViewPaths.Routes,

@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_Serve: AngularCliCommand[] = [
+export const AngularCli_V6_Serve = [
   {
     command: AngularCliCommandType.Serve,
     description: 'Builds the application and starts a web server.',
@@ -128,4 +128,4 @@ export const AngularCli_V6_Serve: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_New: AngularCliCommand[] = [
+export const AngularCli_V1_New = [
   {
     command: AngularCliCommandType.New,
     description: 'Creates a new angular application.',
@@ -138,4 +138,4 @@ export const AngularCli_V1_New: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

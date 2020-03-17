@@ -5,7 +5,7 @@ import {
 } from '../../../../models/angular-cli';
 import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V6_Application: AngularCliCommand[] = [
+export const AngularCli_V6_Application = [
   {
     command: AngularCliCommandType.Generate,
     template: AngularCliOperandTemplate.Application,
@@ -107,4 +107,4 @@ export const AngularCli_V6_Application: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

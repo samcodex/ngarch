@@ -5,7 +5,7 @@ import {
 } from '../../../../models/angular-cli';
 import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V6_Directive: AngularCliCommand[] = [
+export const AngularCli_V6_Directive = [
   {
     command: AngularCliCommandType.Generate,
     template: AngularCliOperandTemplate.Directive,
@@ -97,4 +97,4 @@ export const AngularCli_V6_Directive: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

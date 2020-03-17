@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_E2e: AngularCliCommand[] = [
+export const AngularCli_V1_E2e = [
   {
     command: AngularCliCommandType.E2e,
     description: 'Serves the application and runs end-to-end tests.',
@@ -61,4 +61,4 @@ export const AngularCli_V1_E2e: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

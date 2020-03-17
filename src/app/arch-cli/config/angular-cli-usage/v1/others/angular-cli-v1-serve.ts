@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType, MetaInputType } from '../../../../../config';
+import { MetaDataType, MetaInputType } from '@config/meta-config';
 
-export const AngularCli_V1_Serve: AngularCliCommand[] = [
+export const AngularCli_V1_Serve = [
   {
     command: AngularCliCommandType.Serve,
     description: 'Builds the application and starts a web server.',
@@ -209,4 +209,4 @@ export const AngularCli_V1_Serve: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

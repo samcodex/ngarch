@@ -32,7 +32,7 @@ export class AngularCliCommand {
     this.template = template;
   }
 
-  getCommandLine?(): string {
+  getCommandLine(): string {
     const command = this.getCommandPart();
     const operand = this.getOperandPart();
     const options = this.getOptionsPart();
@@ -40,7 +40,7 @@ export class AngularCliCommand {
     return this.getCommandPart() + (operand ? ' ' + operand : '') + (options ? ' ' + options : '');
   }
 
-  getCommandPart?(): string {
+  getCommandPart(): string {
     let part;
     if (this.commandAlias) {
       part = this.commandAlias;
@@ -54,7 +54,7 @@ export class AngularCliCommand {
     return 'ng ' + part;
   }
 
-  getOptionsPart?(): string {
+  getOptionsPart(): string {
     return this.options
       ? this.options.reduce((result: string, optionPart) => {
         const part = optionPart.getOptionPart();
@@ -64,7 +64,7 @@ export class AngularCliCommand {
       : null;
   }
 
-  getOperandPart?(): string | null {
+  getOperandPart(): string {
     return this.operand ? this.operand.getOperandPart() : null;
   }
 }
@@ -88,7 +88,7 @@ export class CliOperandPart {
     this.name = name;
   }
 
-  getOperandPart?(): string | null {
+  getOperandPart(): string {
     return this.name ? this.name : '';
   }
 }
@@ -115,7 +115,7 @@ export class CliOptionPart {
     this.isUsed = false;
   }
 
-  getOptionPart?(): string {
+  getOptionPart(): string {
     let param = null;
     if (this.isUsed) {
       const { option } = this;
@@ -128,7 +128,7 @@ export class CliOptionPart {
     return param;
   }
 
-  setOptionInitialValue?() {
+  setOptionInitialValue() {
     this.optionValue.setInitialValue();
   }
 }
@@ -154,7 +154,7 @@ export class CliOptionValue {
   constructor() {
   }
 
-  setInputType?() {
+  setInputType() {
     const { dataType, possibleValues } = this;
 
     if (dataType) {
@@ -170,11 +170,11 @@ export class CliOptionValue {
     }
   }
 
-  setInitialValue?() {
+  setInitialValue() {
     return this.inputValue = metaDataInitialValues[this.dataType];
   }
 
-  getOptionValue?(): string {
+  getOptionValue(): string {
     return this.inputValue;
   }
 }

@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_Doc: AngularCliCommand[] = [
+export const AngularCli_V1_Doc = [
   {
     command: AngularCliCommandType.Doc,
     description: 'Opens the official Angular API documentation for a given keyword on angular.io.',
@@ -23,4 +23,4 @@ export const AngularCli_V1_Doc: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

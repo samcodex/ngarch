@@ -5,7 +5,7 @@ import {
 } from '../../../../models/angular-cli';
 import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V6_Enum: AngularCliCommand[] = [
+export const AngularCli_V6_Enum = [
   {
     command: AngularCliCommandType.Generate,
     template: AngularCliOperandTemplate.Enum,
@@ -42,4 +42,4 @@ export const AngularCli_V6_Enum: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

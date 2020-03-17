@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_Xi18n: AngularCliCommand[] = [
+export const AngularCli_V1_Xi18n = [
   {
     command: AngularCliCommandType.Xi18n,
     description: 'Extracts i18n messages from the templates.',
@@ -59,4 +59,4 @@ export const AngularCli_V1_Xi18n: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

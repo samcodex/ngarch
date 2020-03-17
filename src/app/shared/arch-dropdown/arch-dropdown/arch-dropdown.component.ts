@@ -17,7 +17,7 @@ export class ArchDropdownThumbnailDirective {
   selector: '[archDropdownOption]'
 })
 export class ArchDropdownOptionDirective implements AfterContentInit {
-  @ContentChild(ArchDropdownThumbnailDirective) thumbnail: ArchDropdownThumbnailDirective;
+  @ContentChild(ArchDropdownThumbnailDirective, {static: false}) thumbnail: ArchDropdownThumbnailDirective;
   thumbnailElement: any = null;
   optionElement: any;
 
@@ -54,8 +54,8 @@ export class ArchDropdownOptionDirective implements AfterContentInit {
 })
 export class ArchDropdownComponent implements AfterContentInit {
 
-  @ViewChild('dropdownThumbnail') thumbnail: ElementRef;
-  @ViewChild('dropdownSelection') selection: ElementRef;
+  @ViewChild('dropdownThumbnail', {static: false}) thumbnail: ElementRef;
+  @ViewChild('dropdownSelection', {static: false}) selection: ElementRef;
   @ContentChildren(ArchDropdownOptionDirective) contentChildren: QueryList<ArchDropdownOptionDirective>;
 
   @Input() selectedIndex: number = null;

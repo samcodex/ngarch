@@ -15,7 +15,7 @@ export class CliCommandLineComponent implements OnInit, AfterViewInit {
   @Input()
   command: AngularCliCommand;
 
-  @ViewChild('inputOperand')
+  @ViewChild('inputOperand', {static: false})
   inputRef: ElementRef;
 
   constructor(

@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_Build: AngularCliCommand[] = [
+export const AngularCli_V6_Build = [
   {
     command: AngularCliCommandType.Build,
     description: 'Compiles the application into an output directory.',
@@ -166,4 +166,4 @@ export const AngularCli_V6_Build: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_Xi18n: AngularCliCommand[] = [
+export const AngularCli_V6_Xi18n = [
   {
     command: AngularCliCommandType.Xi18n,
     description: 'Extracts i18n messages from the templates.',
@@ -38,4 +38,4 @@ export const AngularCli_V6_Xi18n: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

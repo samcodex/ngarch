@@ -15,7 +15,7 @@ export class CliOptionInputComponent implements OnInit, AfterViewInit {
   @Input()
   disabled: Observable<boolean>;
 
-  @ViewChild('inputOption')
+  @ViewChild('inputOption', {static: false})
   inputRef: ElementRef;
 
   constructor() { }

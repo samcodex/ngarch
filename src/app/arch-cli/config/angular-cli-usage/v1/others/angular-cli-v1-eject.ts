@@ -2,9 +2,9 @@ import {
   AngularCliCommand,
   AngularCliCommandType
 } from '../../../../models/angular-cli';
-import { MetaDataType, MetaInputType } from '../../../../../config';
+import { MetaDataType, MetaInputType } from '@config/meta-config';
 
-export const AngularCli_V1_Eject: AngularCliCommand[] = [
+export const AngularCli_V1_Eject = [
   {
     command: AngularCliCommandType.Eject,
     description: 'Compiles the application into an output directory.',
@@ -155,4 +155,4 @@ export const AngularCli_V1_Eject: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

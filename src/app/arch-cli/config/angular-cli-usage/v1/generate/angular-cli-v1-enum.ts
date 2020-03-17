@@ -3,9 +3,9 @@ import {
   AngularCliCommandType,
   AngularCliOperandTemplate
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_Enum: AngularCliCommand[] = [
+export const AngularCli_V1_Enum = [
   {
     command: AngularCliCommandType.Generate,
     template: AngularCliOperandTemplate.Enum,
@@ -43,4 +43,4 @@ export const AngularCli_V1_Enum: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

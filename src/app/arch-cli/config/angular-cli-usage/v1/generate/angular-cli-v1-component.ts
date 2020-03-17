@@ -3,9 +3,9 @@ import {
   AngularCliCommandType,
   AngularCliOperandTemplate
 } from '../../../../models/angular-cli';
-import { MetaDataType } from '../../../../../config';
+import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V1_Component: AngularCliCommand[] = [
+export const AngularCli_V1_Component = [
   {
     command: AngularCliCommandType.Generate,
     template: AngularCliOperandTemplate.Component,
@@ -128,4 +128,4 @@ export const AngularCli_V1_Component: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

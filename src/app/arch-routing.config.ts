@@ -29,55 +29,55 @@ export const ArchRoutes: Routes = [
   },
   {
     path: NavigationPaths.NgAppViewer,
-    loadChildren: './ng-app-viewer/ng-app-viewer.module#NgAppViewerModule'
+    loadChildren: () => import('./ng-app-viewer/ng-app-viewer.module').then(m => m.NgAppViewerModule)
   },
   {
     path: NavigationPaths.ArchRouterPath,
-    loadChildren: './router-path-viewer/router-path-viewer.module#RouterPathViewerModule'
+    loadChildren: () => import('./router-path-viewer/router-path-viewer.module').then(m => m.RouterPathViewerModule)
   },
   {
     path: NavigationPaths.ArchApisViewer,
-    loadChildren: './arch-apis-viewer/arch-apis-viewer.module#ArchApisViewerModule'
+    loadChildren: () => import('./arch-apis-viewer/arch-apis-viewer.module').then(m => m.ArchApisViewerModule)
   },
   {
     path: NavigationPaths.LoadingStrategy,
-    loadChildren: './loading-strategy/loading-strategy.module#LoadingStrategyModule'
+    loadChildren: () => import('./loading-strategy/loading-strategy.module').then(m => m.LoadingStrategyModule)
   },
   {
     path: NavigationPaths.AppSummary,
-    loadChildren: './ponent-summary/ponent-summary.module#PonentSummaryModule'
+    loadChildren: () => import('./ponent-summary/ponent-summary.module').then(m => m.PonentSummaryModule)
   },
   {
     path: NavigationPaths.PonentDiagram,
-    loadChildren: './ponent-diagram/ponent-diagram.module#PonentDiagramModule'
+    loadChildren: () => import('./ponent-diagram/ponent-diagram.module').then(m => m.PonentDiagramModule)
   },
   {
     path: NavigationPaths.AnalysisModules,
-    loadChildren: './ponent-mokuai/ponent-mokuai.module#PonentMokuaiModule'
+    loadChildren: () => import('./ponent-mokuai/ponent-mokuai.module').then(m => m.PonentMokuaiModule)
   },
   {
     path: NavigationPaths.FullStructure,
-    loadChildren: './full-structure/full-structure.module#FullStructureModule'
+    loadChildren: () => import('./full-structure/full-structure.module').then(m => m.FullStructureModule)
   },
   {
     path: NavigationPaths.ClazzDiagram,
-    loadChildren: './clazz-diagram/clazz-diagram.module#ClazzDiagramModule'
+    loadChildren: () => import('./clazz-diagram/clazz-diagram.module').then(m => m.ClazzDiagramModule)
   },
   {
     path: NavigationPaths.ServiceList,
-    loadChildren: './service-dependency/service-dependency.module#ServiceDependencyModule'
+    loadChildren: () => import('./service-dependency/service-dependency.module').then(m => m.ServiceDependencyModule)
   },
   {
     path: NavigationPaths.RouteList,
-    loadChildren: './routing-structure/routing-structure.module#RoutingStructureModule'
+    loadChildren: () => import('./routing-structure/routing-structure.module').then(m => m.RoutingStructureModule)
   },
   {
     path: NavigationPaths.FileExplorer,
-    loadChildren: './file-explorer/file-explorer.module#FileExplorerModule'
+    loadChildren: () => import('./file-explorer/file-explorer.module').then(m => m.FileExplorerModule)
   },
   {
     path: NavigationPaths.ArchCli,
-    loadChildren: './arch-cli/arch-cli.module#ArchCliModule'
+    loadChildren: () => import('./arch-cli/arch-cli.module').then(m => m.ArchCliModule)
   },
   {
     path: '**',

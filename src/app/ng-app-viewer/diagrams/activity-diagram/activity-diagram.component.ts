@@ -47,7 +47,7 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
   projectName: string;
   optionData: UiElementData;
 
-  @ViewChild('svgBoard') svgBoardRef: ElementRef;
+  @ViewChild('svgBoard', {static: true}) svgBoardRef: ElementRef;
 
   constructor(
     elementRef: ElementRef,

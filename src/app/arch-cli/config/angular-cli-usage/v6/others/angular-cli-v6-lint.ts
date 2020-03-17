@@ -4,7 +4,7 @@ import {
 } from '../../../../models/angular-cli';
 import { MetaDataType } from '@config/meta-config';
 
-export const AngularCli_V6_Lint: AngularCliCommand[] = [
+export const AngularCli_V6_Lint = [
   {
     command: AngularCliCommandType.Lint,
     description: 'Lint you app code using tslint.',
@@ -47,4 +47,4 @@ export const AngularCli_V6_Lint: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

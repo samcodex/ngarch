@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_Doc: AngularCliCommand[] = [
+export const AngularCli_V6_Doc = [
   {
     command: AngularCliCommandType.Doc,
     description: 'Opens the official Angular API documentation for a given keyword on angular.io.',
@@ -18,4 +18,4 @@ export const AngularCli_V6_Doc: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

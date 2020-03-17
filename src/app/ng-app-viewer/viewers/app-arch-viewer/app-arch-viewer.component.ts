@@ -90,7 +90,7 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   contentHierarchy: ArchViewerHierarchy = null;
   headerTitle = defaultHeaderTitle;
 
-  @ViewChild('svgBoard') svgBoardRef: ElementRef;
+  @ViewChild('svgBoard', {static: true}) svgBoardRef: ElementRef;
 
   hierarchies: any;
   treeName: string;

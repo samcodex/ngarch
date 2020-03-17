@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../../models/angular-cli';
 
-export const AngularCli_V6_Config: AngularCliCommand[] = [
+export const AngularCli_V6_Config = [
   {
     command: AngularCliCommandType.Config,
     operand: {
@@ -17,4 +17,4 @@ export const AngularCli_V6_Config: AngularCliCommand[] = [
       }
     ]
   }
-];
+] as AngularCliCommand[];

@@ -35,7 +35,7 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
   fromViewer: ArchViewerHierarchy | ViewerType | DiagramViewerType;
 
   viewerType = DiagramViewerType.StructureDiagram;
-  @ViewChild('svgBoard') svgBoardRef: ElementRef;
+  @ViewChild('svgBoard', {static: true}) svgBoardRef: ElementRef;
 
   constructor(
     elementRef: ElementRef,

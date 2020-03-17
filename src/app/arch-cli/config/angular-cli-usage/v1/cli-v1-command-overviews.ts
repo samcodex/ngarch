@@ -3,7 +3,7 @@ import {
   AngularCliCommandType
 } from '../../../models/angular-cli';
 
-export const AngularCli_Command_Overviews: AngularCliCommand[] = [
+export const AngularCli_Command_Overviews = [
   {
     command: AngularCliCommandType.Generate,
     description: 'Generates the specified schematic',
@@ -96,4 +96,4 @@ export const AngularCli_Command_Overviews: AngularCliCommand[] = [
       name: '[project]',
     }
   }
-];
+] as AngularCliCommand[];

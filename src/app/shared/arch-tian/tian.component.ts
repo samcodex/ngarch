@@ -31,7 +31,7 @@ export class TianComponent implements OnInit {
   @Output() drag = new EventEmitter();
   @Output() stopDrag = new EventEmitter();
 
-  @ViewChild('tianRightPanel') private tianRightPanel: ElementRef ;
+  @ViewChild('tianRightPanel', {static: false}) private tianRightPanel: ElementRef ;
 
   private startX = 0;
   private startWidth = 0;
