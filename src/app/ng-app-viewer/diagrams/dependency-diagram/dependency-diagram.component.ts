@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { NgArchUiContentComponent } from 'ng-arch-ui';
 
 import { SvgZoomBoardComponent } from '@core/svg/svg-zoom-board-component';
@@ -62,8 +62,13 @@ export class DependencyDiagramComponent extends SvgZoomBoardComponent
     super.afterViewInit();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onChangeSize() {
+    super.changeSize();
+  }
+
   archOnResize() {
-    this.onSizeChanged();
+    this.changeSize();
   }
 
   private setupStream() {

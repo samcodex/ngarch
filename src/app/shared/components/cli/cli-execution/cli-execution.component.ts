@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
 import { ProjectConfig, ProjectProfileService } from '@shared/project-profile';

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, Input, HostListener } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { NgArchUiContentComponent } from 'ng-arch-ui';
@@ -77,18 +77,23 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
     super.afterViewInit();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onChangeSize() {
+    super.changeSize();
+  }
+
   onExpand(event: { expanded: boolean, delay: number }) {
     const { expanded, delay } = event;
 
     if (!expanded) {
-      this.onSizeChanged(true);
+      this.changeSize(true);
     } else {
-      setTimeout(this.onSizeChanged.bind(this), delay);
+      setTimeout(this.changeSize.bind(this), delay);
     }
   }
 
   onDrag(event) {
-    this.onSizeChanged();
+    this.changeSize();
   }
 
   onClickViewerExplanation() {
@@ -96,7 +101,7 @@ export class ActivityDiagramComponent extends SvgZoomBoardComponent
   }
 
   archOnResize() {
-    this.onSizeChanged();
+    this.changeSize();
   }
 
   onChangeOption(item) {

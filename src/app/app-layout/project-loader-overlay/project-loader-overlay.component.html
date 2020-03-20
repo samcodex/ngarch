@@ -8,7 +8,7 @@
     <span *ngIf="!canClose"> ...</span>
     <span *ngIf="canClose"> - [Done]</span>
   </div>
-  <button mat-flat-button class="close-overlay" *ngIf="canClose" (click)="tryClose($event)">Close</button>
+  <button mat-flat-button class="close-overlay" *ngIf="canClose" (click)="tryClose()">Close</button>
 </div>
 
 <div *ngIf="canClose" class="overlay-close" (click)="onClose()">X</div>

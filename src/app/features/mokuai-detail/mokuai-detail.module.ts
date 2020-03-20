@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatIconModule, MatSelectModule, MatTabsModule, MatTooltipModule } from '@angular/material';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '@shared/shared.module';
@@ -30,14 +28,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule.forRoot(),
-    MatFormFieldModule,
-    MatSelectModule,
     FormsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatTabsModule,
-    MatIconModule
+    ReactiveFormsModule
   ],
   declarations: [MokuaiDetailOptionsComponent, MokuaiDetailComponent]
 })

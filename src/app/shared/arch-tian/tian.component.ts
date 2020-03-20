@@ -26,12 +26,12 @@ const minWidth = 15;
 export class TianComponent implements OnInit {
   @Input() isExpanded = true;
 
-  @Input('disableSummary') disableSummary = false;
+  @Input() disableSummary = false;
   @Output() expand = new EventEmitter<{expanded: boolean, delay: number}>();
   @Output() drag = new EventEmitter();
   @Output() stopDrag = new EventEmitter();
 
-  @ViewChild('tianRightPanel', {static: false}) private tianRightPanel: ElementRef ;
+  @ViewChild('tianRightPanel') private tianRightPanel: ElementRef ;
 
   private startX = 0;
   private startWidth = 0;

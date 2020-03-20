@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatDividerModule, MatExpansionModule, MatIconModule, MatListModule, MatNativeDateModule } from '@angular/material';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
@@ -19,12 +17,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatNativeDateModule,
-    MatDividerModule,
-    MatListModule,
-    MatTooltipModule,
 
     RouterModule.forChild(routes),
     SharedModule.forRoot()

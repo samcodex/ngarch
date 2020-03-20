@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { combineLatest } from 'rxjs';
 
@@ -62,19 +62,24 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     super.afterViewInit();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onChangeSize() {
+    super.changeSize();
+  }
+
   onExpand(event: { expanded: boolean, delay: number }) {
     const { expanded, delay } = event;
     this.setBoardMaxSize();
 
     if (!expanded) {
-      this.onSizeChanged(true);
+      this.changeSize(true);
     } else {
-      setTimeout(this.onSizeChanged.bind(this), delay);
+      setTimeout(this.changeSize.bind(this), delay);
     }
   }
 
   onDrag(event) {
-    this.onSizeChanged();
+    this.changeSize();
   }
 
   onChangeOption(item) {

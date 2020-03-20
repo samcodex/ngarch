@@ -32,7 +32,7 @@ export class CliCommandComponent implements OnInit {
     this.changeVersion(firstVersion);
   }
 
-  private changeVersion(version: string) {
+  changeVersion(version: string) {
     this.selectedVersion = version;
     this.selectedCli = cliHelper.getCliByVersion(this.usages, version);
     const commands = cliHelper.listCliCommands(this.selectedCli);
@@ -42,7 +42,7 @@ export class CliCommandComponent implements OnInit {
     this.changeCommand(firstCommand);
   }
 
-  private changeCommand(command) {
+  changeCommand(command: string) {
     this.selectedCommand = command;
     const commands: AngularCliCommand[] = this.selectedCli.commands;
 

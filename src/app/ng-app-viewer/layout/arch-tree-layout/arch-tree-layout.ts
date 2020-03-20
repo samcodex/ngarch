@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { cloneDeep } from 'lodash-es';
+import { Injectable } from '@angular/core';
 
 import { DiagramLayout } from '@core/diagram/diagram-layout';
 import { DiagramElementFeature } from '@core/diagram/diagram-definition';
@@ -26,6 +27,7 @@ let foreignStyle = '';
 /**
  * TreeLayout version 3, uses ArchTree & ArchNode
  */
+@Injectable()
 export class ArchTreeLayout extends DiagramLayout {
   private rawData: DiagramTreeNode;
   private treeRoot: ArchHierarchyPointNode;
@@ -56,7 +58,7 @@ export class ArchTreeLayout extends DiagramLayout {
     } else if (context instanceof DiagramTreeNode) {
       root = context;
     } else {
-      throw('Error, tree context/node(s) is empty');
+      throw(new Error('Error, tree context/node(s) is empty'));
     }
 
     // initialize the properties

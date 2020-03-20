@@ -16,8 +16,9 @@ export abstract class SvgZoomBoardComponent {
     protected organizer: DiagramOrganizer
   ) { }
 
-  @HostListener('window:resize', ['$event'])
-  onSizeChanged(useMaxSize = false ) {
+  abstract onChangeSize();
+
+  changeSize(useMaxSize = false ) {
     this.board.resetSize(-1, -1, false, useMaxSize === true);
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AngularCliCommand } from '../../../../arch-cli/models/angular-cli';
 import { CliExecutionComponent } from '../cli-execution/cli-execution.component';
@@ -15,7 +15,7 @@ export class CliCommandLineComponent implements OnInit, AfterViewInit {
   @Input()
   command: AngularCliCommand;
 
-  @ViewChild('inputOperand', {static: false})
+  @ViewChild('inputOperand')
   inputRef: ElementRef;
 
   constructor(

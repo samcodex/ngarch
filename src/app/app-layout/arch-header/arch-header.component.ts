@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { LocalStorage } from '@ngx-pwa/local-storage';
+import { MatDialog } from '@angular/material/dialog';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 
 import { ProjectConfig, ProjectProfileService } from '@shared/project-profile';
@@ -26,8 +25,7 @@ export class ArchHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private profileService: ProjectProfileService,
-    private localStorage: LocalStorage
+    private profileService: ProjectProfileService
   ) { }
 
   ngOnInit() {
@@ -37,11 +35,12 @@ export class ArchHeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe( data => this.projectConfig = data ? data : initConfig);
 
-    this.localStorage.getItem(keyOfDisplayedHelp).subscribe(value => {
-      if (!value) {
-        this.displayHelpMessage();
-      }
-    });
+    const valueJSON = localStorage.getItem(keyOfDisplayedHelp);
+    const valueObj = valueJSON ? JSON.parse(valueJSON) : {};
+    const value = valueObj['value'];
+    if (!value) {
+      this.displayHelpMessage();
+    }
   }
 
   ngOnDestroy() {}
@@ -70,11 +69,8 @@ export class ArchHeaderComponent implements OnInit, OnDestroy {
   changeStatus(status: string) {
     this.relationStatus = status;
 
-    this.localStorage.setItem(keyOfDisplayedHelp, true)
-      .pipe(
-        takeUntilNgDestroy(this)
-      )
-      .subscribe();
+    const value = { value: true};
+    localStorage.setItem(keyOfDisplayedHelp, JSON.stringify(value));
   }
 
   private displayHelpMessage() {

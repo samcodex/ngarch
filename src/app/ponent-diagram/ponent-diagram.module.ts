@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatSelectModule, MatTooltipModule } from '@angular/material';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DiagramOrganizer } from '../core/diagram/diagram-organizer';
@@ -23,13 +21,10 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule.forRoot(),
-    MatFormFieldModule,
-    MatSelectModule,
+
     FormsModule,
     ReactiveFormsModule,
     FlowPanelModule,
-    MatCheckboxModule,
-    MatTooltipModule
   ],
   declarations: [
     PonentDiagramComponent
