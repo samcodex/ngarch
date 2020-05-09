@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { TreeModule } from 'angular-tree-component';
 
 import { SharedModule } from '../shared/shared.module';
@@ -22,10 +20,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     MatSidenavModule,
-    FlexLayoutModule,
     RouterModule.forChild(routes),
     SharedModule.forRoot(),
-    TreeModule
+    TreeModule.forRoot()
   ],
   declarations: [
     ExplorerCanvasComponent,

@@ -1,9 +1,9 @@
-  <mat-sidenav-container id="explorer-sidenav-container" fxLayout="row">
+  <mat-sidenav-container id="explorer-sidenav-container">
     <mat-sidenav mode="side" opened="true">
 
       <arch-explorer-dock (clickFileNode)="onClickFileNode($event)"></arch-explorer-dock>
     </mat-sidenav>
-    <mat-sidenav-content id="explorer-sidenav-content" fxLayout="column">
+    <mat-sidenav-content id="explorer-sidenav-content">
       <div id="svg-board"></div>
       <!-- <arch-explorer-canvas></arch-explorer-canvas> -->
       <!-- <arch-viewer-terminal></arch-viewer-terminal> -->

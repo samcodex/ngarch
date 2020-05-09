@@ -36,6 +36,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatDividerModule } from '@angular/material/divider';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CallbackPipe } from './components/callback/callback.pipe';
 import { CommaWithSpacePipe } from './components/comma-with-space/comma-with-space.pipe';
@@ -92,7 +93,8 @@ import { PrismCoderComponent } from './components/prism-coder/prism-coder.compon
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
+    MatTreeModule,
+    FlexLayoutModule
   ],
   declarations: [
     ViewerHeaderComponent,
@@ -145,6 +147,7 @@ import { PrismCoderComponent } from './components/prism-coder/prism-coder.compon
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
+    FlexLayoutModule,
 
     ViewerHeaderComponent,
     ViewerTerminalComponent,

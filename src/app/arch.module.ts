@@ -2,7 +2,6 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -54,7 +53,6 @@ import { WINDOW_PROVIDERS } from './arch.env';
 
     BrowserModule,
     BrowserAnimationsModule,
-    FlexLayoutModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
