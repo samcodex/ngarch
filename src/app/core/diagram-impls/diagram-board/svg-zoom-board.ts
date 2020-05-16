@@ -33,7 +33,7 @@ export class SvgZoomBoard extends Board {
   private scales: [d3.ScaleLinear<number, number>, d3.ScaleLinear<number, number>];
   private _zoomFactor = 1;
 
-  constructor(host: d3Element) {
+  constructor(host: d3Element, private initialScale = 0.8) {
     super(BoardType.SVG, host);
 
     this.changeBoardSize();
@@ -94,7 +94,7 @@ export class SvgZoomBoard extends Board {
     const zoom = d3.zoom().on('zoom', zooming);
     this.rootSvg
       .call(zoom)
-      .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(0.8))
+      .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(this.initialScale))
       ;
 
     // stop zoom's double click
