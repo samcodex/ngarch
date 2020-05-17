@@ -22,10 +22,11 @@ export abstract class SvgZoomBoardComponent {
     this.board.resetSize(-1, -1, false, useMaxSize === true);
   }
 
-  onInit(svgBoardRef: ElementRef) {
+  onInit(svgBoardRef: ElementRef, initialScale?: number) {
     this.svgBoardRef = svgBoardRef;
-    const host: d3Element = d3.select(svgBoardRef.nativeElement);
-    this.board = new SvgZoomBoard(host);
+    // const host: d3Element = d3.select(svgBoardRef.nativeElement);
+    const host: d3Element = svgBoardRef instanceof ElementRef ? d3.select(svgBoardRef.nativeElement) : d3.select(svgBoardRef as any);
+    this.board = new SvgZoomBoard(host, initialScale);
     this.organizer.setBoard(this.board);
   }
 
