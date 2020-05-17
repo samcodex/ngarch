@@ -5,7 +5,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
 
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '../shared/shared.module';
-import { BoardTileComponent } from './board-tile/board-tile.component';
 import { NgAppViewerModule } from 'app/ng-app-viewer/ng-app-viewer.module';
 import { DashboardIndicator } from './models/dashboard-indicator';
 
@@ -19,8 +18,7 @@ import { DashboardIndicator } from './models/dashboard-indicator';
     NgAppViewerModule
   ],
   declarations: [
-    DashboardComponent,
-    BoardTileComponent
+    DashboardComponent
   ],
   exports: [
     DashboardComponent
