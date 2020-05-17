@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NavigationItem } from '../models/navigation-item-type';
+import { DashboardIndicator } from './../../../dashboard/models/dashboard-indicator';
 
 @Component({
   selector: 'arch-navigation-section',
@@ -14,7 +15,8 @@ export class ArchNavigationSectionComponent implements OnInit {
   items: NavigationItem[];
 
   constructor(
-    private router: Router
+    private router: Router,
+    private dashboardIndicator: DashboardIndicator
   ) {
   }
 
@@ -28,6 +30,7 @@ export class ArchNavigationSectionComponent implements OnInit {
   }
 
   selectItem(selectedItem: NavigationItem) {
+    this.dashboardIndicator.close();
     this.changeItemState(selectedItem);
     const { path, dataKey, dataId, queryParams } = selectedItem;
     let navigatePath = '';

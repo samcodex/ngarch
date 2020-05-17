@@ -1,19 +1,30 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { DashboardStatus } from './dashboard-status';
 
+@Injectable()
 export class DashboardIndicator {
-  strategy = [DashboardStatus.None, DashboardStatus.Closed, DashboardStatus.Half, DashboardStatus.Full];
-  indicator = DashboardStatus.None;
+  // strategy = [DashboardStatus.None, DashboardStatus.Closed, DashboardStatus.Half, DashboardStatus.Full];
+  strategy = [DashboardStatus.Closed, DashboardStatus.Full];
+  indicatorStream = new BehaviorSubject(DashboardStatus.Full);
 
-  get enabled() {
-    return this.indicator !== DashboardStatus.None;
+  isIndicatorOpened(): Observable<boolean> {
+    return this.indicatorStream.asObservable()
+      .pipe(
+        map(indicator => indicator === DashboardStatus.Full)
+      );
   }
 
-  get index() {
-    return this.strategy.indexOf(this.indicator);
+  next() {
+    const indicator = this.indicatorStream.value;
+    const index = this.strategy.indexOf(indicator);
+    const nextIndex = (index + 1) % this.strategy.length;
+    this.indicatorStream.next(this.strategy[nextIndex]);
   }
 
-  next(): DashboardStatus {
-    const nextIndex = (this.index + 1) % this.strategy.length;
-    return this.indicator = this.strategy[nextIndex];
+  close() {
+    this.indicatorStream.next(DashboardStatus.Closed);
   }
 }
