@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { Observable, BehaviorSubject } from 'rxjs';
+// import { Location } from '@angular/common';
+// import { Router, ActivatedRoute } from '@angular/router';
 
 import { UiElementCategory, UiElementSection, UiElementData, findCategoryFromSection } from '@core/models/ui-element-category';
 import { UiElementItem } from '@core/models/ui-element-item';
@@ -23,7 +25,11 @@ export class ArchViewerOptionsService {
   private viewerType: BehaviorSubject<ArchViewerType> = new BehaviorSubject(ArchViewerType.RoutesTree);
   private viewerExtraContent: BehaviorSubject<ArchViewerExtraContent> = new BehaviorSubject(null);
 
-  constructor() {
+  constructor(
+    // private location: Location,
+    // private router: Router,
+    // private activatedRoute: ActivatedRoute
+  ) {
     this.initViewerOptions();
   }
 
@@ -63,8 +69,22 @@ export class ArchViewerOptionsService {
         this.viewerExtraContent.next(option.isChecked ? option.value : null);
         break;
       default:
-
     }
+
+    // const objOptions = {
+    //   'hierarch': this.viewerHierarchy.value,
+    //   'orientation': this.viewerOrientation.value,
+    //   'treeNodes': this.viewerNodeType.value,
+    //   'viewerType': this.viewerType.value,
+    //   'extraService': this.viewerExtraContent.value
+    // };
+
+    // const url = this
+    //   .router
+    //   .createUrlTree([], {relativeTo: this.activatedRoute, queryParams: objOptions})
+    //   .toString();
+
+    // this.location.go(url);
   }
 
   getViewerHierarchy(): Observable<ArchViewerHierarchy> {
