@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener, Input } from '@angular/core';
 import { combineLatest, zip, of } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { map, mergeMap } from 'rxjs/operators';
@@ -83,6 +83,9 @@ const defaultHeaderTitle = 'Architecture View';
 export class AppArchViewerComponent extends SvgZoomBoardComponent
     implements OnInit, OnDestroy, AfterViewInit {
 
+  @Input()tianLayout = true;
+  @Input()initialScale: number;
+
   projectName: string;
   optionData: UiElementData;
 
@@ -109,28 +112,48 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   ngOnInit() {
-    super.onInit(this.svgBoardRef);
-
-    const specificHierarchies = Object.keys(titlesOfSpecificHierarchy);
     this.contentHierarchy = this.ngAppViewerService.getContentHierarchy();
-    const isSpecificHierarchy = specificHierarchies.includes(this.contentHierarchy);
     this.headerTitle = titlesOfSpecificHierarchy[this.contentHierarchy] || defaultHeaderTitle;
 
+    const specificHierarchies = Object.keys(titlesOfSpecificHierarchy);
+    const isSpecificHierarchy = specificHierarchies.includes(this.contentHierarchy);
     if (!isSpecificHierarchy) {
       this.hierarchies = hierarchies;
     }
 
-    this.setBoardMaxSize();
-
     const optionData = this.optionsService.getOptionDataForRuntimeStructure();
     this.optionData = optionData.filter(element => isSpecificHierarchy ? element.type !== 'hierarchies' : true);
-
-    this.setupStream();
   }
+  // ngOnInit() {
+  //   super.onInit(this.svgBoardRef);
+
+  //   const specificHierarchies = Object.keys(titlesOfSpecificHierarchy);
+  //   this.contentHierarchy = this.ngAppViewerService.getContentHierarchy();
+  //   const isSpecificHierarchy = specificHierarchies.includes(this.contentHierarchy);
+  //   this.headerTitle = titlesOfSpecificHierarchy[this.contentHierarchy] || defaultHeaderTitle;
+
+  //   if (!isSpecificHierarchy) {
+  //     this.hierarchies = hierarchies;
+  //   }
+
+  //   this.setBoardMaxSize();
+
+  //   const optionData = this.optionsService.getOptionDataForRuntimeStructure();
+  //   this.optionData = optionData.filter(element => isSpecificHierarchy ? element.type !== 'hierarchies' : true);
+
+  //   this.setupStream();
+  // }
 
   ngOnDestroy() {}
 
   ngAfterViewInit() {
+    if (!this.svgBoardRef) {
+      this.svgBoardRef = this.elementRef.nativeElement.querySelector('#svg-board');
+    }
+
+    super.onInit(this.svgBoardRef, this.initialScale);
+    this.setBoardMaxSize();
+    this.setupStream();
     super.afterViewInit();
   }
 
@@ -192,7 +215,10 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
         takeUntilNgDestroy(this)
       )
       .subscribe( ([ [hierarchy, data], orientation, nodeType, viewerType, extraContent ]) => {
-        this.treeName = data.name;
+        setTimeout(() => {
+          this.treeName = data.name;
+        });
+
         if (hierarchy === ArchViewerHierarchy.InjectorHierarchy || hierarchy === ArchViewerHierarchy.FullView) {
           disableOrientationLeftToRight(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
           disableExtraContentServiceProvider(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
