@@ -95,6 +95,10 @@ const routes: Route[] = [
     CodeDiagramComponent,
     ViewerExplanationComponent,
     DependencyDiagramComponent
+  ],
+  exports: [
+    ModuleStructureViewerComponent,
+    NgAppViewerComponent
   ]
 })
 export class NgAppViewerModule { }
