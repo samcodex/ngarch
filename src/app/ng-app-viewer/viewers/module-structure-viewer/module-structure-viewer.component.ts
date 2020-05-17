@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener, Input } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { combineLatest } from 'rxjs';
 
@@ -21,15 +21,20 @@ import { UiElementData } from '@core/models/ui-element-category';
 import { ArchViewerOptionsService } from '../app-arch-viewer/services/arch-viewer-options.service';
 
 @Component({
+  selector: 'arch-module-structure-viewer',
   templateUrl: './module-structure-viewer.component.html',
   styleUrls: ['./module-structure-viewer.component.scss'],
   providers: [
     DiagramOrganizer,
+    ArchViewerOptionsService,
     { provide: DiagramLayoutToken, useClass: ArchTreeLayout },
   ]
 })
 export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
     implements OnInit, OnDestroy, AfterViewInit {
+
+  @Input()tianLayout = true;
+  @Input()initialScale: number;
 
   optionData: UiElementData;
   viewerType = ViewerType.ModuleStructureTree;
@@ -50,15 +55,19 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
   }
 
   ngOnInit() {
-    super.onInit(this.svgBoardRef);
-    this.setBoardMaxSize();
     this.optionData = this.optionsService.getOptionDataForModuleStructure();
-    this.setupStream();
   }
 
   ngOnDestroy() {}
 
   ngAfterViewInit() {
+    if (!this.svgBoardRef) {
+      this.svgBoardRef = this.elementRef.nativeElement.querySelector('#svg-board');
+    }
+
+    super.onInit(this.svgBoardRef, this.initialScale);
+    this.setBoardMaxSize();
+    this.setupStream();
     super.afterViewInit();
   }
 

@@ -1,38 +1,45 @@
-<arch-tian (expand)="onExpand($event)" (drag)="onDrag($event)">
-  <arch-tian-header>
-    <div class="viewer-header-bar">
-      <span class="viewer-header">Module Structure</span>
-      <span class="viewer-explanation-icon">
-        <i class="material-icons" (click)="onClickViewerExplanation()">help_outline</i>
-      </span>
-    </div>
-  </arch-tian-header>
-
-  <arch-tian-main>
-    <!-- svg-board -->
-    <div #svgBoard id="svg-board"></div>
-  </arch-tian-main>
-
-  <arch-tian-title>
-    Viewer Options & Usage
-  </arch-tian-title>
-
-  <arch-tian-summary>
-    <!-- <div class="option-wrapper">
-      <div class="app-viewer-options">
-        <arch-generic-option [optionData]="optionData" (optionChanged)="onChangeOption($event)"></arch-generic-option>
+<div class="tian-container" *ngIf="tianLayout else onlySvgBoard">
+  <arch-tian (expand)="onExpand($event)" (drag)="onDrag($event)">
+    <arch-tian-header>
+      <div class="viewer-header-bar">
+        <span class="viewer-header">Module Structure</span>
+        <span class="viewer-explanation-icon">
+          <i class="material-icons" (click)="onClickViewerExplanation()">help_outline</i>
+        </span>
       </div>
-    </div> -->
+    </arch-tian-header>
 
-    <arch-tabs>
-      <arch-tab caption="Options" [active]="true">
-        <arch-generic-option [optionData]="optionData" (optionChanged)="onChangeOption($event)"></arch-generic-option>
-      </arch-tab>
-      <arch-tab caption="Usage">
-        <arch-viewer-generic-usage></arch-viewer-generic-usage>
-      </arch-tab>
-    </arch-tabs>
+    <arch-tian-main>
+      <!-- svg-board -->
+      <div #svgBoard id="svg-board"></div>
+    </arch-tian-main>
 
-  </arch-tian-summary>
+    <arch-tian-title>
+      Viewer Options & Usage
+    </arch-tian-title>
 
-</arch-tian>
+    <arch-tian-summary>
+      <!-- <div class="option-wrapper">
+        <div class="app-viewer-options">
+          <arch-generic-option [optionData]="optionData" (optionChanged)="onChangeOption($event)"></arch-generic-option>
+        </div>
+      </div> -->
+
+      <arch-tabs>
+        <arch-tab caption="Options" [active]="true">
+          <arch-generic-option [optionData]="optionData" (optionChanged)="onChangeOption($event)"></arch-generic-option>
+        </arch-tab>
+        <arch-tab caption="Usage">
+          <arch-viewer-generic-usage></arch-viewer-generic-usage>
+        </arch-tab>
+      </arch-tabs>
+
+    </arch-tian-summary>
+
+  </arch-tian>
+</div>
+
+<ng-template #onlySvgBoard>
+  <!-- svg-board -->
+  <div #svgBoard id="svg-board"></div>
+</ng-template>
