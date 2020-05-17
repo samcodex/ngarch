@@ -9,19 +9,19 @@
 
     <mat-sidenav-content id="arch-content-container">
       <div class="expander-bar arch-navigation-drag-icon"
-          (click)="opened = !opened">
+          (click)="toggleExpandNavigation()">
         <i class="navigation-expand-icon material-icons">{{opened ? "chevron_left" : "chevron_right"}}</i>
       </div>
 
       <div id="arch-content">
         <router-outlet></router-outlet>
+
+        <arch-dashboard [ngStyle]="{'display': dashboardOpened ? 'block': 'none'}"></arch-dashboard>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
 
 <arch-welcome-page *ngIf="hasWelcomePage" [isServerError]="isServerError"></arch-welcome-page>
-
-<arch-dashboard *ngIf="dashboardIndicator.enabled"></arch-dashboard>
 
 <arch-project-loader-overlay *ngIf="useOverlay" (closeOverlay)="closeOverlay($event)"></arch-project-loader-overlay>

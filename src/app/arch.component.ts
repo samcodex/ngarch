@@ -24,12 +24,13 @@ export class ArchComponent implements OnInit, OnDestroy {
   isServerError = false;
 
   hasDashboard = false;
-  dashboardIndicator = new DashboardIndicator();
+  dashboardOpened = false;
 
   constructor(
     private centerController: CenterControllerService,
     private socket: SocketHandlerService,
-    private profileService: ProjectProfileService
+    private profileService: ProjectProfileService,
+    public dashboardIndicator: DashboardIndicator
   ) {
 
   }
@@ -64,6 +65,11 @@ export class ArchComponent implements OnInit, OnDestroy {
       //   this.subscription.unsubscribe();
       // }
     });
+
+    this.dashboardIndicator.isIndicatorOpened()
+      .subscribe((opened) => {
+        this.dashboardOpened = opened;
+      });
   }
 
   ngOnDestroy() {
@@ -76,6 +82,10 @@ export class ArchComponent implements OnInit, OnDestroy {
   }
 
   onToggleDashboard() {
-    // this.dashboardIndicator.next();
+    this.dashboardIndicator.next();
+  }
+
+  toggleExpandNavigation() {
+    this.opened = !this.opened;
   }
 }
