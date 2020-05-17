@@ -1,5 +1,5 @@
 import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { Component, OnInit, ComponentFactoryResolver, OnDestroy } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, OnDestroy, Input } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { zip } from 'rxjs';
 
@@ -10,9 +10,19 @@ import { ViewerContentHierarchyIndicator, ArchViewerHierarchy } from '../viewers
 
 
 @Component({
-  template: '<ng-arch-ui></ng-arch-ui>'
+  selector: 'arch-ng-app-viewer',
+  template: '<ng-arch-ui [desktopData]="viewerData"></ng-arch-ui>',
+  providers: [
+    NgAppViewerService
+  ]
 })
 export class NgAppViewerComponent implements OnInit, OnDestroy {
+  @Input() viewerId: string = null;
+  @Input() contentHierarchyKey: ArchViewerHierarchy = null;
+  viewerData = {
+    tianLayout: false,
+    initialScale: 1
+  };
 
   constructor(
     private resolver: ComponentFactoryResolver,
@@ -21,16 +31,27 @@ export class NgAppViewerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const source = zip(
-      this.activatedRoute.url,
-      this.activatedRoute.data
-    );
+    if (this.viewerId && this.contentHierarchyKey) {
+      const contentHierarchy: ArchViewerHierarchy = ArchViewerHierarchy[this.contentHierarchyKey];
+      this.viewerData.tianLayout = false;
+      this.viewerData.initialScale = 0.4;
 
-    source
-      .pipe(
-        takeUntilNgDestroy(this)
-      )
-      .subscribe(this.initWithSegments.bind(this));
+      this.initMainViewer(this.viewerId, contentHierarchy);
+    } else {
+      this.viewerData.tianLayout = true;
+      this.viewerData.initialScale = 0.8;
+
+      const source = zip(
+        this.activatedRoute.url,
+        this.activatedRoute.data
+      );
+
+      source
+        .pipe(
+          takeUntilNgDestroy(this)
+        )
+        .subscribe(this.initWithSegments.bind(this));
+    }
   }
 
   ngOnDestroy() {
@@ -49,6 +70,10 @@ export class NgAppViewerComponent implements OnInit, OnDestroy {
       contentHierarchy = data.contentHierarchy;
     }
 
+    this.initMainViewer(viewerId, contentHierarchy);
+  }
+
+  private initMainViewer(viewerId: string, contentHierarchy: ArchViewerHierarchy) {
     this.ngAppViewerService.initializeMainViewer(this.resolver, viewerId, contentHierarchy, mapOfNgAppViewer, mapViewPurposeToUiClass);
   }
 }

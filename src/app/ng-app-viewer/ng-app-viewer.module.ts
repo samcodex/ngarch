@@ -67,7 +67,6 @@ const routes: Route[] = [
     ArchDropdownModule
   ],
   providers: [
-    NgAppViewerService,
     AppViewerDataService
   ],
   declarations: [
