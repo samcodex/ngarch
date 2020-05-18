@@ -4,10 +4,7 @@ import { Observable } from 'rxjs';
 import { ArchNgPonentStore } from '@shared/arch-ngponent-store';
 import { RelationshipType } from '@core/arch-relationship';
 import { ArchNgPonent } from '@core/arch-ngponent';
-import { ArchViewerOptionsService } from '../viewers/app-arch-viewer/services/arch-viewer-options.service';
 import { ArchTree } from '@core/arch-tree/arch-tree';
-import { mergeMap, map } from 'rxjs/operators';
-import { mapViewerHierarchyToArchTree } from '../viewers/config/arch-viewer-definition';
 import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 
 @Injectable({
@@ -16,8 +13,7 @@ import { ArchTreeType } from '@core/arch-tree/arch-tree-definition';
 export class AppViewerDataService {
 
   constructor(
-    private store: ArchNgPonentStore,
-    private optionsService: ArchViewerOptionsService
+    private store: ArchNgPonentStore
   ) { }
 
   getRootNgModules() {

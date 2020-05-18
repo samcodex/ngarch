@@ -26,7 +26,6 @@ import { ArchViewerOptionsService } from '../app-arch-viewer/services/arch-viewe
   styleUrls: ['./module-structure-viewer.component.scss'],
   providers: [
     DiagramOrganizer,
-    ArchViewerOptionsService,
     { provide: DiagramLayoutToken, useClass: ArchTreeLayout },
   ]
 })
