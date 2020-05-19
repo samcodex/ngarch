@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { Observable, BehaviorSubject } from 'rxjs';
-// import { Location } from '@angular/common';
-// import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { distinctUntilChanged, map, filter } from 'rxjs/operators';
 
 import { UiElementCategory, UiElementSection, UiElementData, findCategoryFromSection } from '@core/models/ui-element-category';
 import { UiElementItem } from '@core/models/ui-element-item';
 import { appViewerOptions } from '../../config/app-arch-viewer-config';
 import { Orientation } from '@core/diagram/layout-options';
 import { ArchViewerOptionCategory, ArchViewerNodeType, ArchViewerType, ArchViewerExtraContent, ArchViewerHierarchy } from '../../config/arch-viewer-definition';
-
-const isItemChecked = (item: UiElementItem) => item.isChecked;
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +24,12 @@ export class ArchViewerOptionsService {
   private viewerType: BehaviorSubject<ArchViewerType> = new BehaviorSubject(ArchViewerType.RoutesTree);
   private viewerExtraContent: BehaviorSubject<ArchViewerExtraContent> = new BehaviorSubject(null);
 
+  private changeFromService = true;
+
   constructor(
-    // private location: Location,
-    // private router: Router,
-    // private activatedRoute: ActivatedRoute
+    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.initViewerOptions();
   }
@@ -55,36 +56,23 @@ export class ArchViewerOptionsService {
     switch (categoryType) {
       case ArchViewerOptionCategory.Hierarchy:
         this.viewerHierarchy.next(option.value);
+        this.router.navigate(['../', option.value], { relativeTo: this.activatedRoute});
+        this.changeFromService = true;
         break;
       case ArchViewerOptionCategory.Orientation:
         this.viewerOrientation.next(option.value);
         break;
-      case ArchViewerOptionCategory.TreeNodes:
-        this.viewerNodeType.next(option.isChecked ? option.value : null);
-        break;
-      case ArchViewerOptionCategory.ViewerType:
-        this.viewerType.next(option.isChecked ? option.value : null);
-        break;
+      // case ArchViewerOptionCategory.TreeNodes:
+      //   this.viewerNodeType.next(option.isChecked ? option.value : null);
+      //   break;
+      // case ArchViewerOptionCategory.ViewerType:
+      //   this.viewerType.next(option.isChecked ? option.value : null);
+      //   break;
       case ArchViewerOptionCategory.ExtraService:
         this.viewerExtraContent.next(option.isChecked ? option.value : null);
         break;
       default:
     }
-
-    // const objOptions = {
-    //   'hierarch': this.viewerHierarchy.value,
-    //   'orientation': this.viewerOrientation.value,
-    //   'treeNodes': this.viewerNodeType.value,
-    //   'viewerType': this.viewerType.value,
-    //   'extraService': this.viewerExtraContent.value
-    // };
-
-    // const url = this
-    //   .router
-    //   .createUrlTree([], {relativeTo: this.activatedRoute, queryParams: objOptions})
-    //   .toString();
-
-    // this.location.go(url);
   }
 
   getViewerHierarchy(): Observable<ArchViewerHierarchy> {
@@ -107,25 +95,78 @@ export class ArchViewerOptionsService {
     return this.viewerExtraContent.asObservable();
   }
 
-  private initViewerOptions() {
-    const checkedHierarchy = this.findCheckedItem(ArchViewerOptionCategory.Hierarchy);
+  private initOptionsFromHierarchy(hierarchy: ArchViewerHierarchy, orientation = Orientation.TopToBottom) {
+    const checkedHierarchy = this.findCheckedItem(ArchViewerOptionCategory.Hierarchy, hierarchy);
     this.viewerHierarchy.next(checkedHierarchy ? checkedHierarchy.value : null);
 
-    const checkedOrientation = this.findCheckedItem(ArchViewerOptionCategory.Orientation);
+    const checkedOrientation = this.findCheckedItem(ArchViewerOptionCategory.Orientation, orientation);
     this.viewerOrientation.next(checkedOrientation ? checkedOrientation.value : null);
 
-    const checkedTreeNode = this.findCheckedItem(ArchViewerOptionCategory.TreeNodes);
-    this.viewerNodeType.next(checkedTreeNode ? checkedTreeNode.value : null);
+    // const checkedTreeNode = this.findCheckedItem(ArchViewerOptionCategory.TreeNodes);
+    // this.viewerNodeType.next(checkedTreeNode ? checkedTreeNode.value : null);
 
-    const checkedViewerType = this.findCheckedItem(ArchViewerOptionCategory.ViewerType);
-    this.viewerType.next(checkedViewerType ? checkedViewerType.value : null);
+    // const checkedViewerType = this.findCheckedItem(ArchViewerOptionCategory.ViewerType);
+    // this.viewerType.next(checkedViewerType ? checkedViewerType.value : null);
 
     const checkedExtraContent = this.findCheckedItem(ArchViewerOptionCategory.ExtraService);
     this.viewerExtraContent.next(checkedExtraContent ? checkedExtraContent.value : null);
   }
 
-  private findCheckedItem(type: ArchViewerOptionCategory): UiElementItem {
+  private initViewerOptions() {
+    const hierarchy = this.activatedRoute.snapshot.paramMap.get('hierarchy');
+    this.initOptionsFromHierarchy(hierarchy as any);
+    this.changeFromService = true;
+
+    if (hierarchy) {
+      this.listenParamHierarchy();
+    }
+  }
+
+  private listenParamHierarchy() {
+    this.activatedRoute.paramMap
+    .pipe(
+      filter(() => {
+        const passed = !this.changeFromService;
+        this.changeFromService = false;
+        return passed;
+      }),
+      map(params => params.get('hierarchy')),
+      distinctUntilChanged()
+    )
+    .subscribe(hierarchy => {
+      this.initOptionsFromHierarchy(hierarchy as any);
+    });
+  }
+
+  private findCheckedItem(type: ArchViewerOptionCategory, itemValue?: string): UiElementItem {
     const category = findCategoryFromSection(this.appViewerOptions, type);
-    return category ? category.items.find(isItemChecked) : null;
+    let found: UiElementItem = null;
+    if (category) {
+      let checked: UiElementItem;
+      found = itemValue ? category.items.find(item => item.value === itemValue) : null;
+      const checkedItems = category.items.filter(item => item.isChecked);
+      if (checkedItems.length > 0) {
+        checked = checkedItems[0];
+        if (checkedItems.length > 1) {
+          checkedItems.forEach((item, index) => {
+            if (index > 0) {
+              item.isChecked = false;
+            }
+          });
+        }
+      }
+
+      if (found !== checked) {
+        if (found) {
+          found.isChecked = true;
+          if (checked) {
+            checked.isChecked = false;
+          }
+        } else {
+          found = checked;
+        }
+      }
+    }
+    return found;
   }
 }
