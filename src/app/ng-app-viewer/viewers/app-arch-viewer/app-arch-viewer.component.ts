@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener, Input } from '@angular/core';
 import { combineLatest, zip, of } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { DiagramOrganizer } from '@core/diagram';
 import { DiagramLayoutToken } from '@core/diagram/diagram-layout';
@@ -205,33 +205,50 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
     const source = combineLatest([
       treeSource,
       this.optionsService.getViewerOrientation(),
-      this.optionsService.getViewerNodeType(),
-      this.optionsService.getViewerType(),
+      // this.optionsService.getViewerNodeType(),
+      // this.optionsService.getViewerType(),
       this.optionsService.getViewerExtraContent()
     ]);
 
+    const distinctData = ([ [hierarchy1, data1], ...rest1 ],
+                          [ [hierarchy2, data2], ...rest2 ]) => {
+      return hierarchy1 === hierarchy2 && rest1.reduce((prev, curr, index) => prev && curr === rest2[index], true);
+    };
     source
       .pipe(
-        takeUntilNgDestroy(this)
+        takeUntilNgDestroy(this),
+        distinctUntilChanged(distinctData),
+        filter(([ [hierarchy, data], orientation, /*nodeType, viewerType,*/ extraContent ]) => {
+          // Navigation from Dashboard causes multiple subscribed values changes,
+          // This filter avoid trigger multiple times.
+          const notAccepted = hierarchy === ArchViewerHierarchy.InjectorHierarchy
+            && (orientation === Orientation.LeftToRight
+            || extraContent === ArchViewerExtraContent.LayerServiceProvider);
+          return !notAccepted;
+        })
       )
-      .subscribe( ([ [hierarchy, data], orientation, nodeType, viewerType, extraContent ]) => {
+      .subscribe( ([ [hierarchy, data], orientation, /*nodeType, viewerType,*/ extraContent ]) => {
         setTimeout(() => {
           this.treeName = data.name;
         });
 
         if (hierarchy === ArchViewerHierarchy.InjectorHierarchy || hierarchy === ArchViewerHierarchy.FullView) {
-          disableOrientationLeftToRight(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
-          disableExtraContentServiceProvider(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
-          disableInjectorAndDependencyHierarchy(this.optionData, orientation === Orientation.LeftToRight
-            || extraContent === ArchViewerExtraContent.LayerServiceProvider);
+          const resetOptionAttr = () => {
+            disableOrientationLeftToRight(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
+            disableExtraContentServiceProvider(this.optionData, hierarchy === ArchViewerHierarchy.InjectorHierarchy);
+            disableInjectorAndDependencyHierarchy(this.optionData, orientation === Orientation.LeftToRight
+              || extraContent === ArchViewerExtraContent.LayerServiceProvider);
+          };
+          // setTimeout(resetOptionAttr);
+          resetOptionAttr();
         }
 
-        this.updateOrganizer(data, hierarchy, orientation, nodeType, viewerType, extraContent);
+        this.updateOrganizer(data, hierarchy, orientation, /*nodeType, viewerType,*/ extraContent);
       });
   }
 
   private updateOrganizer(data: ArchTree, hierarchy: ArchViewerHierarchy, orientation: Orientation,
-      nodeType: ArchViewerNodeType, viewerType: ArchViewerType, extraContent: ArchViewerExtraContent) {
+      /*nodeType: ArchViewerNodeType, viewerType: ArchViewerType,*/ extraContent: ArchViewerExtraContent) {
     this.organizer.clear();
 
     if (data) {
