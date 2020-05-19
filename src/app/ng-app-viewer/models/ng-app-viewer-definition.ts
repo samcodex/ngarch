@@ -26,5 +26,3 @@ export type TypeOfViewerComponentMap = { [ key in ViewerType ]: Type<any>};
 export function getNgAppViewerTypeByPath(viewerId: string): ViewerType {
   return pathToViewerType[viewerId] || ViewerType.AppArchViewer;
 }
-
-export const NgAppViewerConfiguration = new InjectionToken<UiElementCategory[]>('Diagram Tree Node Builder');
