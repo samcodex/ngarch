@@ -1,6 +1,15 @@
+import { Router } from '@angular/router';
+
+import { DashboardIndicator } from './models/dashboard-indicator';
 import { Component, OnInit } from '@angular/core';
-import { BoardItem } from './models/board-item';
-import { DashboardConfig } from './config/dashboard-config';
+
+const mapOfRoutePath = {
+  'overview': '/ng-app-viewer/viewer/app-arch/FullView',
+  'injector': '/ng-app-viewer/viewer/app-arch/InjectorHierarchy',
+  'module': '/ng-app-viewer/viewer/module-struct',
+  'component': '/ng-app-viewer/viewer/component-hierarchy',
+  'routing': '/ng-app-viewer/viewer/routing-hierarchy'
+};
 
 @Component({
   selector: 'arch-dashboard',
@@ -9,12 +18,19 @@ import { DashboardConfig } from './config/dashboard-config';
 })
 export class DashboardComponent implements OnInit {
 
-  boardItems: BoardItem[];
-
-  constructor() { }
+  constructor(
+    private router: Router,
+    private indicator: DashboardIndicator
+  ) { }
 
   ngOnInit() {
-    this.boardItems = DashboardConfig;
   }
 
+  navigateTo(pathName: string) {
+    const path = mapOfRoutePath[pathName];
+    if (path) {
+      this.indicator.close();
+      this.router.navigate([path]);
+    }
+  }
 }

@@ -1,7 +1,84 @@
-<div class="dashboard-container">
-  <mat-grid-list cols="3" gutterSize="20">
-    <mat-grid-tile *ngFor="let item of boardItems">
-      <arch-board-tile [item]="item"></arch-board-tile>
-    </mat-grid-tile>
-</mat-grid-list>
+<div class="dashboard-title">
+  Dashboard
+</div>
+
+<div class="diagram-container">
+
+  <div class="diagram-row">
+    <div class="diagram-tile tile-40pct">
+      <div class="diagram-svg">
+        <arch-module-structure-viewer [tianLayout]="false" initialScale="0.5"></arch-module-structure-viewer>
+      </div>
+      <div class="diagram-description">
+        <span (click)="navigateTo('module')" class="link-icon material-icons">dynamic_feed</span>
+        <span (click)="navigateTo('module')" class="description-subject">Module Structure</span>
+        It identifies the module's own components, directives, and pipes, making some of them public, through the exports property, so that external components can use them.
+      </div>
+    </div>
+
+    <div class="diagram-tile tile-rest">
+      <div class="diagram-svg">
+        <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="FullView"></arch-ng-app-viewer>
+      </div>
+      <div class="diagram-description">
+        <span (click)="navigateTo('overview')" class="link-icon material-icons">dynamic_feed</span>
+        <span (click)="navigateTo('overview')" class="description-subject">Overview</span>
+        It identifies the module's own components, directives, and pipes, making some of them public, through the exports property, so that external components can use them.
+      </div>
+    </div>
+  </div>
+
+  <div class="diagram-row">
+    <div class="diagram-tile tile-40pct">
+      <div class="diagram-svg">
+        <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer>
+      </div>
+      <div class="diagram-description">
+        <span (click)="navigateTo('component')" class="link-icon material-icons">dynamic_feed</span>
+        <span (click)="navigateTo('component')" class="description-subject">Component Hierarchy</span>
+        It identifies the module's own components, directives, and pipes, making some of them public, through the exports property, so that external components can use them.
+      </div>
+    </div>
+
+    <div class="diagram-tile tile-rest">
+      <div class="diagram-svg">
+        <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="InjectorHierarchy"></arch-ng-app-viewer>
+      </div>
+      <div class="diagram-description">
+        <span (click)="navigateTo('injector')" class="link-icon material-icons">dynamic_feed</span>
+        <span (click)="navigateTo('injector')" class="description-subject">Injector & Dependency</span>
+        It identifies the module's own components, directives, and pipes, making some of them public, through the exports property, so that external components can use them.
+      </div>
+    </div>
+  </div>
+
+  <div class="diagram-row">
+    <div class="diagram-tile tile-33pct">
+      <div class="diagram-svg">
+        <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="RoutingHierarchy"></arch-ng-app-viewer>
+      </div>
+      <div class="diagram-description">
+        Module Structure
+      </div>
+    </div>
+
+    <div class="diagram-tile tile-33pct">
+      <div class="diagram-svg">
+        <!-- <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer> -->
+      </div>
+      <div class="diagram-description">
+        Module Structure
+      </div>
+    </div>
+
+    <div class="diagram-tile tile-33pct">
+      <div class="diagram-svg">
+        <!-- <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer> -->
+      </div>
+      <div class="diagram-description">
+        Module Structure
+      </div>
+    </div>
+  </div>
+
 </div>
