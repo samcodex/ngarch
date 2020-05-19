@@ -28,11 +28,16 @@ import { DependencyDiagramComponent } from './diagrams/dependency-diagram/depend
 const routes: Route[] = [
   {
     path: '',
-    redirectTo: 'viewer/app-arch',
+    redirectTo: 'viewer/app-arch/FullView',
     pathMatch: 'full'
   },
   {
     path: 'viewer/app-arch',
+    redirectTo: 'viewer/app-arch/FullView',
+    pathMatch: 'full'
+  },
+  {
+    path: 'viewer/app-arch/:hierarchy',
     component: NgAppViewerComponent
   },
   {
