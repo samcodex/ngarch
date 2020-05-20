@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { NavigationItem } from './app-layout/arch-navigation/models/navigation-item-type';
 import { SocketTasks } from '@core/models/socket-client.interface';
@@ -11,7 +12,25 @@ import { SocketHandlerService } from '@shared/services/socket-handler/socket-han
 @Component({
   selector: 'arch-root',
   templateUrl: './arch.component.html',
-  styleUrls: ['./arch.component.scss']
+  styleUrls: ['./arch.component.scss'],
+  animations: [
+    trigger('showHideDashboard', [
+      state('show', style({
+        opacity: 1,
+        display: 'block'
+      })),
+      state('hide', style({
+        opacity: 0.1,
+        display: 'none'
+      })),
+      transition('show => hide', [
+        animate('1s')
+      ]),
+      transition('hide => show', [
+        animate('0.5s')
+      ]),
+    ]),
+  ]
 })
 export class ArchComponent implements OnInit, OnDestroy {
 

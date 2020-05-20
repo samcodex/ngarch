@@ -16,7 +16,7 @@
       <div id="arch-content">
         <router-outlet></router-outlet>
 
-        <arch-dashboard [ngStyle]="{'display': dashboardOpened ? 'block': 'none'}"></arch-dashboard>
+        <arch-dashboard [@showHideDashboard]="dashboardOpened ? 'show' : 'hide'" ></arch-dashboard>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
