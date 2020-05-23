@@ -39,6 +39,7 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
   viewerType = ViewerType.ModuleStructureTree;
 
   @ViewChild('svgBoard', {static: true}) svgBoardRef: ElementRef;
+  treeName = 'Module Structure';
 
   constructor(
     elementRef: ElementRef,
