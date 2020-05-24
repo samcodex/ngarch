@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, Hos
 import { combineLatest, zip, of } from 'rxjs';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { map, mergeMap, distinctUntilChanged, filter } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DiagramOrganizer } from '@core/diagram';
 import { DiagramLayoutToken } from '@core/diagram/diagram-layout';
@@ -101,11 +102,12 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   constructor(
     elementRef: ElementRef,
     organizer: DiagramOrganizer,
+    snackBar: MatSnackBar,
     private ngAppViewerService: NgAppViewerService,
     private viewerDataService: AppViewerDataService,
     private optionsService: ArchViewerOptionsService,
   ) {
-    super(elementRef, organizer);
+    super(elementRef, organizer, snackBar);
 
     this.organizer.addFeature(DiagramElementFeature.DblClick, this.onDoubleClickPonent.bind(this));
     this.organizer.addFeature(DiagramElementFeature.ActionClick, this.onClickAction.bind(this));
@@ -282,6 +284,11 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   private onDoubleClickPonent(node: DiagramTreeNode | InjectorTreeNode) {
+    if (!this.tianLayout) {
+      this.notifyOpenMainDiagramToInteractive();
+      return;
+    }
+
     if (node instanceof DiagramTreeNode) {
       this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.ArchitectureView, this.viewerType);
     } else if (node instanceof InjectorTreeNode) {
@@ -292,6 +299,11 @@ export class AppArchViewerComponent extends SvgZoomBoardComponent
   }
 
   private onClickAction(item: PonentActionItem) {
+    if (!this.tianLayout) {
+      this.notifyOpenMainDiagramToInteractive();
+      return;
+    }
+
     const purpose: PonentActionPurpose = item.value;
 
     if (purpose === PonentActionPurpose.ToggleCollapseChildren) {

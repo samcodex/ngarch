@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChild, HostListener, Input } from '@angular/core';
 import { takeUntilNgDestroy } from 'take-until-ng-destroy';
 import { combineLatest } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DiagramOrganizer } from '@core/diagram';
 import { DiagramLayoutToken } from '@core/diagram/diagram-layout';
@@ -44,11 +45,12 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
   constructor(
     elementRef: ElementRef,
     organizer: DiagramOrganizer,
+    snackBar: MatSnackBar,
     private ngAppViewerService: NgAppViewerService,
     private viewerDataService: AppViewerDataService,
     private optionsService: ArchViewerOptionsService
   ) {
-    super(elementRef, organizer);
+    super(elementRef, organizer, snackBar);
 
     this.organizer.addFeature(DiagramElementFeature.DblClick, this.onDoubleClickPonent.bind(this));
     this.organizer.addFeature(DiagramElementFeature.ActionClick, this.onClickAction.bind(this));
@@ -138,10 +140,20 @@ export class ModuleStructureViewerComponent extends SvgZoomBoardComponent
   }
 
   private onDoubleClickPonent(node: DiagramTreeNode) {
+    if (!this.tianLayout) {
+      this.notifyOpenMainDiagramToInteractive();
+      return;
+    }
+
     this.ngAppViewerService.openNgPonentOnTop(node, PonentActionPurpose.StructureDiagram, this.viewerType);
   }
 
   private onClickAction(item: PonentActionItem) {
+    if (!this.tianLayout) {
+      this.notifyOpenMainDiagramToInteractive();
+      return;
+    }
+
     const purpose: PonentActionPurpose = item.value;
 
     if (purpose === PonentActionPurpose.ToggleCollapseChildren) {

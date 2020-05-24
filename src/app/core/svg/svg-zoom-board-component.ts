@@ -1,5 +1,6 @@
 import { ElementRef, HostListener } from '@angular/core';
 import * as d3 from 'd3';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { d3Element } from '@core/svg/d3-def-types';
 import { SvgZoomBoard } from '@core/diagram-impls/diagram-board';
@@ -13,7 +14,8 @@ export abstract class SvgZoomBoardComponent {
 
   constructor(
     protected elementRef: ElementRef,
-    protected organizer: DiagramOrganizer
+    protected organizer: DiagramOrganizer,
+    protected snackBar: MatSnackBar
   ) { }
 
   abstract onChangeSize();
@@ -33,5 +35,14 @@ export abstract class SvgZoomBoardComponent {
   afterViewInit() {
     this.board.changeBoardSize();
     this.organizer.start();
+  }
+
+  notifyOpenMainDiagramToInteractive() {
+    this.snackBar.open('Use main diagram to interactive', '', {
+      duration: 2000,
+      panelClass: ['mat-toolbar', 'mat-accent'],
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
   }
 }
