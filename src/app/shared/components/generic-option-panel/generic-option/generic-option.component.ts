@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { UiElementData, UiElementCategory, UiElementSection } from '@core/models/ui-element-category';
+import { UiElementData, UiElementCategory, UiElementSection, traverseUiElementData, assignCategorySelectedItem } from '@core/models/ui-element-category';
 import { UiElementItem } from '@core/models/ui-element-item';
 
 interface OptionChangedType {
@@ -24,14 +24,14 @@ export class GenericOptionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
+    traverseUiElementData(this.optionData, {category: assignCategorySelectedItem()});
   }
 
   isSection(section: UiElementSection): boolean {
     return !!section.categories;
   }
 
-  changeOption(section: UiElementSection, category: UiElementCategory, option: UiElementItem) {
-    this.optionChanged.emit({section, category, option});
+  changeOption(section: UiElementSection, category: UiElementCategory) {
+    this.optionChanged.emit({section, category, option: category.selectedItem});
   }
 }

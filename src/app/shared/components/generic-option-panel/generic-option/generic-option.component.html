@@ -18,12 +18,11 @@
 
   <ng-container [ngSwitch]="category.inputType">
     <!-- category item - radio button -->
-    <mat-radio-group *ngSwitchCase="'RadioGroup'">
+    <mat-radio-group *ngSwitchCase="'RadioGroup'" [(ngModel)]="category.selectedItem" (change)="changeOption(section, category)">
       <div class="category-item" *ngFor="let catItem of category.items">
         <div>
           <mat-radio-button class="option-checkbox"
-            [value]="catItem.value" [disabled]="!!catItem.isDisabled" [checked]="catItem.isChecked"
-            (change)="changeOption(section, category, catItem)">{{catItem.name}}
+            [value]="catItem" [disabled]="!!catItem.isDisabled">{{catItem.name}}
           </mat-radio-button>
           <div *ngIf="catItem.subtitle" class="sub-title">({{ catItem.subtitle }})</div>
         </div>

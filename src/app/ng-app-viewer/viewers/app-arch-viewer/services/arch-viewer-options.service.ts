@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { distinctUntilChanged, map, filter } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
-import { UiElementCategory, UiElementSection, UiElementData, findCategoryFromSection } from '@core/models/ui-element-category';
+import { UiElementCategory, UiElementSection, UiElementData, findCategoryFromSection, checkCategoryItemWithValue } from '@core/models/ui-element-category';
 import { UiElementItem } from '@core/models/ui-element-item';
 import { appViewerOptions } from '../../config/app-arch-viewer-config';
 import { Orientation } from '@core/diagram/layout-options';
@@ -27,7 +26,6 @@ export class ArchViewerOptionsService {
   private changeFromService = true;
 
   constructor(
-    private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -131,7 +129,7 @@ export class ArchViewerOptionsService {
         return passed;
       }),
       map(params => params.get('hierarchy')),
-      distinctUntilChanged()
+      // distinctUntilChanged()
     )
     .subscribe(hierarchy => {
       this.initOptionsFromHierarchy(hierarchy as any);
@@ -140,33 +138,6 @@ export class ArchViewerOptionsService {
 
   private findCheckedItem(type: ArchViewerOptionCategory, itemValue?: string): UiElementItem {
     const category = findCategoryFromSection(this.appViewerOptions, type);
-    let found: UiElementItem = null;
-    if (category) {
-      let checked: UiElementItem;
-      found = itemValue ? category.items.find(item => item.value === itemValue) : null;
-      const checkedItems = category.items.filter(item => item.isChecked);
-      if (checkedItems.length > 0) {
-        checked = checkedItems[0];
-        if (checkedItems.length > 1) {
-          checkedItems.forEach((item, index) => {
-            if (index > 0) {
-              item.isChecked = false;
-            }
-          });
-        }
-      }
-
-      if (found !== checked) {
-        if (found) {
-          found.isChecked = true;
-          if (checked) {
-            checked.isChecked = false;
-          }
-        } else {
-          found = checked;
-        }
-      }
-    }
-    return found;
+    return checkCategoryItemWithValue(category, itemValue);
   }
 }
