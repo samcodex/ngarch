@@ -15,7 +15,7 @@ export abstract class SvgZoomBoardComponent {
   constructor(
     protected elementRef: ElementRef,
     protected organizer: DiagramOrganizer,
-    protected snackBar: MatSnackBar
+    protected snackBar?: MatSnackBar
   ) { }
 
   abstract onChangeSize();
@@ -38,11 +38,13 @@ export abstract class SvgZoomBoardComponent {
   }
 
   notifyOpenMainDiagramToInteractive() {
-    this.snackBar.open('Use main diagram to interactive', '', {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-accent'],
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
+    if (this.snackBar) {
+      this.snackBar.open('Use main diagram to interactive', '', {
+        duration: 2000,
+        panelClass: ['mat-toolbar', 'mat-accent'],
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+    }
   }
 }

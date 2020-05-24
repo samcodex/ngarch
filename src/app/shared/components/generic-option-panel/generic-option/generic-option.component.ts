@@ -31,7 +31,7 @@ export class GenericOptionComponent implements OnInit {
     return !!section.categories;
   }
 
-  changeOption(section: UiElementSection, category: UiElementCategory) {
-    this.optionChanged.emit({section, category, option: category.selectedItem});
+  changeOption(section: UiElementSection, category: UiElementCategory, item?: UiElementItem) {
+    this.optionChanged.emit({section, category, option: item || category.selectedItem});
   }
 }
