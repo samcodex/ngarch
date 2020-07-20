@@ -6,6 +6,7 @@ export enum TsPonentType {
   MethodPonent = 'MethodPonent',
   FunctionPonent = 'FunctionPonent',
   ParameterPonent = 'ParameterPonent',
+  ChainPonent = 'ChainPonent',
   DecoratorPonent = 'DecoratorPonent',
   VariablePonent = 'VariablePonent',
 
@@ -15,7 +16,10 @@ export enum TsPonentType {
   ArrayExpressionPonent = 'ArrayExpressionPonent',
   CallExpressionPonent = 'CallExpressionPonent',
   NewExpressionPonent = 'NewExpressionPonent',
-  BooleanExpressionPonent = 'BooleanExpressionPonent'
+  BooleanExpressionPonent = 'BooleanExpressionPonent',
+  ArrowFunctionPonent = 'ArrowFunctionPonent',
+  ImportKeywordPonent = 'ImportKeywordPonent',
+  ShorthandPropertyAssignmentPonent = 'ShorthandPropertyAssignment'
 }
 
 export const ExpressionPonentTypes = [
