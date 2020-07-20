@@ -23,6 +23,9 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/sass"
