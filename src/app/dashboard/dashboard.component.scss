@@ -19,7 +19,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: absolute;
-  top: 20px;
+  top: 0px;
   left: 7px;
   right: 15px;
   bottom: 10px;
@@ -30,9 +30,7 @@
   // box-shadow:3px 0px 12px -1px rgba(78, 78, 78, 0.75);
 
   .diagram-row {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
+    margin-top: 24px;
   }
 }
 
@@ -43,7 +41,8 @@
   border-radius: 3px;
   display: flex;
   flex-direction: column;
-  height: 300px;
+  height: 310px;
+  box-sizing: border-box;
 
   .diagram-svg {
     border: 1px dotted #ababab;
@@ -73,23 +72,4 @@
       cursor: pointer;
     }
   }
-}
-
-.tile-40pct {
-  min-width: 300px;
-  flex: 1 1 40%;
-}
-
-.tile-rest {
-  min-width: 350px;
-  flex: 1 1 60%;
-  margin-left: 30px;
-}
-
-.tile-33pct {
-  flex: 1 1 33%;
-}
-
-.tile-33pct:not(:first-child) {
-  margin-left: 30px;
 }

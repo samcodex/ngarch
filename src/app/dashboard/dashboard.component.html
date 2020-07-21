@@ -4,8 +4,8 @@
 
 <div class="diagram-container">
 
-  <div class="diagram-row">
-    <div class="diagram-tile tile-40pct">
+  <div class="diagram-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="24px">
+    <div class="diagram-tile" fxFlex="40%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <arch-module-structure-viewer [tianLayout]="false" initialScale="0.5"></arch-module-structure-viewer>
       </div>
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="diagram-tile tile-rest">
+    <div class="diagram-tile" fxFlex="60%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="FullView"></arch-ng-app-viewer>
       </div>
@@ -28,8 +28,8 @@
     </div>
   </div>
 
-  <div class="diagram-row">
-    <div class="diagram-tile tile-40pct">
+  <div class="diagram-row" fxLayout="row" fxLayout.sm="column" fxLayoutGap="24px">
+    <div class="diagram-tile" fxFlex="40%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer>
       </div>
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="diagram-tile tile-rest">
+    <div class="diagram-tile" fxFlex="60%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="InjectorHierarchy"></arch-ng-app-viewer>
       </div>
@@ -52,8 +52,8 @@
     </div>
   </div>
 
-  <div class="diagram-row">
-    <div class="diagram-tile tile-33pct">
+  <div class="diagram-row" fxLayout="row" fxLayout.sm="column" fxLayoutGap="24px">
+    <div class="diagram-tile" fxFlex="33%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <arch-ng-app-viewer viewerId="app-arch" contentHierarchyKey="RoutingHierarchy"></arch-ng-app-viewer>
       </div>
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <div class="diagram-tile tile-33pct">
+    <div class="diagram-tile" fxFlex="33%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <!-- <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer> -->
       </div>
@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <div class="diagram-tile tile-33pct">
+    <div class="diagram-tile" fxFlex="33%" fxFlex.lt-md="100%">
       <div class="diagram-svg">
         <!-- <arch-ng-app-viewer viewerId="component-hierarchy" contentHierarchyKey="ComponentHierarchy"></arch-ng-app-viewer> -->
       </div>
