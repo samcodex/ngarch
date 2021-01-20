@@ -51,7 +51,7 @@
     "popper.js": "^1.16.1",
     "prismjs": "^1.20.0",
     "rxjs": "^6.6.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "socks": "^2.4.1",
     "take-until-ng-destroy": "^0.0.3",
     "tslib": "^1.10.0",
