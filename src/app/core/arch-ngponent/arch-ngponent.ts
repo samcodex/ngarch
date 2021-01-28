@@ -158,6 +158,12 @@ export abstract class ArchNgPonent {
   }
 
   get isRootOfLoadingGroup(): boolean {
+    // first element of loadingGroups is
+    console.log('===>', this.name, ' ===>>> ', this.loadingGroups);
+    return !!this.loadingGroups && this.loadingGroups.includes(this.name) && this.loadingGroups.indexOf(this.name) <= 1;
+  }
+
+  get isBelongLoadingGroup(): boolean {
     return !!this.loadingGroups && this.loadingGroups.includes(this.name);
   }
 
