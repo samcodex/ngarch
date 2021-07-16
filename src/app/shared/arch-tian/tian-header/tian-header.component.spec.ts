@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TianHeaderComponent } from './tian-header.component';
 
@@ -6,7 +6,7 @@ describe('TianHeaderComponent', () => {
   let component: TianHeaderComponent;
   let fixture: ComponentFixture<TianHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TianHeaderComponent ]
     })

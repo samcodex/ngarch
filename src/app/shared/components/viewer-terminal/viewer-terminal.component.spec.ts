@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ViewerTerminalComponent } from './viewer-terminal.component';
 
@@ -6,7 +6,7 @@ describe('ViewerTerminalComponent', () => {
   let component: ViewerTerminalComponent;
   let fixture: ComponentFixture<ViewerTerminalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ViewerTerminalComponent ]
     })

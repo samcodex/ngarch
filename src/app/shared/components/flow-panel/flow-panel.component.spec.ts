@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FlowPanelComponent } from './flow-panel.component';
 
@@ -6,7 +6,7 @@ describe('FlowPanelComponent', () => {
   let component: FlowPanelComponent;
   let fixture: ComponentFixture<FlowPanelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FlowPanelComponent ]
     })

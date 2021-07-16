@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RoutingStructureComponent } from './routing-structure.component';
 
@@ -6,7 +6,7 @@ describe('RoutingStructureComponent', () => {
   let component: RoutingStructureComponent;
   let fixture: ComponentFixture<RoutingStructureComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RoutingStructureComponent ]
     })

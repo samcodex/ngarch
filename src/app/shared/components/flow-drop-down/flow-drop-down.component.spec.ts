@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FlowDropDownComponent } from './flow-drop-down.component';
 
@@ -6,7 +6,7 @@ describe('FlowDropDownComponent', () => {
   let component: FlowDropDownComponent;
   let fixture: ComponentFixture<FlowDropDownComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FlowDropDownComponent ]
     })

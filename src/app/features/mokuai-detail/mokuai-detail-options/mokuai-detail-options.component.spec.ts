@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MokuaiDetailOptionsComponent } from './mokuai-detail-options.component';
 
@@ -6,7 +6,7 @@ describe('MokuaiDetailOptionsComponent', () => {
   let component: MokuaiDetailOptionsComponent;
   let fixture: ComponentFixture<MokuaiDetailOptionsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MokuaiDetailOptionsComponent ]
     })

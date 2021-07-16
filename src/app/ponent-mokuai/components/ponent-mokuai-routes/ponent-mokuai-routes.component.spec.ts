@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PonentMokuaiRoutesComponent } from './ponent-mokuai-routes.component';
 
@@ -6,7 +6,7 @@ describe('PonentMokuaiRoutesComponent', () => {
   let component: PonentMokuaiRoutesComponent;
   let fixture: ComponentFixture<PonentMokuaiRoutesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PonentMokuaiRoutesComponent ]
     })

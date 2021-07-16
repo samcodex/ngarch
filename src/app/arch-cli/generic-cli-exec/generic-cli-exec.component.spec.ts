@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GenericCliExecComponent } from './generic-cli-exec.component';
 
@@ -6,7 +6,7 @@ describe('GenericCliExecComponent', () => {
   let component: GenericCliExecComponent;
   let fixture: ComponentFixture<GenericCliExecComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GenericCliExecComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ViewerGenericUsageComponent } from './viewer-generic-usage.component';
 
@@ -6,7 +6,7 @@ describe('ViewerGenericUsageComponent', () => {
   let component: ViewerGenericUsageComponent;
   let fixture: ComponentFixture<ViewerGenericUsageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ViewerGenericUsageComponent ]
     })

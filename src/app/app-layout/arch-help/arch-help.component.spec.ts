@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ArchHelpComponent } from './arch-help.component';
 
@@ -6,7 +6,7 @@ describe('ArchHelpComponent', () => {
   let component: ArchHelpComponent;
   let fixture: ComponentFixture<ArchHelpComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ArchHelpComponent ]
     })

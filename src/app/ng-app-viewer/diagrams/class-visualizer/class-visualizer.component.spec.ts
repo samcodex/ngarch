@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ClassVisualizerComponent } from './class-visualizer.component';
 
@@ -6,7 +6,7 @@ describe('ClassVisualizerComponent', () => {
   let component: ClassVisualizerComponent;
   let fixture: ComponentFixture<ClassVisualizerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ClassVisualizerComponent ]
     })

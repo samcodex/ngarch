@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ExplorerDockComponent } from './explorer-dock.component';
 
@@ -6,7 +6,7 @@ describe('ExplorerDockComponent', () => {
   let component: ExplorerDockComponent;
   let fixture: ComponentFixture<ExplorerDockComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ExplorerDockComponent ]
     })

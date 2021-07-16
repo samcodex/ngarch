@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CliCommandPanelComponent } from './cli-command-panel.component';
 
@@ -6,7 +6,7 @@ describe('CliCommandPanelComponent', () => {
   let component: CliCommandPanelComponent;
   let fixture: ComponentFixture<CliCommandPanelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CliCommandPanelComponent ]
     })

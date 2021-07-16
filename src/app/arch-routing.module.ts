@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ArchRoutes } from './arch-routing.config';
 
 @NgModule({
-  imports: [RouterModule.forRoot(ArchRoutes, { useHash: false })],
+  imports: [RouterModule.forRoot(ArchRoutes, { useHash: false, relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class ArchRoutingModule { }

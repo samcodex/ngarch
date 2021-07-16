@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PrismCoderComponent } from './prism-coder.component';
 
@@ -6,7 +6,7 @@ describe('PrismCoderComponent', () => {
   let component: PrismCoderComponent;
   let fixture: ComponentFixture<PrismCoderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PrismCoderComponent ]
     })
