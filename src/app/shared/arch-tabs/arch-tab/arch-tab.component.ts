@@ -18,14 +18,17 @@ export class ArchTabComponent implements OnInit, AfterContentChecked {
 
   @Input() theme: string;
 
-  @HostBinding('class.panel-tab') themePanelTab = this.theme === 'panel';
-  @HostBinding('class.workspace-tab') themeWorkspaceTab = this.theme === 'workspace';
+  @HostBinding('class.panel-tab') themePanelTab;
+  @HostBinding('class.workspace-tab') themeWorkspaceTab;
 
   private isThemeDynamicChanged = false;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.themePanelTab = this.theme === 'panel';
+    this.themeWorkspaceTab = this.theme === 'workspace';
+  }
 
   updateTheme(theme: string) {
     this.theme = theme;

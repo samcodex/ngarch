@@ -4,7 +4,7 @@ import {
 } from '../../../../models/angular-cli';
 import { MetaDataType, MetaInputType } from '@config/meta-config';
 
-export const AngularCli_V1_Build = [
+export const AngularCli_V1_Build: AngularCliCommand[] = [
   {
     command: AngularCliCommandType.Build,
     description: 'Compiles the application into an output directory.',
@@ -190,4 +190,4 @@ export const AngularCli_V1_Build = [
       }
     ]
   }
-] as AngularCliCommand[];
+] as any;

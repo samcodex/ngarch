@@ -94,7 +94,7 @@ export class SvgZoomBoard extends Board {
     const zoom = d3.zoom().on('zoom', zooming);
     this.rootSvg
       .call(zoom)
-      .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(this.initialScale))
+      .call(zoom.transform as any, d3.zoomIdentity.translate(translateX, translateY).scale(this.initialScale))
       ;
 
     // stop zoom's double click
